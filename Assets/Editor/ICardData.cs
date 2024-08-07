@@ -5,11 +5,17 @@ namespace Editor
 {
     public interface ICardData
     {
-        public string CardType { get;  set; }
+        public CardTypes CardType { get;  set; }
         public string CardName { get; set; }
-        public List<CardStat> CardStats { get; set; }
         // Add other stats and text fields
         public Texture2D ArtWork { get; set; }
         public string CardText { get; set; }
+
+        public CardStat Attack { get; set; }
+        public CardStat Explore{ get; set; }
+        public CardStat Focus{ get; set; }
+        public CardStat HitPoints{ get; set; }
+        public CardStat Speed{ get; set; }
+        public CardStat UpgradeSlots{ get; set; }
     }
 }

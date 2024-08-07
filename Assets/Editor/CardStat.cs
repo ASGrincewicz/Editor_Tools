@@ -1,19 +1,54 @@
-﻿using JetBrains.Annotations;
+﻿
+using UnityEngine;
 
 namespace Editor
 {
     [System.Serializable]
     public struct CardStat
     {
-        public string statName;
-        public int statValue;
-        [CanBeNull] public string statDescription;
+        
+        //Backing Fields
+        [SerializeField] private string _statName;
+        [SerializeField] private int _statValue;
+        [SerializeField] private string _statDescription;
+
+        //Properties
+        public string StatName
+        {
+            get { return _statName; }
+            //set { _statName = value; }
+        }
+
+        public int StatValue
+        {
+            get
+            {
+                return _statValue;
+            }
+            set
+            {
+                _statValue = value;
+            }
+        }
+
+        public string StatDescription
+        {
+            get
+            {
+                return _statDescription;
+            }
+        }
 
         public CardStat(string statName, int statValue = 0, string statDescription = null)
         {
-            this.statName = statName;
-            this.statValue = statValue;
-            this.statDescription = statDescription;
+            _statName = statName;
+            _statValue = statValue;
+            _statDescription = statDescription;
+        }
+
+        public void SetStatValue(int value)
+        {
+            StatValue = value;
         }
     }
 }

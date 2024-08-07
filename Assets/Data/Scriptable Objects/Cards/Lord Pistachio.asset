@@ -10,27 +10,33 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 85c2db69d287cba46a63d7dc92203786, type: 3}
-  m_Name: Plasma Sword
+  m_Name: Lord Pistachio
   m_EditorClassIdentifier: 
-  _cardType: 6
-  _cardName: Plasma Sword
+  _cardType: 2
+  _cardName: Lord Pistachio
   _artWork: {fileID: 0}
   _attack:
-    _statName: 
-    _statDescription: 
+    _statName: Attack
+    _statValue: 100
+    _statDescription: Amount of damage dealt.
   _explore:
-    _statName: Explore
+    _statName: 
+    _statValue: 0
     _statDescription: 
   _focus:
-    _statName: 
-    _statDescription: 
+    _statName: Focus
+    _statValue: 0
+    _statDescription: Resources generated
   _hitPoints:
-    _statName: 
-    _statDescription: 
+    _statName: Hit Points
+    _statValue: 300
+    _statDescription: Amount of health
   _speed:
-    _statName: 
-    _statDescription: 
+    _statName: Speed
+    _statValue: 3
+    _statDescription: Determines Attack Sequence and Move Rate.
   _upgradeSlots:
     _statName: 
+    _statValue: 0
     _statDescription: 
   _cardText: 

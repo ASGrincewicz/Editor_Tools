@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 //using Data.Scriptable_Objects;
 using UnityEditor;
 using UnityEngine;
+using static Editor.StatDataReference;
 
 namespace Editor
 {
@@ -20,12 +22,20 @@ namespace Editor
 
         // Temporary variables to hold the values to apply
         private CardSO _cardToEdit;
-        private readonly string[] CARD_TYPES =
-            { "TBD", "Action", "Boss", "Character", "Creature", "Equipment", "Environment", "Hunter", "Upgrade" };
-        private string cardType;
+        private CardTypes _cardTypes;
         private string cardName;
-        private List<CardStat> cardStats = new List<CardStat>();
-        private CardStat newStat = new CardStat();
+        private CardStat? _attack;
+        private int _attackValue;
+        private CardStat? _explore;
+        private int _exploreValue;
+        private CardStat? _focus;
+        private int _focusValue;
+        private CardStat? _hitPoints;
+        private int _hitPointsValue;
+        private CardStat? _speed;
+        private int _speedValue;
+        private CardStat? _upgradeSlots;
+        private int _upgradeSlotsValue;
         private Texture2D artwork;
         [Multiline] private string cardText;
         private CardSO selectedCard;
@@ -57,12 +67,9 @@ namespace Editor
                     {
                         allCards.Add(card);
                     }
-
                     selectedCards[card] = false; // Initialize all cards as unselected
                 }
             }
-
-            //selectedCard = _placeHolderBlank;
             _stringBuilder = new StringBuilder();
         }
 
@@ -76,27 +83,117 @@ namespace Editor
             _cardToEdit = EditorGUILayout.ObjectField("Card To Edit",_cardToEdit, typeof(CardSO),false) as CardSO;
             GUILayout.Label(!ReferenceEquals(selectedCard, null) ? "Select Card Type" : "Create New Card",
                 EditorStyles.boldLabel);
-
-            dropDownContent = new GUIContent(cardType);
-            if (EditorGUILayout.DropdownButton(dropDownContent, FocusType.Keyboard, GUILayout.Width(FIELD_WIDTH)))
-            {
-                GenericMenu menu = new GenericMenu();
-
-                foreach (string type in CARD_TYPES)
-                {
-                    menu.AddItem(new GUIContent(type), cardType == type,() => SelectCardType(type));
-                }
-                menu.ShowAsContext();
-            }
+            _cardTypes = (CardTypes)EditorGUILayout.EnumPopup("Card Type",_cardTypes, GUILayout.Width(FIELD_WIDTH));
+           
             cardName = EditorGUILayout.TextField("Card Name", cardName, GUILayout.Width(FIELD_WIDTH));
             artwork = (Texture2D)EditorGUILayout.ObjectField("Artwork", artwork, typeof(Texture2D), false,
                 GUILayout.Height(200), GUILayout.Width(FIELD_WIDTH));
-            
-            
-            // start creating new elements
-            newStat.statName = EditorGUILayout.TextField("Stat Name", newStat.statName, GUILayout.Width(FIELD_WIDTH));
-            newStat.statValue = EditorGUILayout.IntField("Stat Value", newStat.statValue,GUILayout.Width(200));
-            newStat.statDescription = EditorGUILayout.TextField("Stat Description", newStat.statDescription, GUILayout.Width(FIELD_WIDTH));
+
+            switch (_cardTypes)
+            {
+                case CardTypes.TBD:
+                    break;
+                case CardTypes.Action:
+                    break;
+                case CardTypes.Environment:
+                    //Explore Stat Layout Start
+                    GUILayout.BeginHorizontal(GUILayout.Width(FIELD_WIDTH),GUILayout.ExpandWidth(true));
+                    GUILayout.BeginVertical(GUILayout.Width(100));
+                    GUILayout.Label(EXPLORE_NAME);
+                    GUILayout.EndVertical();
+                    GUILayout.BeginVertical(GUILayout.Width(100));
+                    _exploreValue = EditorGUILayout.IntField(" Value", _exploreValue,GUILayout.Width(130),GUILayout.ExpandWidth(true));
+                    GUILayout.EndVertical();
+                    GUILayout.BeginVertical(GUILayout.Width(200));
+                    GUILayout.Label(EXPLORE_DESCRIPTION);
+                    GUILayout.EndVertical();
+                    GUILayout.EndHorizontal();
+                    //Explore Stat Layout end
+                    break;
+                case CardTypes.Equipment:
+                    break;
+                case CardTypes.Hunter:
+                case CardTypes.Character:
+                case CardTypes.Creature:
+                case CardTypes.Boss:
+                    //Attack Stat Layout Start
+                    GUILayout.BeginHorizontal(GUILayout.Width(FIELD_WIDTH),GUILayout.ExpandWidth(true));
+                    GUILayout.BeginVertical(GUILayout.Width(100));
+                    GUILayout.Label(ATTACK_NAME);
+                    GUILayout.EndVertical();
+                    GUILayout.BeginVertical(GUILayout.Width(100));
+                    _attackValue = EditorGUILayout.IntField(" Value", _attackValue,GUILayout.Width(130),GUILayout.ExpandWidth(true));
+                    GUILayout.EndVertical();
+                    GUILayout.BeginVertical(GUILayout.Width(200));
+                    GUILayout.Label(ATTACK_DESCRIPTION);
+                    GUILayout.EndVertical();
+                    GUILayout.EndHorizontal();
+                    //Attack Stat Layout end
+                    //Hit Points Stat Layout Start
+                    GUILayout.BeginHorizontal(GUILayout.Width(FIELD_WIDTH),GUILayout.ExpandWidth(true));
+                    GUILayout.BeginVertical(GUILayout.Width(100));
+                    GUILayout.Label(HIT_POINTS_NAME);
+                    GUILayout.EndVertical();
+                    GUILayout.BeginVertical(GUILayout.Width(100));
+                    _hitPointsValue = EditorGUILayout.IntField("Value", _hitPointsValue,GUILayout.Width(130), GUILayout.ExpandWidth(true));
+                    GUILayout.EndVertical();
+                    GUILayout.BeginVertical(GUILayout.Width(200));
+                    GUILayout.Label(HIT_POINTS_DESCRIPTION);
+                    GUILayout.EndVertical();
+                    GUILayout.EndHorizontal();
+                    //Hit Points Stat Layout End
+                    //Speed Stat Layout Start
+                    GUILayout.BeginHorizontal(GUILayout.Width(FIELD_WIDTH),GUILayout.ExpandWidth(true));
+                    GUILayout.BeginVertical(GUILayout.Width(100));
+                    GUILayout.Label(SPEED_NAME);
+                    GUILayout.EndVertical();
+                    GUILayout.BeginVertical(GUILayout.Width(100));
+                    _speedValue = EditorGUILayout.IntField("Value", _speedValue,GUILayout.Width(130), GUILayout.ExpandWidth(true));
+                    GUILayout.EndVertical();
+                    GUILayout.BeginVertical(GUILayout.Width(200));
+                    GUILayout.Label(SPEED_DESCRIPTION);
+                    GUILayout.EndVertical();
+                    GUILayout.EndHorizontal();
+                    //Speed Stat Layout End
+                    //Focus Stat Layout Start
+                    GUILayout.BeginHorizontal(GUILayout.Width(FIELD_WIDTH),GUILayout.ExpandWidth(true));
+                    GUILayout.BeginVertical(GUILayout.Width(100));
+                    GUILayout.Label(FOCUS_NAME);
+                    GUILayout.EndVertical();
+                    GUILayout.BeginVertical(GUILayout.Width(100));
+                    _focusValue = EditorGUILayout.IntField("Value", _focusValue,GUILayout.Width(130), GUILayout.ExpandWidth(true));
+                    GUILayout.EndVertical();
+                    GUILayout.BeginVertical(GUILayout.Width(200));
+                    GUILayout.Label(FOCUS_DESCRIPTION);
+                    GUILayout.EndVertical();
+                    GUILayout.EndHorizontal();
+                    //Focus Stat Layout End
+                    if (_cardTypes == CardTypes.Hunter)
+                    {
+                        //Upgrade Slots Stat Layout Start
+                        GUILayout.BeginHorizontal(GUILayout.Width(FIELD_WIDTH),GUILayout.ExpandWidth(true));
+                        GUILayout.BeginVertical(GUILayout.Width(100));
+                        GUILayout.Label(UPGRADE_SLOTS_NAME);
+                        GUILayout.EndVertical();
+                        GUILayout.BeginVertical(GUILayout.Width(100));
+                        _upgradeSlotsValue = EditorGUILayout.IntField("Value", _upgradeSlotsValue,GUILayout.Width(130), GUILayout.ExpandWidth(true));
+                        GUILayout.EndVertical();
+                        GUILayout.BeginVertical(GUILayout.Width(200));
+                        GUILayout.Label(UPGRADE_SLOTS_DESCRIPTION);
+                        GUILayout.EndVertical();
+                        GUILayout.EndHorizontal();
+                        //Hit Points Stat Layout End
+                    }
+                    break;
+                case CardTypes.Upgrade:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            /*// start creating new elements
+            newStat.StatName = EditorGUILayout.TextField("Stat Name", newStat.StatName, GUILayout.Width(FIELD_WIDTH));
+            newStat.StatValue = EditorGUILayout.IntField("Stat Value", newStat.StatValue,GUILayout.Width(200));
+            newStat.StatDescription = EditorGUILayout.TextField("Stat Description", newStat.StatDescription, GUILayout.Width(FIELD_WIDTH));
 
             if (GUILayout.Button("Add Stat", GUILayout.Width(FIELD_WIDTH)))
             {
@@ -120,15 +217,15 @@ namespace Editor
 
                     // allow users to edit the stat values directly in the list
                     EditorGUILayout.BeginVertical(GUILayout.Width(200));
-                    stat.statName = EditorGUILayout.TextField("Name: ", stat.statName, GUILayout.Width(200));
+                    stat.StatName = EditorGUILayout.TextField("Name: ", stat.StatName, GUILayout.Width(200));
                     EditorGUILayout.EndVertical();
                 
                     EditorGUILayout.BeginVertical(GUILayout.Width(100));
-                    stat.statValue = EditorGUILayout.IntField("Value: ", stat.statValue,GUILayout.Width(100));
+                    stat.StatValue = EditorGUILayout.IntField("Value: ", stat.StatValue,GUILayout.Width(100));
                     EditorGUILayout.EndVertical();
                 
                     EditorGUILayout.BeginVertical(GUILayout.Width(200));
-                    stat.statDescription = EditorGUILayout.TextArea(stat.statDescription);
+                    stat.StatDescription = EditorGUILayout.TextArea(stat.StatDescription);
                     EditorGUILayout.EndVertical();
                 
 
@@ -143,7 +240,7 @@ namespace Editor
 
                     EditorGUILayout.EndHorizontal();
                 }
-            }
+            }*/
             
             
             GUILayout.Label("Card Text");
@@ -213,32 +310,65 @@ namespace Editor
             GUILayout.EndArea();
             
         }
-
-        private void SelectCardType(string selectedCardType)
-        {
-            cardType = selectedCardType;
-            dropDownContent.text = cardType;
-        }
         
-        private void InitializeCard(CardSO card)
+        private bool InitializeCard(CardSO card)
         {
-            card.CardType = cardType;
+            if (ReferenceEquals(card, null))
+            {
+                return false;
+            }
+            card.CardType = _cardTypes;
             card.CardName = cardName;
-            card.CardStats = cardStats;
-            // Assign other stats and text fields
             card.ArtWork = artwork;
             card.CardText = cardText;
+            switch (_cardTypes)
+            {
+                case CardTypes.TBD:
+                    break;
+                case CardTypes.Action:
+                    break;
+                case CardTypes.Environment:
+                    _explore = new CardStat(EXPLORE_NAME, _exploreValue, EXPLORE_DESCRIPTION);
+                    break;
+                case CardTypes.Equipment:
+                    break;
+                case CardTypes.Hunter:
+                case CardTypes.Boss:
+                case CardTypes.Character:
+                case CardTypes.Creature:
+                    card.Attack = new CardStat(ATTACK_NAME, _attackValue, ATTACK_DESCRIPTION);
+                    card.HitPoints = new CardStat(HIT_POINTS_NAME, _hitPointsValue, HIT_POINTS_DESCRIPTION);
+                    card.Speed = new CardStat(SPEED_NAME, _speedValue, SPEED_DESCRIPTION);
+                    card.Focus = new CardStat(FOCUS_NAME, _focusValue, FOCUS_DESCRIPTION);
+                    if (_cardTypes == CardTypes.Hunter)
+                    {
+                        card.UpgradeSlots = new CardStat(UPGRADE_SLOTS_NAME, _upgradeSlotsValue, UPGRADE_SLOTS_DESCRIPTION);
+                    }
+                    break;
+                case CardTypes.Upgrade:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            
+            return true;
         }
 
         private void CreateNewCard()
         {
             CardSO newCard = CreateInstance<CardSO>();
-            InitializeCard(newCard);
-            AssetDatabase.CreateAsset(newCard, $"{ASSET_PATH}{cardName}.asset");
-            AssetDatabase.SaveAssets();
-            EditorUtility.FocusProjectWindow();
-            Selection.activeObject = newCard;
-            RefreshCardList(true);
+            if (InitializeCard(newCard))
+            {
+                AssetDatabase.CreateAsset(newCard, $"{ASSET_PATH}{cardName}.asset");
+                AssetDatabase.SaveAssets();
+                EditorUtility.FocusProjectWindow();
+                Selection.activeObject = newCard;
+                RefreshCardList(true);
+            }
+            else
+            {
+                Debug.Log("Initialization Failed: Card is null.");
+            }
         }
 
         private void LoadCardFromFile()
@@ -261,12 +391,40 @@ namespace Editor
             
             if (!ReferenceEquals(selectedCard, null))
             {
-                cardType = selectedCard.CardType;
+                _cardTypes = selectedCard.CardType;
                 cardName = selectedCard.CardName;
-                cardStats = selectedCard.CardStats;
-                // Assign other stats and text fields
                 artwork = selectedCard.ArtWork;
                 cardText += _stringBuilder.Append(selectedCard.CardText);
+                switch (_cardTypes)
+                {
+                    case CardTypes.TBD:
+                    break;
+                    case CardTypes.Action:
+                    break;
+                    case CardTypes.Environment:
+                    _explore = selectedCard.Explore;
+                    break;
+                    case CardTypes.Equipment:
+                    break;
+                    case CardTypes.Hunter:
+                    case CardTypes.Boss:
+                    case CardTypes.Character:
+                    case CardTypes.Creature:
+                        _attack = selectedCard.Attack;
+                        _hitPoints = selectedCard.HitPoints;
+                        _speed = selectedCard.Speed;
+                        _focus = selectedCard.Focus;
+                    if (_cardTypes == CardTypes.Hunter)
+                        {
+                            _upgradeSlots = selectedCard.UpgradeSlots;
+                        }
+                        break;
+                    case CardTypes.Upgrade:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+               
                 _stringBuilder.Clear();;
             }
         }
@@ -274,24 +432,33 @@ namespace Editor
         private void UnloadCard()
         {
             selectedCard = null;
-            cardType = CARD_TYPES[0];
+            _cardTypes = CardTypes.TBD;
             cardName = string.Empty;
             cardText = string.Empty;
-            cardStats = new List<CardStat>();
+            //cardStats = new List<CardStat>();
+            //Todo: Set all stats to null.
+            _attack = null;
+            _hitPoints = null;
+            _speed = null;
+            _focus = null;
+            _explore = null;
+            _upgradeSlots = null;
+            
             artwork = null;
         }
 
         private void SaveExistingCard()
         {
-            if (!ReferenceEquals(selectedCard, null))
+            Undo.RecordObject(selectedCard, "Edited Card");
+            if (InitializeCard(selectedCard))
             {
-                Undo.RecordObject(selectedCard, "Edited Card");
-                InitializeCard(selectedCard);
+                //InitializeCard(selectedCard);
                 EditorUtility.SetDirty(selectedCard);
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
             }
             UnloadCard();
+            SelectAllCards(false);
         }
 
         private void SelectAllCards(bool select)
@@ -320,6 +487,7 @@ namespace Editor
 
         private void RefreshCardList(bool clearList)
         {
+            UnloadCard();
             if (clearList)
             {
                 allCards.Clear();

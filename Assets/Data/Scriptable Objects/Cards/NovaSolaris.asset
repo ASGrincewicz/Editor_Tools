@@ -12,17 +12,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85c2db69d287cba46a63d7dc92203786, type: 3}
   m_Name: NovaSolaris
   m_EditorClassIdentifier: 
-  _cardType: Hunter
+  _cardType: 7
   _cardName: Nova Solaris
-  _cardStats:
-  - statName: Attack
-    statValue: 25
-    statDescription: Damage amount
-  - statName: Health
-    statValue: 100
-    statDescription: HP
-  - statName: Focus
-    statValue: 5
-    statDescription: Quantix Regen
   _artWork: {fileID: 0}
+  _attack:
+    _statName: Attack
+    _statValue: 25
+    _statDescription: Amount of damage dealt.
+  _explore:
+    _statName: Explore
+    _statValue: 0
+    _statDescription: 
+  _focus:
+    _statName: Focus
+    _statValue: 5
+    _statDescription: Resources generated
+  _hitPoints:
+    _statName: Hit Points
+    _statValue: 100
+    _statDescription: Amount of health
+  _speed:
+    _statName: Speed
+    _statValue: 5
+    _statDescription: Determines Attack Sequence and Move Rate.
+  _upgradeSlots:
+    _statName: Upgrade Slots
+    _statValue: 5
+    _statDescription: Amount of Upgrades that can be equipped.
   _cardText: 
