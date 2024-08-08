@@ -361,12 +361,17 @@ namespace Editor
                     case CardTypes.Character:
                     case CardTypes.Creature:
                         _attack = selectedCard.Attack;
+                        _attackValue = selectedCard.Attack.StatValue;
                         _hitPoints = selectedCard.HitPoints;
+                        _hitPointsValue = selectedCard.HitPoints.StatValue;
                         _speed = selectedCard.Speed;
+                        _speedValue = selectedCard.Speed.StatValue;
                         _focus = selectedCard.Focus;
+                        _focusValue = selectedCard.Focus.StatValue;
                     if (_cardTypes == CardTypes.Hunter)
                         {
                             _upgradeSlots = selectedCard.UpgradeSlots;
+                            _upgradeSlotsValue = selectedCard.UpgradeSlots.StatValue;
                         }
                         break;
                     case CardTypes.Upgrade:

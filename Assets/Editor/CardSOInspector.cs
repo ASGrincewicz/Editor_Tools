@@ -50,14 +50,22 @@ namespace Editor
                 CardEditor instance = (CardEditor)EditorWindow.GetWindow(typeof(CardEditor));
                 instance.OpenCardInEditor(card);
             }
-            EditorGUILayout.PropertyField(CardType);
-
             CardTypes cardTypes = (CardTypes)CardType.enumValueIndex;
-            EditorGUILayout.PropertyField(CardName);
-            ArtWork.objectReferenceValue = EditorGUILayout.ObjectField("Artwork",ArtWork.objectReferenceValue, typeof(Texture2D),false);
+            EditorGUILayout.LabelField($"Card Type: {(CardTypes)CardType.enumValueIndex}",EditorStyles.boldLabel, GUILayout.Width(200), GUILayout.ExpandWidth(true),GUILayout.ExpandHeight(true));
+
             
-            EditorGUILayout.PropertyField(CardText);
+            EditorGUILayout.LabelField($"Card Name: {CardName.stringValue}",EditorStyles.boldLabel, GUILayout.Width(200), GUILayout.ExpandWidth(true),GUILayout.ExpandHeight(true));
+            //ArtWork.objectReferenceValue = EditorGUILayout.ObjectField("Artwork",ArtWork.objectReferenceValue, typeof(Texture2D),false);
+            if (ArtWork.objectReferenceValue is Texture2D artworkTexture)
+            {
+                GUILayout.Label("Artwork Preview:");
+                Rect rect = GUILayoutUtility.GetRect(400 * 0.75f,225 * 0.75f);
+                EditorGUI.DrawPreviewTexture(rect, artworkTexture);
+                EditorGUILayout.LabelField(artworkTexture.name);
+            }
             
+            EditorGUILayout.LabelField($"Card Text: {CardText.stringValue}",EditorStyles.wordWrappedLabel, GUILayout.Width(200), GUILayout.ExpandWidth(true),GUILayout.ExpandHeight(true));
+            EditorGUILayout.LabelField($"STATS:",EditorStyles.whiteLargeLabel, GUILayout.Width(200), GUILayout.ExpandWidth(true),GUILayout.ExpandHeight(true));
             switch (cardTypes)
             {
                 case CardTypes.TBD:
@@ -72,18 +80,18 @@ namespace Editor
                 case CardTypes.Character:
                 case CardTypes.Creature:
                 case CardTypes.Hunter:
-                    EditorGUILayout.PropertyField(Attack, GUILayout.Height(40));
-                    EditorGUILayout.Space(10, true);
-                    EditorGUILayout.PropertyField(HitPoints, GUILayout.Height(40));
-                    EditorGUILayout.Space(10, true);
-                    EditorGUILayout.PropertyField(Speed, GUILayout.Height(40));
-                    EditorGUILayout.Space(10, true);
-                    EditorGUILayout.PropertyField(Focus, GUILayout.Height(40));
-                    EditorGUILayout.Space(10, true);
+                    EditorGUILayout.PropertyField(Attack, GUILayout.Height(15));
+                    //EditorGUILayout.Space(10, true);
+                    EditorGUILayout.PropertyField(HitPoints, GUILayout.Height(15));
+                    //EditorGUILayout.Space(10, true);
+                    EditorGUILayout.PropertyField(Speed, GUILayout.Height(15));
+                    //EditorGUILayout.Space(10, true);
+                    EditorGUILayout.PropertyField(Focus, GUILayout.Height(15));
+                    //EditorGUILayout.Space(10, true);
                     if (cardTypes == CardTypes.Hunter)
                     {
-                        EditorGUILayout.PropertyField(UpgradeSlots, GUILayout.Height(40));
-                        EditorGUILayout.Space(10, true);
+                        EditorGUILayout.PropertyField(UpgradeSlots, GUILayout.Height(15));
+                        //EditorGUILayout.Space(10, true);
                     }
                     break;
                 case CardTypes.Upgrade:
@@ -92,13 +100,7 @@ namespace Editor
                     throw new ArgumentOutOfRangeException();
             }
            
-            if (ArtWork.objectReferenceValue is Texture2D artworkTexture)
-            {
-                GUILayout.Label("Artwork Preview:");
-                Rect rect = GUILayoutUtility.GetRect(400 * 0.75f,225 * 0.75f);
-                EditorGUI.DrawPreviewTexture(rect, artworkTexture);
-                EditorGUILayout.LabelField(artworkTexture.name);
-            }
+            
             GUILayout.EndVertical();
             serializedObject.ApplyModifiedProperties();
         }
