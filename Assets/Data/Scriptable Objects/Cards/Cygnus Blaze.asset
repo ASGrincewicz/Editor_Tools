@@ -16,21 +16,27 @@ MonoBehaviour:
   _cardName: Cygnus Blaze
   _artWork: {fileID: 0}
   _attack:
-    _statName: 
-    _statDescription: 
+    _statName: Attack
+    _statValue: 5
+    _statDescription: Amount of damage dealt.
   _explore:
     _statName: Explore
+    _statValue: 0
     _statDescription: 
   _focus:
-    _statName: 
-    _statDescription: 
+    _statName: Focus
+    _statValue: 5
+    _statDescription: Resources generated
   _hitPoints:
-    _statName: 
-    _statDescription: 
+    _statName: Hit Points
+    _statValue: 50
+    _statDescription: Amount of health
   _speed:
-    _statName: 
-    _statDescription: 
+    _statName: Speed
+    _statValue: 5
+    _statDescription: Determines Attack Sequence and Move Rate.
   _upgradeSlots:
-    _statName: 
-    _statDescription: 
+    _statName: Upgrade Slots
+    _statValue: 3
+    _statDescription: Amount of Upgrades that can be equipped.
   _cardText: 

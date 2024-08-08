@@ -10,31 +10,31 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 85c2db69d287cba46a63d7dc92203786, type: 3}
-  m_Name: Lyra Stryker
+  m_Name: Missile Launcher
   m_EditorClassIdentifier: 
-  _cardType: 3
-  _cardName: Lyra Stryker
+  _cardType: 6
+  _cardName: Missile Launcher
   _artWork: {fileID: 0}
   _attack:
-    _statName: Attack
-    _statValue: 15
-    _statDescription: Amount of damage dealt.
+    _statName: 
+    _statValue: 0
+    _statDescription: 
   _explore:
-    _statName: Explore
+    _statName: 
     _statValue: 0
     _statDescription: 
   _focus:
-    _statName: Focus
-    _statValue: 2
-    _statDescription: Resources generated
+    _statName: 
+    _statValue: 0
+    _statDescription: 
   _hitPoints:
-    _statName: Hit Points
-    _statValue: 50
-    _statDescription: Amount of health
+    _statName: 
+    _statValue: 0
+    _statDescription: 
   _speed:
-    _statName: Speed
-    _statValue: 2
-    _statDescription: Determines Attack Sequence and Move Rate.
+    _statName: 
+    _statValue: 0
+    _statDescription: 
   _upgradeSlots:
     _statName: 
     _statValue: 0

@@ -6,7 +6,6 @@ namespace Editor
     [System.Serializable]
     public struct CardStat
     {
-        
         //Backing Fields
         [SerializeField] private string _statName;
         [SerializeField] private int _statValue;

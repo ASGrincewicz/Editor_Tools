@@ -190,66 +190,10 @@ namespace Editor
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            /*// start creating new elements
-            newStat.StatName = EditorGUILayout.TextField("Stat Name", newStat.StatName, GUILayout.Width(FIELD_WIDTH));
-            newStat.StatValue = EditorGUILayout.IntField("Stat Value", newStat.StatValue,GUILayout.Width(200));
-            newStat.StatDescription = EditorGUILayout.TextField("Stat Description", newStat.StatDescription, GUILayout.Width(FIELD_WIDTH));
-
-            if (GUILayout.Button("Add Stat", GUILayout.Width(FIELD_WIDTH)))
-            {
-                // When the user clicks the "Add Stat" button add the new stat to the list of stats
-                cardStats.Add(newStat);
-                newStat = new CardStat();
-            }
-            
-            // show all stats 
-            EditorGUILayout.LabelField("Card Stats:");
-            if (cardStats != null)
-            {
-                for (int i = 0; i < cardStats.Count; i++)
-                {
-                    CardStat stat = cardStats[i];
-
-                    EditorGUILayout.BeginHorizontal();
-                    EditorGUIUtility.labelWidth = 50;
-                    EditorGUILayout.PrefixLabel("Stat " + (i+1));
-                
-
-                    // allow users to edit the stat values directly in the list
-                    EditorGUILayout.BeginVertical(GUILayout.Width(200));
-                    stat.StatName = EditorGUILayout.TextField("Name: ", stat.StatName, GUILayout.Width(200));
-                    EditorGUILayout.EndVertical();
-                
-                    EditorGUILayout.BeginVertical(GUILayout.Width(100));
-                    stat.StatValue = EditorGUILayout.IntField("Value: ", stat.StatValue,GUILayout.Width(100));
-                    EditorGUILayout.EndVertical();
-                
-                    EditorGUILayout.BeginVertical(GUILayout.Width(200));
-                    stat.StatDescription = EditorGUILayout.TextArea(stat.StatDescription);
-                    EditorGUILayout.EndVertical();
-                
-
-                    // update the list with the edited stat
-                    cardStats[i] = stat;
-
-                    // provide a button to remove this stat from the list
-                    if (GUILayout.Button("Remove", GUILayout.Width(100)))
-                    {
-                        cardStats.RemoveAt(i);
-                    }
-
-                    EditorGUILayout.EndHorizontal();
-                }
-            }*/
-            
-            
+           
             GUILayout.Label("Card Text");
             cardText = EditorGUILayout.TextArea(cardText, GUILayout.Height(100), GUILayout.Width(FIELD_WIDTH));
-            // Add other stats and text fields
-            
            
-            
-
             GUILayout.EndScrollView();
             using (var horizontalScope = new GUILayout.HorizontalScope())
             {
@@ -277,7 +221,7 @@ namespace Editor
                 }  
             }
             GUILayout.EndArea();
-           // GUILayout.Space(50.0f);
+           EditorGUILayout.Separator();
             
             GUILayout.BeginArea(secondAreaRect);
             scrollPosition2 = GUILayout.BeginScrollView(scrollPosition2,GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
@@ -309,6 +253,12 @@ namespace Editor
             }
             GUILayout.EndArea();
             
+        }
+
+        public void OpenCardInEditor(CardSO card)
+        {
+            _cardToEdit = card;
+            LoadCardFromFile();
         }
         
         private bool InitializeCard(CardSO card)

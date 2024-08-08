@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEngine;
+
 namespace Editor
 {
     [CustomEditor(typeof(CardSO))]
@@ -39,14 +41,23 @@ namespace Editor
         
         public override void OnInspectorGUI()
         {
+            CardSO card = (CardSO)target;
             serializedObject.Update();
-
+            GUILayout.BeginVertical(GUILayout.Width(300));
+            EditorGUIUtility.labelWidth = 80;
+            if (GUILayout.Button("Open in Card Editor"))
+            {
+                CardEditor instance = (CardEditor)EditorWindow.GetWindow(typeof(CardEditor));
+                instance.OpenCardInEditor(card);
+            }
             EditorGUILayout.PropertyField(CardType);
 
             CardTypes cardTypes = (CardTypes)CardType.enumValueIndex;
             EditorGUILayout.PropertyField(CardName);
-            EditorGUILayout.PropertyField(ArtWork);
+            ArtWork.objectReferenceValue = EditorGUILayout.ObjectField("Artwork",ArtWork.objectReferenceValue, typeof(Texture2D),false);
+            
             EditorGUILayout.PropertyField(CardText);
+            
             switch (cardTypes)
             {
                 case CardTypes.TBD:
@@ -61,13 +72,18 @@ namespace Editor
                 case CardTypes.Character:
                 case CardTypes.Creature:
                 case CardTypes.Hunter:
-                    EditorGUILayout.PropertyField(Attack);
-                    EditorGUILayout.PropertyField(HitPoints);
-                    EditorGUILayout.PropertyField(Speed);
-                    EditorGUILayout.PropertyField(Focus);
+                    EditorGUILayout.PropertyField(Attack, GUILayout.Height(40));
+                    EditorGUILayout.Space(10, true);
+                    EditorGUILayout.PropertyField(HitPoints, GUILayout.Height(40));
+                    EditorGUILayout.Space(10, true);
+                    EditorGUILayout.PropertyField(Speed, GUILayout.Height(40));
+                    EditorGUILayout.Space(10, true);
+                    EditorGUILayout.PropertyField(Focus, GUILayout.Height(40));
+                    EditorGUILayout.Space(10, true);
                     if (cardTypes == CardTypes.Hunter)
                     {
-                        EditorGUILayout.PropertyField(UpgradeSlots);
+                        EditorGUILayout.PropertyField(UpgradeSlots, GUILayout.Height(40));
+                        EditorGUILayout.Space(10, true);
                     }
                     break;
                 case CardTypes.Upgrade:
@@ -75,12 +91,15 @@ namespace Editor
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
-            
-            
-            
-            
-
+           
+            if (ArtWork.objectReferenceValue is Texture2D artworkTexture)
+            {
+                GUILayout.Label("Artwork Preview:");
+                Rect rect = GUILayoutUtility.GetRect(400 * 0.75f,225 * 0.75f);
+                EditorGUI.DrawPreviewTexture(rect, artworkTexture);
+                EditorGUILayout.LabelField(artworkTexture.name);
+            }
+            GUILayout.EndVertical();
             serializedObject.ApplyModifiedProperties();
         }
     }
