@@ -39,5 +39,5 @@ MonoBehaviour:
     _statName: Upgrade Slots
     _statValue: 3
     _statDescription: Amount of Upgrades that can be equipped.
-  _cardText: Main Character of the game.  This Hunter card should be well-rounded
-    and adapt to most strategies.
+  _cardText: "Main Character of the game.  \nThis Hunter card should be well-rounded\n
+    and adapt to most strategies."
