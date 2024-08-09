@@ -2,12 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-//using Data.Scriptable_Objects;
 using UnityEditor;
 using UnityEngine;
-using static Editor.StatDataReference;
+using static Editor.CardEditor.StatDataReference;
 
-namespace Editor
+namespace Editor.CardEditor
 {
     public class CardEditor : EditorWindow
     {

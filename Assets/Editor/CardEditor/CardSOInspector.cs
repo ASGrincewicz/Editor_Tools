@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace Editor
+namespace Editor.CardEditor
 {
     [CustomEditor(typeof(CardSO))]
     public class CardSOInspector: UnityEditor.Editor
@@ -47,7 +46,7 @@ namespace Editor
             EditorGUIUtility.labelWidth = 80;
             if (GUILayout.Button("Open in Card Editor"))
             {
-                CardEditor instance = (CardEditor)EditorWindow.GetWindow(typeof(CardEditor));
+                Editor.CardEditor.CardEditor instance = (Editor.CardEditor.CardEditor)EditorWindow.GetWindow(typeof(Editor.CardEditor.CardEditor));
                 instance.OpenCardInEditor(card);
             }
             CardTypes cardTypes = (CardTypes)CardType.enumValueIndex;

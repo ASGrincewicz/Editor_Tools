@@ -1,7 +1,6 @@
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace Editor
+namespace Editor.CardEditor
 {
     [CreateAssetMenu(menuName="Config/CardData")]
     public class CardSO : ScriptableObject, ICardData

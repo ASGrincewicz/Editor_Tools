@@ -1,8 +1,8 @@
-using System;
+using System.Text;
 using UnityEditor;
 using UnityEngine;
 
-namespace Editor
+namespace Editor.InteractionMatrix
 {
     public class InteractionGridWindow : EditorWindow
     {
@@ -11,15 +11,8 @@ namespace Editor
         private const float COL_WIDTH = 100.0f;
         private const float INDENT = 50.0f;
         private const float TITLE_HEIGHT = 20.0f;
-        private readonly int gridWidth = 5;
-        private readonly int gridHeight = 5;
-        private int[,] gridValues;
+        private StringBuilder _message = new StringBuilder();
 
-        private InteractionGridWindow()
-        {
-        gridValues = new int[gridHeight, gridWidth];
-        }
-        
         [MenuItem("Tools/Interaction Grid")]
         public static void Init()
         {
@@ -30,16 +23,16 @@ namespace Editor
 
         private void OnGUI()
         {
-            if (ReferenceEquals(settings,null))
+            // check if gridData has been initialized, if not - initialize it.
+            if (ReferenceEquals(settings.gridData, null) || settings.gridData.size != settings.labels.Length)
             {
-                EditorGUILayout.LabelField("No settings asset has been assigned.");
-                return;
+                settings.gridData = new GridData
+                {
+                    size = settings.labels.Length,
+                    gridValues = new int[settings.labels.Length * settings.labels.Length]
+                };
             }
-            // Check if gridValues has the correct size, if not - resize it.
-            if (settings.labels.Length != gridValues.GetLength(0) || settings.labels.Length != gridValues.GetLength(1))
-            {
-                ResizeGrid(settings.labels.Length, settings.labels.Length);
-            }
+
             GUILayout.Space(TITLE_HEIGHT);
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField(settings.title, EditorStyles.largeLabel, GUILayout.Height(TITLE_HEIGHT));
@@ -63,28 +56,42 @@ namespace Editor
                
                 for (int j = 0; j < settings.labels.Length; j++)
                 {
-                    gridValues[i, j] = EditorGUILayout.Popup(gridValues[i, j], settings.options, GUILayout.Width(COL_WIDTH));
+                    int index = i * settings.gridData.size + j;
+                    settings.gridData.gridValues[index] = EditorGUILayout.Popup(settings.gridData.gridValues[index], settings.options, GUILayout.Width(COL_WIDTH));
                 }
                 EditorGUILayout.EndHorizontal();
             }
-        }
-        private void ResizeGrid(int rows, int cols)
-        {
-            // Create a new array
-            int[,] newGrid = new int[rows,cols];
-            for (int i = 0; i < rows; ++i)
+
+            if (GUILayout.Button("Validate Grid", GUILayout.Width(200)))
             {
-                // If this row existed in the old grid, copy its values to the new grid.
-                if (i < gridValues.GetLength(0))
+                ValidateGrid();
+            }
+            GUILayout.Label($"Message: {_message}", EditorStyles.whiteLargeLabel);
+        }
+        
+        private void ValidateGrid()
+        {
+            _message.Clear();
+            int size = settings.gridData.size;
+            for (int i = 0; i < size; i++)
+            {
+                int countZero = 0;
+                int countTwo = 0;
+
+                // Validate row
+                for (int j = 0; j < size; j++)
                 {
-                    for (int j = 0; j < Math.Min(cols, gridValues.GetLength(1)); ++j)
-                    {
-                        newGrid[i,j] = gridValues[i,j];
-                    }
+                    int index = i * size + j;
+                    if (settings.gridData.gridValues[index] == 0) countZero++;
+                    if (settings.gridData.gridValues[index] == 2) countTwo++;
+                }
+                if (countZero != settings.optionZeroAmount || countTwo != settings.optionTwoAmount)
+                {
+                    _message.Append($"{settings.labels[i]} does not have exactly {settings.optionZeroAmount} {settings.options[0]} and {settings.optionTwoAmount} {settings.options[2]}!");
+                    return;
                 }
             }
-            // Replace the old grid with the new grid.
-            gridValues = newGrid;
+            _message.Append("Everything looks good!");
         }
     }
 }

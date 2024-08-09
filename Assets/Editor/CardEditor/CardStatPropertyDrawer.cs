@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace Editor
+namespace Editor.CardEditor
 {
     [CustomPropertyDrawer(typeof(CardStat))]
     public class CardStatPropertyDrawer : PropertyDrawer

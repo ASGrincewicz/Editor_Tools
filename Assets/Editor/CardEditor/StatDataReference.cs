@@ -1,6 +1,4 @@
-﻿using System.CodeDom;
-
-namespace Editor
+﻿namespace Editor.CardEditor
 {
     public static class StatDataReference
     {

@@ -1,7 +1,7 @@
 ﻿
 using UnityEngine;
 
-namespace Editor
+namespace Editor.CardEditor
 {
     [System.Serializable]
     public struct CardStat

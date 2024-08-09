@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Editor
+namespace Editor.CardEditor
 {
     public interface ICardData
     {
