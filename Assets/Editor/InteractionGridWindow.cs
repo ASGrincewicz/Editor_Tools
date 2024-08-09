@@ -7,6 +7,10 @@ namespace Editor
     public class InteractionGridWindow : EditorWindow
     {
         public InteractionGridSettings settings;
+        private const float AXIS_LABEL_WIDTH = 115.0f;
+        private const float COL_WIDTH = 100.0f;
+        private const float INDENT = 50.0f;
+        private const float TITLE_HEIGHT = 20.0f;
         private readonly int gridWidth = 5;
         private readonly int gridHeight = 5;
         private int[,] gridValues;
@@ -20,7 +24,7 @@ namespace Editor
         public static void Init()
         {
             EditorWindow window = GetWindow<InteractionGridWindow>("Interaction Matrix");
-            window.position = new Rect(50f, 50f, 700f, 300f);
+            window.position = new Rect(100f, 100f, 900f, 300f);
             window.Show();
         }
 
@@ -36,31 +40,32 @@ namespace Editor
             {
                 ResizeGrid(settings.labels.Length, settings.labels.Length);
             }
-            GUILayout.Space(20);
+            GUILayout.Space(TITLE_HEIGHT);
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField(settings.title, EditorStyles.whiteLargeLabel, GUILayout.Height(50));
+            EditorGUILayout.LabelField(settings.title, EditorStyles.largeLabel, GUILayout.Height(TITLE_HEIGHT));
             EditorGUILayout.EndHorizontal();
-        
+            
             EditorGUILayout.BeginHorizontal();
-            GUILayout.Space(100);
-
+            GUILayout.Space(INDENT);
+            
+            EditorGUILayout.LabelField($"{settings.xAxisLabel}\\{settings.yAxisLabel}", EditorStyles.boldLabel,  GUILayout.Width(AXIS_LABEL_WIDTH));
             for (int j = 0; j < settings.labels.Length; j++)
             {
-                GUILayout.Label(settings.labels[j], GUILayout.Width(112));
+                GUILayout.Label(settings.labels[j], GUILayout.Width(COL_WIDTH));
             }
             EditorGUILayout.EndHorizontal();
         
             for (int i = 0; i < settings.labels.Length; i++)
             {
                 EditorGUILayout.BeginHorizontal();
-                GUILayout.Label(settings.labels[i], GUILayout.Width(50)); // Row label
-
+                GUILayout.Label("", GUILayout.Width(INDENT));
+                GUILayout.Label(settings.labels[i], GUILayout.Width(COL_WIDTH)); // Row label
+               
                 for (int j = 0; j < settings.labels.Length; j++)
                 {
-                    gridValues[i, j] = EditorGUILayout.Popup(gridValues[i, j], settings.options, GUILayout.Width(110));
+                    gridValues[i, j] = EditorGUILayout.Popup(gridValues[i, j], settings.options, GUILayout.Width(COL_WIDTH));
                 }
                 EditorGUILayout.EndHorizontal();
-                GUILayout.Space(10);
             }
         }
         private void ResizeGrid(int rows, int cols)

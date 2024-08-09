@@ -6,6 +6,8 @@ namespace Editor
     public class InteractionGridSettings : ScriptableObject
     {
         public string title = "Interaction Grid";
+        public string xAxisLabel;
+        public string yAxisLabel;
         public string[] labels;
         public string[] options;
     }
