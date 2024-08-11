@@ -78,7 +78,7 @@ namespace Editor.CardEditor
         {
             SetupAreaRects();
             DrawMainArea();
-            DrawBatchEditArea();
+            DrawCardListArea();
         }
 
         public void OpenCardInEditor(CardSO card)
@@ -173,35 +173,59 @@ namespace Editor.CardEditor
             }
         }
 
-        private void DrawBatchEditArea()
+        private void DrawCardListArea()
         {
             GUILayout.BeginArea(secondAreaRect);
-            scrollPosition2 = GUILayout.BeginScrollView(scrollPosition2,GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
-            
-            GUILayout.Label("Batch Editing", EditorStyles.boldLabel);
+            scrollPosition2 = GUILayout.BeginScrollView(scrollPosition2, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+    
+            GUILayout.Label("Card List", EditorStyles.boldLabel);
             // Display all cards with checkboxes
             allCards.Sort((card1, card2) => card1.CardType.CompareTo(card2.CardType));
+    
+            const int ColumnsDesired = 3;
+            int columnCounter = 0;
+    
             foreach (CardSO card in allCards)
             {
-                selectedCards[card] = EditorGUILayout.ToggleLeft($"{card.CardType}/{card.CardName}", selectedCards[card]);
+                if (columnCounter % ColumnsDesired == 0)
+                {
+                    GUILayout.BeginHorizontal();
+                }
+        
+                GUILayout.BeginVertical(GUILayout.Width(secondAreaRect.width / ColumnsDesired));
+                selectedCards[card] = EditorGUILayout.ToggleLeft($"{card.CardType}/{card.CardName}", selectedCards[card], GUILayout.ExpandWidth(true));
+                GUILayout.EndVertical();
+
+                if (columnCounter % ColumnsDesired == ColumnsDesired - 1)
+                {
+                    GUILayout.EndHorizontal();
+                }
+        
+                columnCounter++;
             }
+
+            if (columnCounter % ColumnsDesired != 0) // Close the last row if it doesn't have ColumnsDesired items
+            {
+                GUILayout.EndHorizontal();
+            }
+
             GUILayout.EndScrollView();
-            using GUILayout.HorizontalScope horizontalScope = new();
-            if (GUILayout.Button("Edit Selected Card"))
+    
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Edit Selected Card", GUILayout.ExpandWidth(true)))
             {
                 EditSelectedCard();
             }
-
-            if (GUILayout.Button("Select All"))
+            if (GUILayout.Button("Select All", GUILayout.ExpandWidth(true)))
             {
                 SelectAllCards(true);
             }
-            
-            if (GUILayout.Button("Deselect All"))
+            if (GUILayout.Button("Deselect All", GUILayout.ExpandWidth(true)))
             {
                 SelectAllCards(false);
             }
-
+            GUILayout.EndHorizontal();
+    
             GUILayout.EndArea();
         }
         

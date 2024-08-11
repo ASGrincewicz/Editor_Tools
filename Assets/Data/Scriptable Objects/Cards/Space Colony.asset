@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85c2db69d287cba46a63d7dc92203786, type: 3}
+  m_Name: Space Colony
+  m_EditorClassIdentifier: 
+  _cardType: 5
+  _cardName: Space Colony
+  _artWork: {fileID: 2800000, guid: b7826d9d49aa3b74499c647b389cc31a, type: 3}
+  _attack:
+    _statName: 
+    _statValue: 0
+    _statDescription: 
+  _explore:
+    _statName: 
+    _statValue: 0
+    _statDescription: 
+  _focus:
+    _statName: 
+    _statValue: 0
+    _statDescription: 
+  _hitPoints:
+    _statName: 
+    _statValue: 0
+    _statDescription: 
+  _speed:
+    _statName: 
+    _statValue: 0
+    _statDescription: 
+  _upgradeSlots:
+    _statName: 
+    _statValue: 0
+    _statDescription: 
+  _cardText: Space Environment
