@@ -6,7 +6,7 @@ namespace Editor.CostCalculator
 {
     public class CostCalculatorWindow : EditorWindow
     {
-        //public string _calculationSettings;
+        public CostCalculatorSettings calculationSettings;
         
         // Constants
         private const string Window_Title = "Card Cost Calculator";
