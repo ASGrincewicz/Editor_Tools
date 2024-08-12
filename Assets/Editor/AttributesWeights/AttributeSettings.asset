@@ -12,4 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c83ea5914714ac1a61b603ebebcbbdd, type: 3}
   m_Name: AttributeSettings
   m_EditorClassIdentifier: 
-  attributeData: []
+  attributeData:
+  - CardType: 7
+  - CardType: 1
