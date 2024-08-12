@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Editor.InteractionMatrix
 {
-    [CreateAssetMenu(fileName = "InteractionGridSettings", menuName = "Interaction Grid/Settings", order = 0)]
+    [CreateAssetMenu(fileName = "InteractionGridSettings", menuName = "Settings/Interaction Grid", order = 0)]
     public class InteractionGridSettings : ScriptableObject
     {
         [HideInInspector]

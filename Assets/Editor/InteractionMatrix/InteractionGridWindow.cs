@@ -16,7 +16,7 @@ namespace Editor.InteractionMatrix
         private StringBuilder _message = new StringBuilder();
 
         [MenuItem("Tools/Interaction Grid")]
-        public static void Init()
+        public static void ShowWindow()
         {
             InteractionGridWindow window = GetWindow<InteractionGridWindow>("Interaction Matrix");
             window.position = new Rect(100f, 100f, 900f, 300f);
