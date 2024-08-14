@@ -10,31 +10,31 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 85c2db69d287cba46a63d7dc92203786, type: 3}
-  m_Name: Lyra Stryker
+  m_Name: Dimensional Capture Orb
   m_EditorClassIdentifier: 
-  _cardType: 2
-  _cardName: Lyra Stryker
+  _cardType: 6
+  _cardName: Dimensional Capture Orb
   _artWork: {fileID: 0}
   _attack:
     _statName: 0
-    _statValue: 15
-    _statDescription: Amount of damage dealt.
+    _statValue: 0
+    _statDescription: 
   _explore:
     _statName: 0
     _statValue: 0
     _statDescription: 
   _focus:
-    _statName: 2
-    _statValue: 2
-    _statDescription: Resources generated
+    _statName: 0
+    _statValue: 0
+    _statDescription: 
   _hitPoints:
-    _statName: 3
-    _statValue: 50
-    _statDescription: Amount of health
+    _statName: 0
+    _statValue: 0
+    _statDescription: 
   _speed:
-    _statName: 4
-    _statValue: 2
-    _statDescription: Determines Attack Sequence and Move Rate.
+    _statName: 0
+    _statValue: 0
+    _statDescription: 
   _upgradeSlots:
     _statName: 0
     _statValue: 0

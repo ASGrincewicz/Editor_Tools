@@ -1,4 +1,4 @@
 ﻿namespace Editor.CardEditor
 {
-    public enum CardTypes{TBD, Action, Boss, Character, Creature, Environment, Equipment, Hunter, Upgrade};
+    public enum CardTypes{TBD, Action, Ally, Boss,  Creature, Environment, Gear, Hunter, Upgrade, Starship};
 }

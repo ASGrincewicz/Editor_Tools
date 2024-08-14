@@ -102,7 +102,7 @@ namespace Editor.CardEditor
                 case CardTypes.TBD:
                 case CardTypes.Action:
                 case CardTypes.Environment:
-                case CardTypes.Equipment:
+                case CardTypes.Gear:
                 case CardTypes.Upgrade:
                     break;
                 default:

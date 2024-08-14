@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Editor.Utilities;
 using UnityEditor;
 using UnityEngine;
 using static Editor.CardEditor.StatDataReference;
@@ -122,19 +123,19 @@ namespace Editor.CardEditor
                 case CardTypes.Action:
                     break;
                 case CardTypes.Environment:
-                    DrawStatLayout(EXPLORE_NAME, ref _exploreValue, EXPLORE_DESCRIPTION);
+                    DrawStatLayout(StatNames.Explore, ref _exploreValue, EXPLORE_DESCRIPTION);
                     break;
-                case CardTypes.Equipment:
+                case CardTypes.Gear:
                     break;
                 case CardTypes.Hunter:
-                case CardTypes.Character:
+                case CardTypes.Ally:
                 case CardTypes.Creature:
                 case CardTypes.Boss:
-                    DrawStatLayout(ATTACK_NAME, ref _attackValue, ATTACK_DESCRIPTION);
-                    DrawStatLayout(HIT_POINTS_NAME, ref _hitPointsValue, HIT_POINTS_DESCRIPTION);
-                    DrawStatLayout(SPEED_NAME, ref _speedValue, SPEED_DESCRIPTION);
-                    DrawStatLayout(FOCUS_NAME, ref _focusValue, FOCUS_DESCRIPTION);
-                    if (_cardTypes == CardTypes.Hunter) DrawStatLayout(UPGRADE_SLOTS_NAME, ref _upgradeSlotsValue, UPGRADE_SLOTS_DESCRIPTION);
+                    DrawStatLayout(StatNames.Attack, ref _attackValue, ATTACK_DESCRIPTION);
+                    DrawStatLayout(StatNames.HP, ref _hitPointsValue, HIT_POINTS_DESCRIPTION);
+                    DrawStatLayout(StatNames.Speed, ref _speedValue, SPEED_DESCRIPTION);
+                    DrawStatLayout(StatNames.Focus, ref _focusValue, FOCUS_DESCRIPTION);
+                    if (_cardTypes == CardTypes.Hunter) DrawStatLayout(StatNames.Upgrades, ref _upgradeSlotsValue, UPGRADE_SLOTS_DESCRIPTION);
                     break;
                 case CardTypes.Upgrade:
                     break;
@@ -246,21 +247,21 @@ namespace Editor.CardEditor
                 case CardTypes.Action:
                     break;
                 case CardTypes.Environment:
-                    _explore = new CardStat(EXPLORE_NAME, _exploreValue, EXPLORE_DESCRIPTION);
+                    _explore = new CardStat(StatNames.Explore, _exploreValue, EXPLORE_DESCRIPTION);
                     break;
-                case CardTypes.Equipment:
+                case CardTypes.Gear:
                     break;
                 case CardTypes.Hunter:
                 case CardTypes.Boss:
-                case CardTypes.Character:
+                case CardTypes.Ally:
                 case CardTypes.Creature:
-                    card.Attack = new CardStat(ATTACK_NAME, _attackValue, ATTACK_DESCRIPTION);
-                    card.HitPoints = new CardStat(HIT_POINTS_NAME, _hitPointsValue, HIT_POINTS_DESCRIPTION);
-                    card.Speed = new CardStat(SPEED_NAME, _speedValue, SPEED_DESCRIPTION);
-                    card.Focus = new CardStat(FOCUS_NAME, _focusValue, FOCUS_DESCRIPTION);
+                    card.Attack = new CardStat(StatNames.Attack, _attackValue, ATTACK_DESCRIPTION);
+                    card.HitPoints = new CardStat(StatNames.HP, _hitPointsValue, HIT_POINTS_DESCRIPTION);
+                    card.Speed = new CardStat(StatNames.Speed, _speedValue, SPEED_DESCRIPTION);
+                    card.Focus = new CardStat(StatNames.Focus, _focusValue, FOCUS_DESCRIPTION);
                     if (_cardTypes == CardTypes.Hunter)
                     {
-                        card.UpgradeSlots = new CardStat(UPGRADE_SLOTS_NAME, _upgradeSlotsValue, UPGRADE_SLOTS_DESCRIPTION);
+                        card.UpgradeSlots = new CardStat(StatNames.Upgrades, _upgradeSlotsValue, UPGRADE_SLOTS_DESCRIPTION);
                     }
                     break;
                 case CardTypes.Upgrade:
@@ -321,11 +322,11 @@ namespace Editor.CardEditor
                     case CardTypes.Environment:
                     _explore = selectedCard.Explore;
                     break;
-                    case CardTypes.Equipment:
+                    case CardTypes.Gear:
                     break;
                     case CardTypes.Hunter:
                     case CardTypes.Boss:
-                    case CardTypes.Character:
+                    case CardTypes.Ally:
                     case CardTypes.Creature:
                         _attack = selectedCard.Attack;
                         _attackValue = selectedCard.Attack.StatValue;
@@ -421,11 +422,11 @@ namespace Editor.CardEditor
                 }
             }
         }
-        private void DrawStatLayout(string statName, ref int statValue, string statDescription)
+        private void DrawStatLayout(StatNames statName, ref int statValue, string statDescription)
         {
             GUILayout.BeginHorizontal(GUILayout.Width(FIELD_WIDTH),GUILayout.ExpandWidth(true));
             GUILayout.BeginVertical(GUILayout.Width(100));
-            GUILayout.Label(statName);
+            GUILayout.Label(statName.GetDescription());
             GUILayout.EndVertical();
             GUILayout.BeginVertical(GUILayout.Width(100));
             statValue = EditorGUILayout.IntField(" Value", statValue,GUILayout.Width(130),GUILayout.ExpandWidth(true));

@@ -1,21 +1,9 @@
-﻿using System.Collections.Generic;
+﻿/*using System.Collections.Generic;
 using Editor.CardEditor;
+using UnityEditor;
 
 namespace Editor.AttributesWeights
 {
-    [System.Serializable]
-    public struct CardStatWeight
-    {
-        public CardStat Stat;
-        public float Weight;
-
-        public CardStatWeight(CardStat stat, float weight)
-        {
-            Stat = stat;
-            Weight = weight;
-        }
-    }
-
     [System.Serializable]
     public struct AttributeWeightsData
     {
@@ -42,4 +30,4 @@ namespace Editor.AttributesWeights
             };
         }
     }
-}
+}*/

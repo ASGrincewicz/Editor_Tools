@@ -106,12 +106,12 @@ namespace Editor.AttributesWeights
                     DrawEnvironmentFields();
                     break;
                 case CardTypes.Action:
-                case CardTypes.Equipment:
+                case CardTypes.Gear:
                 case CardTypes.Upgrade:
                     DrawActionEquipmentUpgradeFields();
                     break;
                 case CardTypes.Hunter:
-                case CardTypes.Character:
+                case CardTypes.Ally:
                 case CardTypes.Creature:
                 case CardTypes.Boss:
                     DrawCharacterLikeFields();
@@ -154,6 +154,12 @@ namespace Editor.AttributesWeights
         private void DrawFloatField(string label, ref float value)
         {
             value = EditorGUILayout.FloatField(label, value, GUILayout.Width(200));
+           
         }
+        
+        // Send Data To AttributeSettings Asset
+        // need to send CardStatWeight(name, weight) to AttributeWeightsData with the CardType
+        // Card Types should already be populated in the Attribute Settings Asset
+        // settings.attributeData
     }
 }
