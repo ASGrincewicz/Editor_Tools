@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85c2db69d287cba46a63d7dc92203786, type: 3}
   m_Name: NovaSolaris
   m_EditorClassIdentifier: 
-  _cardType: 7
+  _cardType: 4
   _cardName: Nova Solaris
   _artWork: {fileID: 2800000, guid: 10bb3ca4f95c26b4e9c86cb4b22206eb, type: 3}
   _attack:
     _statName: 0
-    _statValue: 25
+    _statValue: 10
     _statDescription: Amount of damage dealt.
   _explore:
     _statName: 0
@@ -29,11 +29,11 @@ MonoBehaviour:
     _statDescription: Resources generated
   _hitPoints:
     _statName: 3
-    _statValue: 100
+    _statValue: 45
     _statDescription: Amount of health
   _speed:
     _statName: 4
-    _statValue: 5
+    _statValue: 4
     _statDescription: Determines Attack Sequence and Move Rate.
   _upgradeSlots:
     _statName: 5

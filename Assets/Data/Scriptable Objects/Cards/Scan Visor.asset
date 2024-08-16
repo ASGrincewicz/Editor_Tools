@@ -16,21 +16,27 @@ MonoBehaviour:
   _cardName: Scan Visor
   _artWork: {fileID: 0}
   _attack:
-    _statName: 
+    _statName: 0
+    _statValue: 0
     _statDescription: 
   _explore:
-    _statName: Explore
+    _statName: 0
+    _statValue: 0
     _statDescription: 
   _focus:
-    _statName: 
+    _statName: 0
+    _statValue: 0
     _statDescription: 
   _hitPoints:
-    _statName: 
+    _statName: 0
+    _statValue: 0
     _statDescription: 
   _speed:
-    _statName: 
+    _statName: 0
+    _statValue: 0
     _statDescription: 
   _upgradeSlots:
-    _statName: 
+    _statName: 0
+    _statValue: 0
     _statDescription: 
   _cardText: Equip to a Hunter.

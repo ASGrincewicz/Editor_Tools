@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85c2db69d287cba46a63d7dc92203786, type: 3}
   m_Name: Caelum
   m_EditorClassIdentifier: 
-  _cardType: 7
+  _cardType: 4
   _cardName: Caelum
   _artWork: {fileID: 2800000, guid: 5d2555d27ddb6364eb321644beb31db3, type: 3}
   _attack:
     _statName: 0
-    _statValue: 30
+    _statValue: 15
     _statDescription: Amount of damage dealt.
   _explore:
     _statName: 0
@@ -25,11 +25,11 @@ MonoBehaviour:
     _statDescription: 
   _focus:
     _statName: 2
-    _statValue: 2
+    _statValue: 5
     _statDescription: Resources generated
   _hitPoints:
     _statName: 3
-    _statValue: 110
+    _statValue: 65
     _statDescription: Amount of health
   _speed:
     _statName: 4

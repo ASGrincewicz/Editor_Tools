@@ -14,7 +14,7 @@ namespace Editor.AttributesWeights
 
         public CardStatWeight[] environmentCardStatWeights;
         
-        [Tooltip("Keyword Only Card Types: Action, Bounty, Equipment, Upgrade")]
+        [Tooltip("Keyword Only Card Types: Action, Gear")]
         public CardStatWeight[] keywordOnlyCardStatWeights;
     }
 }

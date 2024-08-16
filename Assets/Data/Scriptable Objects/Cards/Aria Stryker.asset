@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85c2db69d287cba46a63d7dc92203786, type: 3}
   m_Name: Aria Stryker
   m_EditorClassIdentifier: 
-  _cardType: 2
+  _cardType: 3
   _cardName: Aria Stryker
   _artWork: {fileID: 2800000, guid: 960df1e29a527114bb4c85e6fa29098a, type: 3}
   _attack:

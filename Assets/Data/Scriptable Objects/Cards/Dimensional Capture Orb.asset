@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85c2db69d287cba46a63d7dc92203786, type: 3}
   m_Name: Dimensional Capture Orb
   m_EditorClassIdentifier: 
-  _cardType: 6
+  _cardType: 7
   _cardName: Dimensional Capture Orb
   _artWork: {fileID: 0}
   _attack:

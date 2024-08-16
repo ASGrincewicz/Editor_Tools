@@ -12,6 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13f24fea1e7a412c9be4863341fb7fa2, type: 3}
   m_Name: Hunter_Speed_Data
   m_EditorClassIdentifier: 
-  cardType: 7
   statName: 4
-  statWeight: 0.01
+  statWeight: 1

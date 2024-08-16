@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using Editor.Utilities;
+using UnityEditor;
 using UnityEngine;
 namespace Editor.CardEditor
 {
@@ -70,7 +71,7 @@ namespace Editor.CardEditor
         private void DrawProperties() 
         {
             CardTypes cardTypes = (CardTypes)CardTypeProperty.enumValueIndex;
-            DrawLabel($"Card Type: {cardTypes}", EditorStyles.boldLabel, GUILayout.Width(200), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+            DrawLabel($"Card Type: {cardTypes.GetDescription()}", EditorStyles.boldLabel, GUILayout.Width(200), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
 
             DrawLabel($"Card Name: {CardNameProperty.stringValue}", EditorStyles.boldLabel, GUILayout.Width(200), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
 

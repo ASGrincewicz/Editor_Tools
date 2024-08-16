@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85c2db69d287cba46a63d7dc92203786, type: 3}
   m_Name: Lyra Stryker
   m_EditorClassIdentifier: 
-  _cardType: 2
+  _cardType: 3
   _cardName: Lyra Stryker
   _artWork: {fileID: 0}
   _attack:

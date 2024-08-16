@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: Lord Pistachio
   m_EditorClassIdentifier: 
   _cardType: 3
-  _cardName: Lord Pistachio
+  _cardName: Admiral Thorn
   _artWork: {fileID: 0}
   _attack:
     _statName: 0
-    _statValue: 100
+    _statValue: 5
     _statDescription: Amount of damage dealt.
   _explore:
     _statName: 0
@@ -25,15 +25,15 @@ MonoBehaviour:
     _statDescription: 
   _focus:
     _statName: 2
-    _statValue: 0
+    _statValue: 5
     _statDescription: Resources generated
   _hitPoints:
     _statName: 3
-    _statValue: 300
+    _statValue: 40
     _statDescription: Amount of health
   _speed:
     _statName: 4
-    _statValue: 3
+    _statValue: 1
     _statDescription: Determines Attack Sequence and Move Rate.
   _upgradeSlots:
     _statName: 0

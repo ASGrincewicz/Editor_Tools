@@ -179,8 +179,6 @@ namespace Editor.CardEditor
             scrollPosition2 = GUILayout.BeginScrollView(scrollPosition2, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
     
             GUILayout.Label("Card List", EditorStyles.boldLabel);
-            // Display all cards with checkboxes
-            /*allCards.Sort((card1, card2) => card1.CardType.CompareTo(card2.CardType));*/
     
             const int ColumnsDesired = 3;
             int columnCounter = 0;
@@ -422,12 +420,7 @@ namespace Editor.CardEditor
             {
                 int compare = card1.CardType.CompareTo(card2.CardType);
 
-                if (compare == 0)
-                {
-                    return card1.CardName.CompareTo(card2.CardName);
-                }
-    
-                return compare;
+                return compare == 0 ? card1.CardName.CompareTo(card2.CardName) : compare;
             });
         }
         private void DrawStatLayout(StatNames statName, ref int statValue, string statDescription)

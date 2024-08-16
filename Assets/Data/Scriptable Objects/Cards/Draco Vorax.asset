@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85c2db69d287cba46a63d7dc92203786, type: 3}
   m_Name: Draco Vorax
   m_EditorClassIdentifier: 
-  _cardType: 3
+  _cardType: 2
   _cardName: Draco Vorax
   _artWork: {fileID: 2800000, guid: 579993095e4d363419cd2226fb5dde83, type: 3}
   _attack:

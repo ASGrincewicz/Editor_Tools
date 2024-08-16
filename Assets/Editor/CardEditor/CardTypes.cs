@@ -9,7 +9,7 @@
         Environment,
         [System.ComponentModel.Description("Gear: Equipment")]
         Gear_Equipment,
-        [System.ComponentModel.Description("Character: Upgrade")]
+        [System.ComponentModel.Description("Gear: Upgrade")]
         Gear_Upgrade,
         Starship
     };
