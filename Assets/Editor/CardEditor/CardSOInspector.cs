@@ -102,8 +102,8 @@ namespace Editor.CardEditor
                 case CardTypes.TBD:
                 case CardTypes.Action:
                 case CardTypes.Environment:
-                case CardTypes.Gear:
-                case CardTypes.Upgrade:
+                case CardTypes.Gear_Equipment:
+                case CardTypes.Gear_Upgrade:
                     break;
                 default:
                     DrawProperty(AttackProperty);
@@ -111,7 +111,7 @@ namespace Editor.CardEditor
                     DrawProperty(SpeedProperty);
                     DrawProperty(FocusProperty);
                     
-                    if (cardTypes == CardTypes.Hunter)
+                    if (cardTypes == CardTypes.Character_Hunter)
                     {
                         DrawProperty(UpgradeSlotsProperty);
                     }

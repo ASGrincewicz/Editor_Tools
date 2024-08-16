@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Ally_Focus_Data
   m_EditorClassIdentifier: 
   cardType: 2
-  statName: 0
+  statName: 2
   statWeight: 0.01

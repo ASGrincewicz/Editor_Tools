@@ -37,7 +37,7 @@ MonoBehaviour:
     _statDescription: Determines Attack Sequence and Move Rate.
   _upgradeSlots:
     _statName: 5
-    _statValue: 3
+    _statValue: 4
     _statDescription: Amount of Upgrades that can be equipped.
   _cardText: "Main Character of the game.  \nThis Hunter card should be well-rounded\n
     and adapt to most strategies."

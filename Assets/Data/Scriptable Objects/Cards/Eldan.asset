@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cardType: 2
   _cardName: Eldan
-  _artWork: {fileID: 0}
+  _artWork: {fileID: 2800000, guid: 1cfdc142c7aca32438a78fcee7fcf426, type: 3}
   _attack:
     _statName: 0
     _statValue: 10

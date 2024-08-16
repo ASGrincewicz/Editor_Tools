@@ -106,12 +106,12 @@ namespace Editor.AttributesWeights
                     DrawEnvironmentFields();
                     break;
                 case CardTypes.Action:
-                case CardTypes.Gear:
-                case CardTypes.Upgrade:
+                case CardTypes.Gear_Equipment:
+                case CardTypes.Gear_Upgrade:
                     DrawActionEquipmentUpgradeFields();
                     break;
-                case CardTypes.Hunter:
-                case CardTypes.Ally:
+                case CardTypes.Character_Ally:
+                case CardTypes.Character_Hunter:
                 case CardTypes.Creature:
                 case CardTypes.Boss:
                     DrawCharacterLikeFields();
@@ -143,7 +143,7 @@ namespace Editor.AttributesWeights
             GUILayout.Space(5);
             DrawFloatField("Speed Weight", ref _speedWeight);
             GUILayout.Space(5);
-            if (_cardType == CardTypes.Hunter)
+            if (_cardType == CardTypes.Character_Hunter)
             {
                 DrawFloatField("Upgrade Slots Weight", ref _upgradeSlotsWeight);
                 GUILayout.Space(5);
