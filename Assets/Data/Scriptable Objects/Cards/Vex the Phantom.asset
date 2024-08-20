@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85c2db69d287cba46a63d7dc92203786, type: 3}
+  m_Name: Vex the Phantom
+  m_EditorClassIdentifier: 
+  _cardType: 4
+  _cardName: Vex the Phantom
+  _artWork: {fileID: 2800000, guid: 35205c9da098bf442b8c81d555e5f7ad, type: 3}
+  _attack:
+    _statName: 0
+    _statValue: 0
+    _statDescription: Amount of damage dealt.
+  _explore:
+    _statName: 0
+    _statValue: 0
+    _statDescription: 
+  _focus:
+    _statName: 2
+    _statValue: 0
+    _statDescription: Resources generated
+  _hitPoints:
+    _statName: 3
+    _statValue: 0
+    _statDescription: Amount of health
+  _speed:
+    _statName: 4
+    _statValue: 0
+    _statDescription: Determines Attack Sequence and Move Rate.
+  _upgradeSlots:
+    _statName: 5
+    _statValue: 0
+    _statDescription: Amount of Upgrades that can be equipped.
+  _cardText: 

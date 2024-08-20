@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Editor.Utilities;
 using UnityEditor;
 using UnityEngine;
 using static Editor.CardEditor.StatDataReference;
@@ -122,21 +123,20 @@ namespace Editor.CardEditor
                 case CardTypes.Action:
                     break;
                 case CardTypes.Environment:
-                    DrawStatLayout(EXPLORE_NAME, ref _exploreValue, EXPLORE_DESCRIPTION);
+                    DrawStatLayout(StatNames.Explore, ref _exploreValue, EXPLORE_DESCRIPTION);
                     break;
-                case CardTypes.Equipment:
+                case CardTypes.Gear_Equipment:
+                case CardTypes.Gear_Upgrade:
                     break;
-                case CardTypes.Hunter:
-                case CardTypes.Character:
+                case CardTypes.Character_Ally:
+                case CardTypes.Character_Hunter:
                 case CardTypes.Creature:
                 case CardTypes.Boss:
-                    DrawStatLayout(ATTACK_NAME, ref _attackValue, ATTACK_DESCRIPTION);
-                    DrawStatLayout(HIT_POINTS_NAME, ref _hitPointsValue, HIT_POINTS_DESCRIPTION);
-                    DrawStatLayout(SPEED_NAME, ref _speedValue, SPEED_DESCRIPTION);
-                    DrawStatLayout(FOCUS_NAME, ref _focusValue, FOCUS_DESCRIPTION);
-                    if (_cardTypes == CardTypes.Hunter) DrawStatLayout(UPGRADE_SLOTS_NAME, ref _upgradeSlotsValue, UPGRADE_SLOTS_DESCRIPTION);
-                    break;
-                case CardTypes.Upgrade:
+                    DrawStatLayout(StatNames.Attack, ref _attackValue, ATTACK_DESCRIPTION);
+                    DrawStatLayout(StatNames.HP, ref _hitPointsValue, HIT_POINTS_DESCRIPTION);
+                    DrawStatLayout(StatNames.Speed, ref _speedValue, SPEED_DESCRIPTION);
+                    DrawStatLayout(StatNames.Focus, ref _focusValue, FOCUS_DESCRIPTION);
+                    if (_cardTypes == CardTypes.Character_Hunter) DrawStatLayout(StatNames.Upgrades, ref _upgradeSlotsValue, UPGRADE_SLOTS_DESCRIPTION);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -179,8 +179,6 @@ namespace Editor.CardEditor
             scrollPosition2 = GUILayout.BeginScrollView(scrollPosition2, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
     
             GUILayout.Label("Card List", EditorStyles.boldLabel);
-            // Display all cards with checkboxes
-            allCards.Sort((card1, card2) => card1.CardType.CompareTo(card2.CardType));
     
             const int ColumnsDesired = 3;
             int columnCounter = 0;
@@ -193,7 +191,7 @@ namespace Editor.CardEditor
                 }
         
                 GUILayout.BeginVertical(GUILayout.Width(secondAreaRect.width / ColumnsDesired));
-                selectedCards[card] = EditorGUILayout.ToggleLeft($"{card.CardType}/{card.CardName}", selectedCards[card], GUILayout.ExpandWidth(true));
+                selectedCards[card] = EditorGUILayout.ToggleLeft($"{card.CardName}/{card.CardType}", selectedCards[card], GUILayout.ExpandWidth(true));
                 GUILayout.EndVertical();
 
                 if (columnCounter % ColumnsDesired == ColumnsDesired - 1)
@@ -246,24 +244,23 @@ namespace Editor.CardEditor
                 case CardTypes.Action:
                     break;
                 case CardTypes.Environment:
-                    _explore = new CardStat(EXPLORE_NAME, _exploreValue, EXPLORE_DESCRIPTION);
+                    _explore = new CardStat(StatNames.Explore, _exploreValue, EXPLORE_DESCRIPTION);
                     break;
-                case CardTypes.Equipment:
+                case CardTypes.Gear_Equipment:
+                case CardTypes.Gear_Upgrade:
                     break;
-                case CardTypes.Hunter:
-                case CardTypes.Boss:
-                case CardTypes.Character:
+                case CardTypes.Character_Ally:
+                case CardTypes.Character_Hunter:
                 case CardTypes.Creature:
-                    card.Attack = new CardStat(ATTACK_NAME, _attackValue, ATTACK_DESCRIPTION);
-                    card.HitPoints = new CardStat(HIT_POINTS_NAME, _hitPointsValue, HIT_POINTS_DESCRIPTION);
-                    card.Speed = new CardStat(SPEED_NAME, _speedValue, SPEED_DESCRIPTION);
-                    card.Focus = new CardStat(FOCUS_NAME, _focusValue, FOCUS_DESCRIPTION);
-                    if (_cardTypes == CardTypes.Hunter)
+                case CardTypes.Boss:
+                    card.Attack = new CardStat(StatNames.Attack, _attackValue, ATTACK_DESCRIPTION);
+                    card.HitPoints = new CardStat(StatNames.HP, _hitPointsValue, HIT_POINTS_DESCRIPTION);
+                    card.Speed = new CardStat(StatNames.Speed, _speedValue, SPEED_DESCRIPTION);
+                    card.Focus = new CardStat(StatNames.Focus, _focusValue, FOCUS_DESCRIPTION);
+                    if (_cardTypes == CardTypes.Character_Hunter)
                     {
-                        card.UpgradeSlots = new CardStat(UPGRADE_SLOTS_NAME, _upgradeSlotsValue, UPGRADE_SLOTS_DESCRIPTION);
+                        card.UpgradeSlots = new CardStat(StatNames.Upgrades, _upgradeSlotsValue, UPGRADE_SLOTS_DESCRIPTION);
                     }
-                    break;
-                case CardTypes.Upgrade:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -321,11 +318,12 @@ namespace Editor.CardEditor
                     case CardTypes.Environment:
                     _explore = selectedCard.Explore;
                     break;
-                    case CardTypes.Equipment:
-                    break;
-                    case CardTypes.Hunter:
+                    case CardTypes.Gear_Equipment:
+                    case CardTypes.Gear_Upgrade:
+                        break;
+                    case CardTypes.Character_Ally:
+                    case CardTypes.Character_Hunter:
                     case CardTypes.Boss:
-                    case CardTypes.Character:
                     case CardTypes.Creature:
                         _attack = selectedCard.Attack;
                         _attackValue = selectedCard.Attack.StatValue;
@@ -335,13 +333,11 @@ namespace Editor.CardEditor
                         _speedValue = selectedCard.Speed.StatValue;
                         _focus = selectedCard.Focus;
                         _focusValue = selectedCard.Focus.StatValue;
-                    if (_cardTypes == CardTypes.Hunter)
+                    if (_cardTypes == CardTypes.Character_Hunter)
                         {
                             _upgradeSlots = selectedCard.UpgradeSlots;
                             _upgradeSlotsValue = selectedCard.UpgradeSlots.StatValue;
                         }
-                        break;
-                    case CardTypes.Upgrade:
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -420,12 +416,18 @@ namespace Editor.CardEditor
                     selectedCards[card] = false; // Initialize all cards as unselected
                 }
             }
+            allCards.Sort((card1, card2) =>
+            {
+                int compare = card1.CardType.CompareTo(card2.CardType);
+
+                return compare == 0 ? card1.CardName.CompareTo(card2.CardName) : compare;
+            });
         }
-        private void DrawStatLayout(string statName, ref int statValue, string statDescription)
+        private void DrawStatLayout(StatNames statName, ref int statValue, string statDescription)
         {
             GUILayout.BeginHorizontal(GUILayout.Width(FIELD_WIDTH),GUILayout.ExpandWidth(true));
             GUILayout.BeginVertical(GUILayout.Width(100));
-            GUILayout.Label(statName);
+            GUILayout.Label(statName.GetDescription());
             GUILayout.EndVertical();
             GUILayout.BeginVertical(GUILayout.Width(100));
             statValue = EditorGUILayout.IntField(" Value", statValue,GUILayout.Width(130),GUILayout.ExpandWidth(true));

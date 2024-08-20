@@ -12,31 +12,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85c2db69d287cba46a63d7dc92203786, type: 3}
   m_Name: Space Colony
   m_EditorClassIdentifier: 
-  _cardType: 5
+  _cardType: 6
   _cardName: Space Colony
   _artWork: {fileID: 2800000, guid: b7826d9d49aa3b74499c647b389cc31a, type: 3}
   _attack:
-    _statName: 
+    _statName: 0
     _statValue: 0
     _statDescription: 
   _explore:
-    _statName: 
+    _statName: 0
     _statValue: 0
     _statDescription: 
   _focus:
-    _statName: 
+    _statName: 0
     _statValue: 0
     _statDescription: 
   _hitPoints:
-    _statName: 
+    _statName: 0
     _statValue: 0
     _statDescription: 
   _speed:
-    _statName: 
+    _statName: 0
     _statValue: 0
     _statDescription: 
   _upgradeSlots:
-    _statName: 
+    _statName: 0
     _statValue: 0
     _statDescription: 
   _cardText: Space Environment

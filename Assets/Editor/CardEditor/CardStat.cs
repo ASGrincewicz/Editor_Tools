@@ -1,4 +1,5 @@
 ﻿
+using Editor.Utilities;
 using UnityEngine;
 
 namespace Editor.CardEditor
@@ -7,14 +8,14 @@ namespace Editor.CardEditor
     public struct CardStat
     {
         //Backing Fields
-        [SerializeField] private string _statName;
+        [SerializeField] private StatNames _statName;
         [SerializeField] private int _statValue;
         [SerializeField] private string _statDescription;
 
         //Properties
         public string StatName
         {
-            get { return _statName; }
+            get { return _statName.GetDescription(); }
             //set { _statName = value; }
         }
 
@@ -30,15 +31,15 @@ namespace Editor.CardEditor
             }
         }
 
-        public string StatDescription
+       public string StatDescription
         {
             get
             {
                 return _statDescription;
             }
-        }
+        } 
 
-        public CardStat(string statName, int statValue = 0, string statDescription = null)
+        public CardStat(StatNames statName, int statValue = 0, string statDescription = null)
         {
             _statName = statName;
             _statValue = statValue;

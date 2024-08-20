@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using Editor.Utilities;
+using UnityEditor;
 using UnityEngine;
 namespace Editor.CardEditor
 {
@@ -70,7 +71,7 @@ namespace Editor.CardEditor
         private void DrawProperties() 
         {
             CardTypes cardTypes = (CardTypes)CardTypeProperty.enumValueIndex;
-            DrawLabel($"Card Type: {cardTypes}", EditorStyles.boldLabel, GUILayout.Width(200), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+            DrawLabel($"Card Type: {cardTypes.GetDescription()}", EditorStyles.boldLabel, GUILayout.Width(200), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
 
             DrawLabel($"Card Name: {CardNameProperty.stringValue}", EditorStyles.boldLabel, GUILayout.Width(200), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
 
@@ -102,8 +103,8 @@ namespace Editor.CardEditor
                 case CardTypes.TBD:
                 case CardTypes.Action:
                 case CardTypes.Environment:
-                case CardTypes.Equipment:
-                case CardTypes.Upgrade:
+                case CardTypes.Gear_Equipment:
+                case CardTypes.Gear_Upgrade:
                     break;
                 default:
                     DrawProperty(AttackProperty);
@@ -111,7 +112,7 @@ namespace Editor.CardEditor
                     DrawProperty(SpeedProperty);
                     DrawProperty(FocusProperty);
                     
-                    if (cardTypes == CardTypes.Hunter)
+                    if (cardTypes == CardTypes.Character_Hunter)
                     {
                         DrawProperty(UpgradeSlotsProperty);
                     }

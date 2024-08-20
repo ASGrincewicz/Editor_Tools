@@ -16,27 +16,27 @@ MonoBehaviour:
   _cardName: Lyra Stryker
   _artWork: {fileID: 0}
   _attack:
-    _statName: Attack
+    _statName: 0
     _statValue: 15
     _statDescription: Amount of damage dealt.
   _explore:
-    _statName: Explore
+    _statName: 0
     _statValue: 0
     _statDescription: 
   _focus:
-    _statName: Focus
+    _statName: 2
     _statValue: 2
     _statDescription: Resources generated
   _hitPoints:
-    _statName: Hit Points
+    _statName: 3
     _statValue: 50
     _statDescription: Amount of health
   _speed:
-    _statName: Speed
+    _statName: 4
     _statValue: 2
     _statDescription: Determines Attack Sequence and Move Rate.
   _upgradeSlots:
-    _statName: 
+    _statName: 0
     _statValue: 0
     _statDescription: 
   _cardText: 

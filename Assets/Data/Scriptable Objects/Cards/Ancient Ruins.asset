@@ -12,31 +12,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85c2db69d287cba46a63d7dc92203786, type: 3}
   m_Name: Ancient Ruins
   m_EditorClassIdentifier: 
-  _cardType: 5
+  _cardType: 6
   _cardName: Ancient Ruins
   _artWork: {fileID: 0}
   _attack:
-    _statName: 
+    _statName: 0
     _statValue: 0
     _statDescription: 
   _explore:
-    _statName: 
+    _statName: 0
     _statValue: 0
     _statDescription: 
   _focus:
-    _statName: 
+    _statName: 0
     _statValue: 0
     _statDescription: 
   _hitPoints:
-    _statName: 
+    _statName: 0
     _statValue: 0
     _statDescription: 
   _speed:
-    _statName: 
+    _statName: 0
     _statValue: 0
     _statDescription: 
   _upgradeSlots:
-    _statName: 
+    _statName: 0
     _statValue: 0
     _statDescription: 
   _cardText: 
