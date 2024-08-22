@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85c2db69d287cba46a63d7dc92203786, type: 3}
   m_Name: Reboot Suit
   m_EditorClassIdentifier: 
+  _weightData: {fileID: 11400000, guid: af1ceeef313a042509ec5b3245208423, type: 2}
   _cardType: 8
   _cardName: Reboot Suit
   _artWork: {fileID: 0}

@@ -259,7 +259,7 @@ namespace Editor.CardEditor
                 case CardTypes.Action:
                     break;
                 case CardTypes.Environment:
-                    _explore = new CardStat(StatNames.Explore, _exploreValue, EXPLORE_DESCRIPTION);
+                    card.Explore = new CardStat(StatNames.Explore, _exploreValue, EXPLORE_DESCRIPTION);
                     break;
                 case CardTypes.Gear_Equipment:
                 case CardTypes.Gear_Upgrade:
@@ -324,11 +324,11 @@ namespace Editor.CardEditor
         private void SetWeightData(CardSO card)
         {
             WeightContainer weights = GetWeightContainer(_cardTypes);
-            card.WeightData = weights;
             if (ReferenceEquals(card.WeightData, null))
             {
                 Debug.LogError($"{nameof(card.WeightData)} is null.");
             }
+            card.WeightData = weights;
         }
 
         private void LoadCardFromFile()

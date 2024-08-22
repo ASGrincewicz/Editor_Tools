@@ -11,6 +11,7 @@ namespace Editor.CardEditor
         private const string CardNamePropertyName = "_cardName";
         private const string ArtWorkPropertyName = "_artWork";
         private const string AttackStatPropertyName = "_attack";
+        private const string ExploreStatPropertyName = "_explore";
         private const string HitPointsStatPropertyName = "_hitPoints";
         private const string SpeedStatPropertyName = "_speed";
         private const string FocusStatPropertyName = "_focus";
@@ -22,6 +23,7 @@ namespace Editor.CardEditor
         private SerializedProperty CardNameProperty;
         private SerializedProperty ArtWorkProperty;
         private SerializedProperty AttackProperty;
+        private SerializedProperty ExploreProperty;
         private SerializedProperty HitPointsProperty;
         private SerializedProperty SpeedProperty;
         private SerializedProperty FocusProperty;
@@ -35,6 +37,7 @@ namespace Editor.CardEditor
             CardNameProperty = serializedObject.FindProperty(CardNamePropertyName);
             ArtWorkProperty = serializedObject.FindProperty(ArtWorkPropertyName);
             AttackProperty = serializedObject.FindProperty(AttackStatPropertyName);
+            ExploreProperty = serializedObject.FindProperty(ExploreStatPropertyName);
             HitPointsProperty = serializedObject.FindProperty(HitPointsStatPropertyName);
             SpeedProperty = serializedObject.FindProperty(SpeedStatPropertyName);
             FocusProperty = serializedObject.FindProperty(FocusStatPropertyName);
@@ -102,26 +105,34 @@ namespace Editor.CardEditor
 
         private void DrawStatsProperties(CardTypes cardTypes) 
         {
+            //Debug.Log($"Card Type: {cardTypes.GetDescription()}");
             switch (cardTypes)
             {
                 case CardTypes.TBD:
                 case CardTypes.Action:
                 case CardTypes.Environment:
+                    DrawProperty(ExploreProperty);
+                    break;
                 case CardTypes.Gear_Equipment:
                 case CardTypes.Gear_Upgrade:
+                    // These cases don't require any properties to be drawn.
                     break;
                 default:
-                    DrawProperty(AttackProperty);
-                    DrawProperty(HitPointsProperty);
-                    DrawProperty(SpeedProperty);
-                    DrawProperty(FocusProperty);
-                    
+                    DrawCommonStatsProperties();
                     if (cardTypes == CardTypes.Character_Hunter)
                     {
                         DrawProperty(UpgradeSlotsProperty);
                     }
                     break;
             }
+        }
+
+        private void DrawCommonStatsProperties()
+        {
+            DrawProperty(AttackProperty);
+            DrawProperty(HitPointsProperty);
+            DrawProperty(SpeedProperty);
+            DrawProperty(FocusProperty);
         }
 
         private void DrawProperty(SerializedProperty property) 

@@ -22,6 +22,9 @@ namespace Editor.CardEditor
         [HideInInspector] [SerializeField] private CardStat _speed;
         [HideInInspector] [SerializeField] private CardStat _upgradeSlots;
         
+        
+        //[HideInInspector] [SerializeField] private string[] _keywords
+        
         [HideInInspector] [SerializeField][Multiline]
         private string _cardText;
 
@@ -98,7 +101,7 @@ namespace Editor.CardEditor
 
         public CardStat[] GetCardStats()
         {
-            CardStat[] stats = new CardStat[]
+            CardStat[] stats = new[]
             {
                 _attack, _explore, _focus, _hitPoints, _speed, _upgradeSlots
             };

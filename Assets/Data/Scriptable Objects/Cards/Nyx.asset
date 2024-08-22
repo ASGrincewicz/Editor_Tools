@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85c2db69d287cba46a63d7dc92203786, type: 3}
   m_Name: Nyx
   m_EditorClassIdentifier: 
+  _weightData: {fileID: 11400000, guid: 2765bd0e5cf8642e1b657d07d186cd61, type: 2}
   _cardType: 3
   _cardName: Nyx
   _artWork: {fileID: 2800000, guid: 2550878bc44bc1747991375317921cbf, type: 3}

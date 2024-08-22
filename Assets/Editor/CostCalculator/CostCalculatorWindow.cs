@@ -141,7 +141,16 @@ namespace Editor.CostCalculator
         {
             // Call method on Settings to run calculation.
             // Display Message "Cost: n"
+            float cost = 0.0f;
             _message = $"Calculating cost for {_loadedCard?.CardName}";
+            if (!ReferenceEquals(_loadedCard, null))
+            {
+                CostCalculator calculator = new CostCalculator(_loadedCard.WeightData,_loadedCard.GetCardStats());
+                ;
+               cost = calculator.NormalizeCost();
+            }
+
+            _message = $"Cost is {cost}";
         }
     }
 }
