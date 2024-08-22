@@ -12,4 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b1aa697563d41d1953a3f47018af1e9, type: 3}
   m_Name: Keyword-Only_Weights
   m_EditorClassIdentifier: 
-  cardStatWeights: []
+  weightType: 5
+  cardStatWeights:
+  - {fileID: 11400000, guid: b67d8670a097d50498b4f06026c2cbbc, type: 2}

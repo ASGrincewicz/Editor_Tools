@@ -10,7 +10,7 @@ namespace Editor.CardEditor
     [CreateAssetMenu(menuName="Config/CardData")] 
     public class CardSO : ScriptableObject, ICardData
     {
-        [HideInInspector] [SerializeField] public WeightContainer _weightData;
+        [HideInInspector] [SerializeField] private WeightContainer _weightData;
         [HideInInspector] [SerializeField] private CardTypes _cardType;
         [HideInInspector] [SerializeField] private string _cardName;
         [HideInInspector] [SerializeField] private Texture2D _artWork;
@@ -103,6 +103,12 @@ namespace Editor.CardEditor
                 _attack, _explore, _focus, _hitPoints, _speed, _upgradeSlots
             };
             return stats;
+        }
+
+        public WeightContainer WeightData
+        {
+            get { return _weightData; }
+            set { _weightData = value; }
         }
     }
 }

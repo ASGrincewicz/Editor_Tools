@@ -6,6 +6,7 @@ namespace Editor.CardEditor
     [CustomEditor(typeof(CardSO))]
     public class CardSOInspector: UnityEditor.Editor
     {
+        private const string WeightDataPropertyName = "_weightData";
         private const string CardTypePropertyName = "_cardType";
         private const string CardNamePropertyName = "_cardName";
         private const string ArtWorkPropertyName = "_artWork";
@@ -16,6 +17,7 @@ namespace Editor.CardEditor
         private const string UpgradeSlotsPropertyName = "_upgradeSlots";
         private const string CardTextPropertyName = "_cardText";
         
+        private SerializedProperty WeightDataProperty;
         private SerializedProperty CardTypeProperty;
         private SerializedProperty CardNameProperty;
         private SerializedProperty ArtWorkProperty;
@@ -28,6 +30,7 @@ namespace Editor.CardEditor
 
         private void OnEnable()
         {
+            WeightDataProperty = serializedObject.FindProperty(WeightDataPropertyName);
             CardTypeProperty = serializedObject.FindProperty(CardTypePropertyName);
             CardNameProperty = serializedObject.FindProperty(CardNamePropertyName);
             ArtWorkProperty = serializedObject.FindProperty(ArtWorkPropertyName);
@@ -70,6 +73,7 @@ namespace Editor.CardEditor
 
         private void DrawProperties() 
         {
+            DrawProperty(WeightDataProperty);
             CardTypes cardTypes = (CardTypes)CardTypeProperty.enumValueIndex;
             DrawLabel($"Card Type: {cardTypes.GetDescription()}", EditorStyles.boldLabel, GUILayout.Width(200), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
 

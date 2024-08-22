@@ -12,4 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b1aa697563d41d1953a3f47018af1e9, type: 3}
   m_Name: Environment_Weights
   m_EditorClassIdentifier: 
-  cardStatWeights: []
+  weightType: 3
+  cardStatWeights:
+  - {fileID: 11400000, guid: 388a9020a4adbf340a4da24191d63765, type: 2}
+  - {fileID: 11400000, guid: 1b0d4b60a100b7d4e8ba6b38f4439d9f, type: 2}

@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85c2db69d287cba46a63d7dc92203786, type: 3}
   m_Name: Parasite
   m_EditorClassIdentifier: 
+  _weightData: {fileID: 11400000, guid: c1b82eff57c6a4250aa4121cefbfdb82, type: 2}
   _cardType: 5
   _cardName: Parasite
-  _artWork: {fileID: 0}
+  _artWork: {fileID: 2800000, guid: ba2c683f9b247504f9f7c841d2b5ffa6, type: 3}
   _attack:
     _statName: 0
     _statValue: 10
@@ -25,7 +26,7 @@ MonoBehaviour:
     _statDescription: 
   _focus:
     _statName: 2
-    _statValue: 3
+    _statValue: 2
     _statDescription: Resources generated
   _hitPoints:
     _statName: 3

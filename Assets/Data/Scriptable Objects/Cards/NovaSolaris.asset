@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85c2db69d287cba46a63d7dc92203786, type: 3}
   m_Name: NovaSolaris
   m_EditorClassIdentifier: 
+  _weightData: {fileID: 11400000, guid: 32fd2d69de8ff43ce9976f51c89fdd94, type: 2}
   _cardType: 4
   _cardName: Nova Solaris
   _artWork: {fileID: 2800000, guid: 10bb3ca4f95c26b4e9c86cb4b22206eb, type: 3}

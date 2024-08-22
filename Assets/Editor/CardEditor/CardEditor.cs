@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Editor.AttributesWeights;
 using Editor.Utilities;
 using UnityEditor;
 using UnityEngine;
@@ -13,6 +14,20 @@ namespace Editor.CardEditor
     {
         // Constants
         private const string ASSET_PATH = "Assets/Data/Scriptable Objects/Cards/";
+
+        private const string ALLY_WEIGHT_ASSET_PATH =
+            "Assets/Data/Scriptable Objects/Card Stats/Weight Data/Ally_Weights.asset";
+
+        private const string BOSS_WEIGHT_ASSET_PATH =
+            "Assets/Data/Scriptable Objects/Card Stats/Weight Data/Boss_Weights.asset";
+
+        private const string CREATURE_WEIGHT_ASSET_PATH =
+            "Assets/Data/Scriptable Objects/Card Stats/Weight Data/Creature_Weights.asset";
+        private const string ENVIRONMENT_WEIGHT_ASSET_PATH = "Assets/Data/Scriptable Objects/Card Stats/Weight Data/Environment_Weights.asset";
+        private const string HUNTER_WEIGHT_ASSET_PATH = "Assets/Data/Scriptable Objects/Card Stats/Weight Data/Hunter_Weights.asset";
+
+        private const string KEYWORD_ONLY_WEIGHT_ASSET_PATH =
+            "Assets/Data/Scriptable Objects/Card Stats/Weight Data/Keyword-Only_Weights.asset";
         private const string ASSET_FILTER = "t:CardSO";
         private const float FIELD_WIDTH = 400;
         
@@ -265,6 +280,8 @@ namespace Editor.CardEditor
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+            SetWeightData(card);
             return true;
         }
 
@@ -285,7 +302,34 @@ namespace Editor.CardEditor
             }
         }
         // Method to Get Weight Container based on Card Type
-        
+        private WeightContainer GetWeightContainer(CardTypes cardType)
+        {
+            switch(cardType)
+            {
+                case CardTypes.Character_Ally:
+                    return AssetDatabase.LoadAssetAtPath<WeightContainer>(ALLY_WEIGHT_ASSET_PATH);
+                case CardTypes.Environment:
+                    return AssetDatabase.LoadAssetAtPath<WeightContainer>(ENVIRONMENT_WEIGHT_ASSET_PATH);
+                case CardTypes.Creature:
+                    return AssetDatabase.LoadAssetAtPath<WeightContainer>(CREATURE_WEIGHT_ASSET_PATH);
+                case CardTypes.Boss:
+                    return AssetDatabase.LoadAssetAtPath<WeightContainer>(BOSS_WEIGHT_ASSET_PATH);
+                case CardTypes.Character_Hunter:
+                    return AssetDatabase.LoadAssetAtPath<WeightContainer>(HUNTER_WEIGHT_ASSET_PATH);
+                default:
+                    return AssetDatabase.LoadAssetAtPath<WeightContainer>(KEYWORD_ONLY_WEIGHT_ASSET_PATH);
+            }
+        }
+
+        private void SetWeightData(CardSO card)
+        {
+            WeightContainer weights = GetWeightContainer(_cardTypes);
+            card.WeightData = weights;
+            if (ReferenceEquals(card.WeightData, null))
+            {
+                Debug.LogError($"{nameof(card.WeightData)} is null.");
+            }
+        }
 
         private void LoadCardFromFile()
         {
