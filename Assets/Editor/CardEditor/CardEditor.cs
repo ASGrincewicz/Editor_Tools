@@ -284,6 +284,8 @@ namespace Editor.CardEditor
                 Debug.Log("Initialization Failed: Card is null.");
             }
         }
+        // Method to Get Weight Container based on Card Type
+        
 
         private void LoadCardFromFile()
         {

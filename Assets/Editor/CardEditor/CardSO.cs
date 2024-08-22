@@ -1,3 +1,4 @@
+using Editor.AttributesWeights;
 using UnityEngine;
 
 namespace Editor.CardEditor
@@ -6,9 +7,10 @@ namespace Editor.CardEditor
     /// This class represents a card configuration as a ScriptableObject.
     /// It implements the ICardData interface and is used to create new card configs in Unity.
     /// </summary>
-    [CreateAssetMenu(menuName="Config/CardData")]
+    [CreateAssetMenu(menuName="Config/CardData")] 
     public class CardSO : ScriptableObject, ICardData
     {
+        [HideInInspector] [SerializeField] public WeightContainer _weightData;
         [HideInInspector] [SerializeField] private CardTypes _cardType;
         [HideInInspector] [SerializeField] private string _cardName;
         [HideInInspector] [SerializeField] private Texture2D _artWork;
@@ -92,6 +94,15 @@ namespace Editor.CardEditor
         {
             get { return _upgradeSlots; }
             set { _upgradeSlots = value; }
+        }
+
+        public CardStat[] GetCardStats()
+        {
+            CardStat[] stats = new CardStat[]
+            {
+                _attack, _explore, _focus, _hitPoints, _speed, _upgradeSlots
+            };
+            return stats;
         }
     }
 }
