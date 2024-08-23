@@ -64,7 +64,6 @@ namespace Editor.CostCalculator
         // Placeholder for adding Keyword Values
         private int SimulateKeywords()
         {
-            // Define the range
             int minRange = 0;
             int maxRange = 25;
     

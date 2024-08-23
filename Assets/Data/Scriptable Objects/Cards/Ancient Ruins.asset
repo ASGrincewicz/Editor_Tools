@@ -21,8 +21,8 @@ MonoBehaviour:
     _statValue: 0
     _statDescription: 
   _explore:
-    _statName: 0
-    _statValue: 0
+    _statName: 1
+    _statValue: 5
     _statDescription: 
   _focus:
     _statName: 0
