@@ -12,3 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cae797c378843469c08787aad4d220e, type: 3}
   m_Name: KeywordManager
   m_EditorClassIdentifier: 
+  keywordList:
+  - keywordName: Heal
+    keywordValue: 0
+    abilityType: 6
+  - keywordName: Fortify
+    keywordValue: 0
+    abilityType: 2
+  - keywordName: Grapple
+    keywordValue: 0
+    abilityType: 7
+  - keywordName: Union
+    keywordValue: 0
+    abilityType: 4
+  - keywordName: 
+    keywordValue: 0
+    abilityType: 0
