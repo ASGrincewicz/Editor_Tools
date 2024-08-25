@@ -32,7 +32,7 @@ namespace Editor.CostCalculator
             CostCalculatorWindow window =
                 (CostCalculatorWindow)GetWindow(typeof(CostCalculatorWindow), Is_Utility_Window, Window_Title);
             // Set window position
-            window.position = new Rect(50, 50, 300, 700);
+            window.position = new Rect(50, 50, 300, 500);
             window.Show();
         }
 
@@ -49,14 +49,14 @@ namespace Editor.CostCalculator
         private void SetupAreaRects()
         {
             // Initialize Card Info rect
-            _cardInfoRect = new Rect(position.width * 0.10f, 100,position.width * 0.5f, position.height * 0.40f );
+            _cardInfoRect = new Rect(position.width * 0.10f, 50,position.width * 0.5f, position.height * 0.50f );
             // Initialize Calc area rect
-            _calculationRect = new Rect(position.width * 0.10f,360,position.width * 0.5f,position.height * 0.30f);
+            _calculationRect = new Rect(position.width * 0.10f,_cardInfoRect.y + 300,position.width * 0.5f,position.height * 0.20f);
             // Initialize Message area rect
-            _messageRect = new Rect(position.width * 0.10f, 465,position.width * 0.5f,position.height * 0.10f);
+            _messageRect = new Rect(position.width * 0.10f, _calculationRect.y + 50,position.width * 0.5f,position.height * 0.10f);
             // Initialize Button area rect
-            _buttonRect = new Rect(position.width * 0.10f, 525, position.width * 0.5f, position.height * 0.20f);
-        }
+            _buttonRect = new Rect(position.width * 0.10f, _messageRect.y + 5, position.width * 0.5f, position.height * 0.20f);
+            }
 
         
         /// <summary>
@@ -96,7 +96,7 @@ namespace Editor.CostCalculator
             // 600w * 200h
             // Display Card Weight Values for the loaded card.
             GUILayout.BeginArea(_calculationRect);
-            GUILayout.Space(50);
+            //GUILayout.Space(50);
             DrawLabel("Calculation Info will go here.");
             GUILayout.EndArea();
         }
@@ -111,7 +111,7 @@ namespace Editor.CostCalculator
         private void DrawControlButtons()
         {
             GUILayout.BeginArea(_buttonRect);
-            GUILayout.BeginHorizontal(GUILayout.Width(position.width * 0.33f));
+            GUILayout.BeginHorizontal(GUILayout.Width(position.width * 0.33f),GUILayout.ExpandHeight(true));
             // Calculate Cost Button
             // 200w * 60h
             if (GUILayout.Button(submitButtonText, GUILayout.Width(position.width * 0.33f), GUILayout.Height(_buttonRect.height * 0.25f)))
