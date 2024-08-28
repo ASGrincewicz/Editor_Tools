@@ -134,6 +134,7 @@ namespace Editor.CardEditor
             switch (_cardTypes)
             {
                 case CardTypes.TBD:
+                case CardTypes.Starship:
                     break;
                 case CardTypes.Action:
                     break;
