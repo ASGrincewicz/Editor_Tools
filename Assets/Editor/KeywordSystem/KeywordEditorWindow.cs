@@ -14,6 +14,7 @@ namespace Editor.KeywordSystem
         //Class variables
         private string _keywordName = "";
         private int _keywordValue = 0;
+        private string _keywordDefinition = "";
         private AbilityType _abilityType;
         
         // GUI variables
@@ -47,7 +48,7 @@ namespace Editor.KeywordSystem
 
         private void SetupAreaRects()
         {
-            _mainAreaRect = new Rect(20,15, position.width * 0.90f, position.height * 0.25f);
+            _mainAreaRect = new Rect(20,15, position.width * 0.90f, position.height * 0.30f);
             _buttonAreaRect = new Rect(20,_mainAreaRect.y + _mainAreaRect.height + 5, position.width * 0.90f, position.height * 0.15f);
             _keywordListAreaRect = new Rect(20, (_buttonAreaRect.y + _buttonAreaRect.height) + 5, position.width * 0.90f, position.height * 0.50f);
         }
@@ -56,8 +57,9 @@ namespace Editor.KeywordSystem
         {
             GUILayout.BeginArea(_mainAreaRect);
             EditorGUIUtility.labelWidth = 100;
-            _keywordName = EditorGUILayout.TextField("Keyword Name:",_keywordName);
-            _keywordValue = EditorGUILayout.IntField("Keyword Value:",_keywordValue);
+            _keywordName = EditorGUILayout.TextField("Name:",_keywordName);
+            _keywordValue = EditorGUILayout.IntField("Value:",_keywordValue);
+            _keywordDefinition = EditorGUILayout.TextArea(_keywordDefinition, GUILayout.Height(50));
             _abilityType = (AbilityType)EditorGUILayout.EnumPopup("Ability Type:",_abilityType);
             GUILayout.EndArea();
         }
@@ -91,6 +93,7 @@ namespace Editor.KeywordSystem
                 {
                     _keywordName = keyword.keywordName;
                     _keywordValue = keyword.keywordValue;
+                    _keywordDefinition = keyword.definition;
                     _abilityType = keyword.abilityType;
                 }
                 EditorGUILayout.EndHorizontal();
