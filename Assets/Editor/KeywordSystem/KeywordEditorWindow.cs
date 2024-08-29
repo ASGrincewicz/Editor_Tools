@@ -27,7 +27,7 @@ namespace Editor.KeywordSystem
         [MenuItem("Tools/Keyword Editor")]
         private static void ShowWindow()
         {
-            var window = GetWindow<KeywordEditorWindow>();
+            KeywordEditorWindow window = GetWindow<KeywordEditorWindow>();
             window.titleContent = new GUIContent("Keyword Editor");
             window.position = new Rect(50, 50, 250, 600);
             window.Show();
@@ -68,7 +68,11 @@ namespace Editor.KeywordSystem
         {
             GUILayout.BeginArea(_buttonAreaRect);
             // Implement Save functions
-            GUILayout.Button("Save", GUILayout.Width(100));
+
+            if (GUILayout.Button("Save", GUILayout.Width(100)))
+            {
+                SaveKeywords();
+            }
             if (GUILayout.Button("Reload Keyword List"))
             {
                 GetKeywords();
@@ -80,7 +84,7 @@ namespace Editor.KeywordSystem
         {
             GUILayout.BeginArea(_keywordListAreaRect);
             _scrollPosition = GUILayout.BeginScrollView(_scrollPosition, GUILayout.ExpandHeight(true));
-            foreach (var keyword in _keywords)
+            foreach (Keyword keyword in _keywords)
             {
                 if (keyword.keywordName == "")
                 {
@@ -109,6 +113,54 @@ namespace Editor.KeywordSystem
             {
                 _keywords = _keywordManager.keywordList;
             }
+        }
+
+        private void SaveKeywords()
+        {
+            Undo.RecordObject(_keywordManager, "Keyword Manager");
+            Keyword editedKeyword = new Keyword
+            {
+                keywordName = _keywordName,
+                keywordValue = _keywordValue,
+                definition = _keywordDefinition,
+                abilityType = _abilityType
+            };
+            // Check if _keywords is initialized
+            if (_keywords == null)
+            {
+                Debug.LogError("_keywords list is not initialized");
+                return;
+            }
+
+            // Overwrite data for edited keywords
+            foreach (Keyword keyword in _keywords)
+            {
+                if (string.Equals(keyword.keywordName, _keywordName, StringComparison.OrdinalIgnoreCase))
+                {
+                    _keywords.Remove(_keywords.Find(x => x.keywordName == keyword.keywordName));
+                    _keywords.Add(editedKeyword);
+                    return;
+                }
+                // replace empty keyword if available
+                Keyword emptyKeyword = _keywords.Find(x => string.IsNullOrEmpty(x.keywordName));
+                if (emptyKeyword.keywordName != null)
+                {
+                    _keywords.Remove(emptyKeyword);
+                    _keywords.Add(editedKeyword);
+                    return;
+                }
+            }
+
+            // Add new keywords to list if not found
+            _keywords.Add(new Keyword
+            {
+                keywordName = _keywordName,
+                keywordValue = _keywordValue,
+                definition = _keywordDefinition,
+                abilityType = _abilityType
+            });
+            EditorUtility.SetDirty(_keywordManager);
+            AssetDatabase.SaveAssets();
         }
     }
 }
