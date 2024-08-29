@@ -28,7 +28,7 @@ namespace Editor.KeywordSystem
         {
             var window = GetWindow<KeywordEditorWindow>();
             window.titleContent = new GUIContent("Keyword Editor");
-            window.position = new Rect(50, 50, 200, 600);
+            window.position = new Rect(50, 50, 250, 600);
             window.Show();
         }
 
@@ -47,9 +47,9 @@ namespace Editor.KeywordSystem
 
         private void SetupAreaRects()
         {
-            _mainAreaRect = new Rect(20,5, 200, position.height * 0.40f);
-            _buttonAreaRect = new Rect(20, _mainAreaRect.height + 10, 200, position.height * 0.10f);
-            _keywordListAreaRect = new Rect(20, _buttonAreaRect.height + 10, 200, position.height * 0.50f);
+            _mainAreaRect = new Rect(20,15, position.width * 0.90f, position.height * 0.25f);
+            _buttonAreaRect = new Rect(20,_mainAreaRect.y + _mainAreaRect.height + 5, position.width * 0.90f, position.height * 0.15f);
+            _keywordListAreaRect = new Rect(20, (_buttonAreaRect.y + _buttonAreaRect.height) + 5, position.width * 0.90f, position.height * 0.50f);
         }
 
         private void DrawMainArea()
@@ -66,7 +66,7 @@ namespace Editor.KeywordSystem
         {
             GUILayout.BeginArea(_buttonAreaRect);
             // Implement Save functions
-            GUILayout.Button("Save");
+            GUILayout.Button("Save", GUILayout.Width(100));
             if (GUILayout.Button("Reload Keyword List"))
             {
                 GetKeywords();
@@ -77,12 +77,17 @@ namespace Editor.KeywordSystem
         private void DrawKeywordListArea()
         {
             GUILayout.BeginArea(_keywordListAreaRect);
-            _scrollPosition = GUILayout.BeginScrollView(_scrollPosition);
+            _scrollPosition = GUILayout.BeginScrollView(_scrollPosition, GUILayout.ExpandHeight(true));
             foreach (var keyword in _keywords)
             {
+                if (keyword.keywordName == "")
+                {
+                    continue;
+                }
+                    
                 EditorGUILayout.BeginHorizontal();
                 GUILayout.Label(keyword.keywordName);
-                if (GUILayout.Button("Edit"))
+                if (GUILayout.Button("Edit",GUILayout.Width(50)))
                 {
                     _keywordName = keyword.keywordName;
                     _keywordValue = keyword.keywordValue;
