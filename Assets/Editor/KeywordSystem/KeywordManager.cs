@@ -65,6 +65,7 @@ namespace Editor.KeywordSystem
             {
                 keywordList.Add(new Keyword { keywordName = string.Empty });
             }
+            keywordList.Sort((a, b) => string.Compare(a.keywordName, b.keywordName, StringComparison.Ordinal));
         }
     }
 }

@@ -73,6 +73,11 @@ namespace Editor.KeywordSystem
             {
                 SaveKeywords();
             }
+
+            if (GUILayout.Button("New Keyword", GUILayout.Width(100)))
+            {
+                InitializeNewKeyword();
+            }
             if (GUILayout.Button("Reload Keyword List"))
             {
                 GetKeywords();
@@ -161,6 +166,14 @@ namespace Editor.KeywordSystem
             });
             EditorUtility.SetDirty(_keywordManager);
             AssetDatabase.SaveAssets();
+        }
+
+        private void InitializeNewKeyword()
+        {
+            _keywordDefinition = "";
+            _keywordValue = 0;
+            _keywordName = "";
+            _abilityType = AbilityType.Block;
         }
     }
 }

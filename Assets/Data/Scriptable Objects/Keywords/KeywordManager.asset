@@ -13,10 +13,6 @@ MonoBehaviour:
   m_Name: KeywordManager
   m_EditorClassIdentifier: 
   keywordList:
-  - keywordName: Mend
-    keywordValue: 1
-    definition: Heal any ally by 5 HP
-    abilityType: 9
   - keywordName: Barrage
     keywordValue: 1
     definition: "Attack X Targets this turn.\nYou must roll X or higher for \neach
@@ -74,24 +70,34 @@ MonoBehaviour:
     definition: Activate this ability to redirect a successful enemy attack on an
       ally towards this card.
     abilityType: 5
-  - keywordName: Overcharge
-    keywordValue: 10
-    definition: Shuffle X cards from your hand into your deck. This card has +5X
-      Attack.
-    abilityType: 1
   - keywordName: Rally
     keywordValue: 10
     definition: All allies get +5 Attack this turn.
     abilityType: 1
-  - keywordName: Pulse
-    keywordValue: 11
-    definition: Deal 5 Damage to every card at this card's location.
-    abilityType: 3
   - keywordName: Nullify
     keywordValue: 12
     definition: Cancel an enemy's ability and all effects.
     abilityType: 2
-  - keywordName: 
-    keywordValue: 0
+  - keywordName: Mend
+    keywordValue: 1
+    definition: Heal any ally by 5.
+    abilityType: 9
+  - keywordName: Overcharge
+    keywordValue: 10
+    definition: 'Shuffle X cards from your hand into
+
+      your deck. This card
+      has +5X Attack.'
+    abilityType: 1
+  - keywordName: Pulse
+    keywordValue: 11
+    definition: "Deal 5 Damage to every card at this \ncard's location."
+    abilityType: 3
+  - keywordName: Parasitic
+    keywordValue: 5
+    definition: "Damage to target heals this \nunit by the same amount."
+    abilityType: 3
+  - keywordName: Swarm
+    keywordValue: 2
     definition: 
-    abilityType: 0
+    abilityType: 1
