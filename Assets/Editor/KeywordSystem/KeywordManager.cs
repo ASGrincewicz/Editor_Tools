@@ -9,7 +9,6 @@ namespace Editor.KeywordSystem
     {
         public List<Keyword> keywordList;
 
-
         private void OnValidate()
         {
             if (keywordList == null)

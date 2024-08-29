@@ -35,5 +35,10 @@ namespace Editor.KeywordSystem
         {
             return HashCode.Combine(keywordName, keywordValue, definition, (int)abilityType);
         }
+        
+        public bool IsDefault()
+        {
+            return string.IsNullOrEmpty(keywordName) && keywordValue == 0 && string.IsNullOrEmpty(definition) && abilityType == 0;
+        }
     }
 }

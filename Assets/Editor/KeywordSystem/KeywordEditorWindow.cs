@@ -89,6 +89,8 @@ namespace Editor.KeywordSystem
         {
             GUILayout.BeginArea(_keywordListAreaRect);
             _scrollPosition = GUILayout.BeginScrollView(_scrollPosition, GUILayout.ExpandHeight(true));
+            Keyword itemToRemove = new Keyword();
+            
             foreach (Keyword keyword in _keywords)
             {
                 if (keyword.keywordName == "")
@@ -105,9 +107,22 @@ namespace Editor.KeywordSystem
                     _keywordDefinition = keyword.definition;
                     _abilityType = keyword.abilityType;
                 }
+
+                if (GUILayout.Button("Delete", GUILayout.Width(50)))
+                {
+                    // Confirm with popup window
+                    if (EditorUtility.DisplayDialog("Confirm Deletion", $"Are you sure you want to delete the keyword '{keyword.keywordName}'?", "Yes", "No"))
+                    {
+                        itemToRemove = keyword;
+                    }
+                }
                 EditorGUILayout.EndHorizontal();
             }
-            
+
+            if (!itemToRemove.IsDefault())
+            {
+                DeleteKeyword(itemToRemove);
+            }
             GUILayout.EndScrollView();
             GUILayout.EndArea();
         }
@@ -122,7 +137,7 @@ namespace Editor.KeywordSystem
 
         private void SaveKeywords()
         {
-            Undo.RecordObject(_keywordManager, "Keyword Manager");
+            Undo.RecordObject(_keywordManager, "Save Keywords");
             Keyword editedKeyword = new Keyword
             {
                 keywordName = _keywordName,
@@ -166,6 +181,12 @@ namespace Editor.KeywordSystem
             });
             EditorUtility.SetDirty(_keywordManager);
             AssetDatabase.SaveAssets();
+        }
+
+        private void DeleteKeyword(Keyword keyword)
+        {
+            Undo.RecordObject(_keywordManager, "Delete Keyword");
+            _keywords.Remove(keyword);
         }
 
         private void InitializeNewKeyword()
