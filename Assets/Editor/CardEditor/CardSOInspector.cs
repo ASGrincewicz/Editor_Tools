@@ -1,4 +1,5 @@
-﻿using Editor.Utilities;
+﻿using Editor.KeywordSystem;
+using Editor.Utilities;
 using UnityEditor;
 using UnityEngine;
 namespace Editor.CardEditor
@@ -16,6 +17,7 @@ namespace Editor.CardEditor
         private const string SpeedStatPropertyName = "_speed";
         private const string FocusStatPropertyName = "_focus";
         private const string UpgradeSlotsPropertyName = "_upgradeSlots";
+        private const string KeywordsPropertyName = "_keywords";
         private const string CardTextPropertyName = "_cardText";
         
         private SerializedProperty WeightDataProperty;
@@ -28,6 +30,7 @@ namespace Editor.CardEditor
         private SerializedProperty SpeedProperty;
         private SerializedProperty FocusProperty;
         private SerializedProperty UpgradeSlotsProperty;
+        private SerializedProperty KeywordsProperty;
         private SerializedProperty CardTextProperty;
 
         private void OnEnable()
@@ -42,17 +45,18 @@ namespace Editor.CardEditor
             SpeedProperty = serializedObject.FindProperty(SpeedStatPropertyName);
             FocusProperty = serializedObject.FindProperty(FocusStatPropertyName);
             UpgradeSlotsProperty = serializedObject.FindProperty(UpgradeSlotsPropertyName);
+            KeywordsProperty = serializedObject.FindProperty(KeywordsPropertyName);
             CardTextProperty = serializedObject.FindProperty(CardTextPropertyName);
         }
         
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
-            DrawCardEditorGUI();
+            DrawCardInspectorGUI();
             serializedObject.ApplyModifiedProperties();
         }
 
-        private void DrawCardEditorGUI() 
+        private void DrawCardInspectorGUI() 
         {           
             CardSO card = target as CardSO;
             GUILayout.BeginVertical(GUILayout.Width(300));
@@ -83,6 +87,8 @@ namespace Editor.CardEditor
             DrawLabel($"Card Name: {CardNameProperty.stringValue}", EditorStyles.boldLabel, GUILayout.Width(200), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
 
             DrawArtWorkProperty();
+            
+            DrawKeywordArrayProperty();
 
             DrawLabel($"Card Text: {CardTextProperty.stringValue}", EditorStyles.wordWrappedLabel, GUILayout.Width(200), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
 
@@ -101,6 +107,18 @@ namespace Editor.CardEditor
             Rect rect = GUILayoutUtility.GetRect(400 * 0.75f, 225 * 0.75f);
             EditorGUI.DrawPreviewTexture(rect, artworkTexture);
             EditorGUILayout.LabelField(artworkTexture.name);
+        }
+
+        private void DrawKeywordArrayProperty()
+        {
+            GUILayout.Label("Keywords:");
+            for (int i = 0; i < KeywordsProperty.arraySize; i++)
+            {
+                
+                SerializedProperty keywordProperty = KeywordsProperty.GetArrayElementAtIndex(i);
+                SerializedProperty keywordNameProperty = keywordProperty.FindPropertyRelative("keywordName");
+                DrawLabel(keywordNameProperty.stringValue, EditorStyles.boldLabel);
+            }
         }
 
         private void DrawStatsProperties(CardTypes cardTypes) 
@@ -137,7 +155,7 @@ namespace Editor.CardEditor
 
         private void DrawProperty(SerializedProperty property) 
         {
-            EditorGUILayout.PropertyField(property, GUILayout.Height(15));
+            EditorGUILayout.PropertyField(property, GUILayout.Height(15), GUILayout.ExpandHeight(true));
         }
 
         private void DrawLabel(string text, GUIStyle editorStyles, params GUILayoutOption[] options) 

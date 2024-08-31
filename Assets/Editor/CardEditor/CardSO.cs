@@ -1,4 +1,5 @@
 using Editor.AttributesWeights;
+using Editor.KeywordSystem;
 using UnityEngine;
 
 namespace Editor.CardEditor
@@ -21,9 +22,9 @@ namespace Editor.CardEditor
         [HideInInspector] [SerializeField] private CardStat _hitPoints;
         [HideInInspector] [SerializeField] private CardStat _speed;
         [HideInInspector] [SerializeField] private CardStat _upgradeSlots;
-        
-        
-        //[HideInInspector] [SerializeField] private string[] _keywords
+
+
+        [HideInInspector] [SerializeField] private Keyword[] _keywords;
         
         [HideInInspector] [SerializeField][Multiline]
         private string _cardText;
@@ -52,6 +53,14 @@ namespace Editor.CardEditor
         {
             get { return _artWork; }
             set { _artWork = value; }
+        }
+        /// <summary>
+        ///  Array of Keywords
+        /// </summary>
+        public Keyword[] Keywords
+        {
+            get { return _keywords; }
+            set { _keywords = value; }
         }
         /// <summary>
         /// Text description of the card.

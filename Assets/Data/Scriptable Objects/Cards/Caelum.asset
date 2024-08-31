@@ -40,4 +40,5 @@ MonoBehaviour:
     _statName: 5
     _statValue: 1
     _statDescription: Amount of Upgrades that can be equipped.
-  _cardText: 
+  _keywords: []
+  _cardText: Discard any Upgrades in your hand to deal 10 damage to target unit.
