@@ -74,14 +74,19 @@ namespace Editor.AttributesWeights
         private void DrawButtonArea()
         {
             GUILayout.BeginArea(_buttonAreaRect);
+            
+            if (GUILayout.Button("Load Data", GUILayout.Width(_buttonAreaRect.width * 0.75f), GUILayout.Height(50)))
+            {
+                ResetLocalWeightData();
+                LoadWeightData();
+            }
             if (GUILayout.Button("Save Data", GUILayout.Width(_buttonAreaRect.width * 0.75f), GUILayout.Height(50)))
             {
                ValidateWeightInput();
             }
-            GUILayout.Space(50);
-            if (GUILayout.Button("Show Grid", GUILayout.Width(_buttonAreaRect.width * 0.75f), GUILayout.Height(50)))
+            if (GUILayout.Button("Reset Values", GUILayout.Width(_buttonAreaRect.width * 0.75f), GUILayout.Height(50)))
             {
-                // Show weights grid
+                ResetLocalWeightData();
             }
             GUILayout.EndArea();
         }
@@ -101,6 +106,7 @@ namespace Editor.AttributesWeights
              switch (_cardType)
             {
                 case CardTypes.TBD:
+                case CardTypes.Starship:
                         break;
                 case CardTypes.Environment:
                     DrawEnvironmentFields();
@@ -154,7 +160,17 @@ namespace Editor.AttributesWeights
         private void DrawFloatField(string label, ref float value)
         {
             value = EditorGUILayout.FloatField(label, value, GUILayout.Width(200));
-           
+        }
+
+        private void ResetLocalWeightData()
+        {
+            _attackWeight = 0;
+            _exploreWeight = 0;
+            _focusWeight = 0;
+            _hitPointsWeight = 0;
+            _speedWeight = 0;
+            _upgradeSlotsWeight = 0;
+            _keywordsWeight = 0;
         }
 
         private void SaveWeightData()
@@ -208,6 +224,57 @@ namespace Editor.AttributesWeights
             }
         }
 
+        private void LoadWeightData()
+        {
+             switch (_cardType)
+            {
+                case CardTypes.Action:
+                case CardTypes.Gear_Equipment:
+                case CardTypes.Gear_Upgrade:
+                    _keywordsWeight = attributeSettings.keywordOnlyCardStatWeights[0].statWeight;
+                    break;
+                case CardTypes.Boss:
+                    _attackWeight = attributeSettings.bossCardStatWeights[0].statWeight;
+                    _focusWeight = attributeSettings.bossCardStatWeights[1].statWeight;
+                    _hitPointsWeight = attributeSettings.bossCardStatWeights[2].statWeight;
+                    _speedWeight = attributeSettings.bossCardStatWeights[3].statWeight;
+                    _keywordsWeight = attributeSettings.bossCardStatWeights[4].statWeight;
+                    break;
+                case CardTypes.Character_Ally:
+                    _attackWeight = attributeSettings.allyCardStatWeights[0].statWeight;
+                    _focusWeight = attributeSettings.allyCardStatWeights[1].statWeight;
+                    _hitPointsWeight = attributeSettings.allyCardStatWeights[2].statWeight;
+                    _speedWeight = attributeSettings.allyCardStatWeights[3].statWeight;
+                    _keywordsWeight = attributeSettings.allyCardStatWeights[4].statWeight;
+                    break;
+                case CardTypes.Character_Hunter:
+                    _attackWeight = attributeSettings.hunterCardStatWeights[0].statWeight;
+                    _focusWeight = attributeSettings.hunterCardStatWeights[1].statWeight;
+                    _hitPointsWeight = attributeSettings.hunterCardStatWeights[2].statWeight;
+                    _speedWeight = attributeSettings.hunterCardStatWeights[3].statWeight;
+                    _upgradeSlotsWeight = attributeSettings.hunterCardStatWeights[4].statWeight;
+                    _keywordsWeight = attributeSettings.hunterCardStatWeights[5].statWeight;
+                    break;
+                case CardTypes.Creature:
+                    _attackWeight = attributeSettings.creatureCardStatWeights[0].statWeight;
+                    _focusWeight = attributeSettings.creatureCardStatWeights[1].statWeight;
+                    _hitPointsWeight = attributeSettings.creatureCardStatWeights[2].statWeight;
+                    _speedWeight = attributeSettings.creatureCardStatWeights[3].statWeight;
+                    _keywordsWeight = attributeSettings.creatureCardStatWeights[4].statWeight;
+                    break;
+                case CardTypes.Environment:
+                    _exploreWeight = attributeSettings.environmentCardStatWeights[0].statWeight;
+                    _keywordsWeight = attributeSettings.environmentCardStatWeights[1].statWeight;
+                    break;
+                case CardTypes.Starship:
+                    break;
+                case CardTypes.TBD:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
         private void DisplayMessage(string message)
         {
             Debug.Log(message);
@@ -226,6 +293,7 @@ namespace Editor.AttributesWeights
             {
                 SaveWeightData();
                 DisplayMessage("All Good!");
+                ResetLocalWeightData();
             }
             else
             {

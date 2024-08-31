@@ -51,7 +51,7 @@ namespace Editor.KeywordSystem
 
             // Ensure there is one empty slot for new entries
             bool hasEmptySlot = false;
-            foreach (var keyword in keywordList)
+            foreach (Keyword keyword in keywordList)
             {
                 if (string.IsNullOrEmpty(keyword.keywordName))
                 {
