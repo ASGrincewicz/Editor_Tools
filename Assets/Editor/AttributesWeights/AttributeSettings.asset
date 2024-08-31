@@ -41,4 +41,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 388a9020a4adbf340a4da24191d63765, type: 2}
   - {fileID: 11400000, guid: 1b0d4b60a100b7d4e8ba6b38f4439d9f, type: 2}
   keywordOnlyCardStatWeights:
-  - {fileID: 0}
+  - {fileID: 11400000, guid: b67d8670a097d50498b4f06026c2cbbc, type: 2}

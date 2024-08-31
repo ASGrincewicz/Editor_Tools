@@ -49,13 +49,13 @@ namespace Editor.CostCalculator
         private void SetupAreaRects()
         {
             // Initialize Card Info rect
-            _cardInfoRect = new Rect(position.width * 0.10f, 50,position.width * 0.5f, position.height * 0.50f );
+            _cardInfoRect = new Rect(position.width * 0.10f, 50,position.width * 0.5f, position.height * 0.5f );
             // Initialize Calc area rect
-            _calculationRect = new Rect(position.width * 0.10f,_cardInfoRect.y + 300,position.width * 0.5f,position.height * 0.20f);
+            _calculationRect = new Rect(position.width * 0.10f,_cardInfoRect.y + _cardInfoRect.height + 10,position.width * 0.5f,position.height * 0.1f);
             // Initialize Message area rect
-            _messageRect = new Rect(position.width * 0.10f, _calculationRect.y + 50,position.width * 0.5f,position.height * 0.10f);
+            _messageRect = new Rect(position.width * 0.10f, _calculationRect.y + _calculationRect.height + 10,position.width * 0.5f,position.height * 0.10f);
             // Initialize Button area rect
-            _buttonRect = new Rect(position.width * 0.10f, _messageRect.y + 5, position.width * 0.5f, position.height * 0.20f);
+            _buttonRect = new Rect(position.width * 0.10f, _messageRect.y + _messageRect.height + 5, position.width * 0.5f, position.height * 0.20f);
             }
 
         

@@ -30,7 +30,7 @@ MonoBehaviour:
     _statDescription: Resources generated
   _hitPoints:
     _statName: 3
-    _statValue: 75
+    _statValue: 200
     _statDescription: Amount of health
   _speed:
     _statName: 4
