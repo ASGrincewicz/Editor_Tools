@@ -40,4 +40,19 @@ MonoBehaviour:
     _statName: 5
     _statValue: 2
     _statDescription: Amount of Upgrades that can be equipped.
+  _keywords:
+  - keywordName: Dodge
+    keywordValue: 7
+    definition: 'oll a 5 or 6 to take no damage from a successful attack. If this
+      card is in the melee zone, any ally in the ranged position behind this card
+      takes the damage. '
+    abilityType: 5
+  - keywordName: Cloak
+    keywordValue: 7
+    definition: This card cannot be targeted this turn.
+    abilityType: 0
+  - keywordName: 0 None
+    keywordValue: 0
+    definition: 
+    abilityType: 0
   _cardText: 

@@ -40,4 +40,17 @@ MonoBehaviour:
     _statName: 0
     _statValue: 0
     _statDescription: 
+  _keywords:
+  - keywordName: 0 None
+    keywordValue: 0
+    definition: 
+    abilityType: 0
+  - keywordName: 0 None
+    keywordValue: 0
+    definition: 
+    abilityType: 0
+  - keywordName: 0 None
+    keywordValue: 0
+    definition: 
+    abilityType: 0
   _cardText: 

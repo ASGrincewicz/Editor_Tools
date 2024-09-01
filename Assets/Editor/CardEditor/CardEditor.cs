@@ -521,7 +521,6 @@ namespace Editor.CardEditor
             {
                 if (!keyword.IsDefault())
                 {
-                    _keywordsList.Add(keyword);
                     _keywordNamesList.Add(keyword.keywordName);
                 }
             }

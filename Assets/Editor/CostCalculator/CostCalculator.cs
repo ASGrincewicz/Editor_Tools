@@ -1,6 +1,7 @@
 using System;
 using Editor.AttributesWeights;
 using Editor.CardEditor;
+using Editor.KeywordSystem;
 using UnityEngine;
 
 namespace Editor.CostCalculator
@@ -12,11 +13,13 @@ namespace Editor.CostCalculator
         private WeightContainer _weightContainer;
         // card stats
         private CardStat[] _cardStats;
+        private Keyword[] _keywords;
 
-        public CostCalculator(WeightContainer weightContainer, CardStat[] cardStats)
+        public CostCalculator(WeightContainer weightContainer, CardStat[] cardStats, Keyword[] keywords)
         {
             _weightContainer = weightContainer;
             _cardStats = cardStats;
+            _keywords = keywords;
         }
         
         // multiply stat values by corresponding weights
@@ -24,56 +27,39 @@ namespace Editor.CostCalculator
         {
             float totalCost = InitialTotalCost;
 
-            switch (_weightContainer.weightType)
+            if (_weightContainer.weightType == WeightType.Keyword)
             {
-                case WeightType.Ally:
-                case WeightType.Boss:
-                case WeightType.Creature:
-                case WeightType.Hunter:
-                    if (_weightContainer.weightType == WeightType.Hunter)
-                    {
-                        totalCost = AddCardStats(totalCost, 5);
-                    }
-                    else
-                    {
-                        totalCost = AddCardStats(totalCost, 4);
-                    }
-                    break;
-                case WeightType.Environment:
-                    totalCost = AddCardStats(totalCost, 1);
-                    break;
-                case WeightType.Keyword:
-                    totalCost += _weightContainer.cardStatWeights[0].statWeight * _cardStats[0].StatValue;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                totalCost += AddKeywordValues(_weightContainer.cardStatWeights[0].statWeight);
             }
-            Debug.Log($"Pre-normalized cost is: {totalCost += SimulateKeywords()}");
+            else
+            {
+                totalCost = AddCardStats(totalCost, _weightContainer.cardStatWeights.Length);
+                Debug.Log($"Weights Size:{_weightContainer.cardStatWeights.Length}'");
+            }
+            Debug.Log($"Pre-normalized cost is: {totalCost}");
             return totalCost;
         }
 
         private float AddCardStats(float totalCost, int count)
         {
-            for (int i = 0; i <= count; i++)
+            for (int i = 0; i <= count - 2 ; i++)
             {
                 totalCost += _weightContainer.cardStatWeights[i].statWeight * _cardStats[i].StatValue;
             }
+            totalCost += AddKeywordValues(_weightContainer.cardStatWeights[count - 1].statWeight);
             return totalCost;
         }
-        
-        // Placeholder for adding Keyword Values
-        private int SimulateKeywords()
-        {
-            int minRange = 0;
-            int maxRange = 25;
-    
-            // Generate a random float within the specified range
-            int simulatedValue = UnityEngine.Random.Range(minRange, maxRange);
-            Debug.Log($"Simulated Keyword value: {simulatedValue}");
 
-            return simulatedValue;
+        private int AddKeywordValues(float keywordWeight)
+        {
+            int keywordCost = 0;
+            for (int i = 0; i < _keywords.Length; i++)
+            {
+                keywordCost += _keywords[i].keywordValue;
+            }
+            return (int)(keywordCost * keywordWeight);
         }
-        // normalize based on overall weight
+       
         public int NormalizeCost()
         {
             float normal = 3.5f;

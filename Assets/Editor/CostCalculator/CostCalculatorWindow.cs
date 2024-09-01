@@ -41,7 +41,7 @@ namespace Editor.CostCalculator
             SetupAreaRects();
             DrawCardObjectField();
             DrawCardInfoArea();
-            DrawCalculationArea();
+            //DrawCalculationArea();
             DrawMessageBox();
             DrawControlButtons();
         }
@@ -51,9 +51,9 @@ namespace Editor.CostCalculator
             // Initialize Card Info rect
             _cardInfoRect = new Rect(position.width * 0.10f, 50,position.width * 0.5f, position.height * 0.5f );
             // Initialize Calc area rect
-            _calculationRect = new Rect(position.width * 0.10f,_cardInfoRect.y + _cardInfoRect.height + 10,position.width * 0.5f,position.height * 0.1f);
+            //_calculationRect = new Rect(position.width * 0.10f,_cardInfoRect.y + _cardInfoRect.height + 10,position.width * 0.5f,position.height * 0.1f);
             // Initialize Message area rect
-            _messageRect = new Rect(position.width * 0.10f, _calculationRect.y + _calculationRect.height + 10,position.width * 0.5f,position.height * 0.10f);
+            _messageRect = new Rect(position.width * 0.10f, _cardInfoRect.y + _cardInfoRect.height + 10,position.width * 0.5f,position.height * 0.10f);
             // Initialize Button area rect
             _buttonRect = new Rect(position.width * 0.10f, _messageRect.y + _messageRect.height + 5, position.width * 0.5f, position.height * 0.20f);
             }
@@ -88,6 +88,7 @@ namespace Editor.CostCalculator
             DrawLabel($"Hit Points: {_loadedCard?.HitPoints.StatValue}");
             DrawLabel($"Speed: {_loadedCard?.Speed.StatValue}");
             DrawLabel($"Upgrade Slots: {_loadedCard?.UpgradeSlots.StatValue}");
+            DrawLabel($"Keywords: {_loadedCard?.GetKeywordsSumString()}");
             GUILayout.EndArea();
         }
 
@@ -97,14 +98,14 @@ namespace Editor.CostCalculator
             // Display Card Weight Values for the loaded card.
             GUILayout.BeginArea(_calculationRect);
             //GUILayout.Space(50);
-            DrawLabel("Calculation Info will go here.");
+            DrawLabel($"Calculation: ");
             GUILayout.EndArea();
         }
 
         private void DrawMessageBox()
         {
             GUILayout.BeginArea(_messageRect);
-            EditorGUILayout.LabelField(_message, EditorStyles.wordWrappedLabel, GUILayout.Height(_messageRect.height));
+            EditorGUILayout.LabelField(_message,  EditorStyles.whiteLargeLabel, GUILayout.Height(_messageRect.height));
             GUILayout.EndArea();
         }
 
@@ -145,7 +146,7 @@ namespace Editor.CostCalculator
             _message = $"Calculating cost for {_loadedCard?.CardName}";
             if (!ReferenceEquals(_loadedCard, null))
             {
-                CostCalculator calculator = new CostCalculator(_loadedCard.WeightData,_loadedCard.GetCardStats());
+                CostCalculator calculator = new CostCalculator(_loadedCard.WeightData,_loadedCard.GetCardStats(), _loadedCard.Keywords);
                 ;
                cost = calculator.NormalizeCost();
             }

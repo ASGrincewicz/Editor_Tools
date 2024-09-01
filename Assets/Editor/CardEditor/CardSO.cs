@@ -117,6 +117,21 @@ namespace Editor.CardEditor
             return stats;
         }
 
+        public int GetKeywordsTotalValue()
+        {
+            int total = 0;
+            foreach (Keyword keyword in _keywords)
+            {
+                total += keyword.keywordValue;
+            }
+            return total;
+        }
+
+        public string GetKeywordsSumString()
+        {
+            return $"{Keywords[0].keywordName}({Keywords[0].keywordValue}) + {Keywords[1].keywordName}({Keywords[1].keywordValue}) + {Keywords[2].keywordName}({Keywords[2].keywordValue}) = {GetKeywordsTotalValue()}";
+        }
+
         public WeightContainer WeightData
         {
             get { return _weightData; }
