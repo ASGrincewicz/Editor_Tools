@@ -191,7 +191,7 @@ namespace Editor.CardEditor
                     _keywordNamesList.ToArray(),
                     GUILayout.Width(FIELD_WIDTH / 3)
                 );
-
+                //TODO: Need error checking on this.
                 // Use Find method to assign Keyword to _selectedKeywords
                 string selectedKeywordName = _keywordNamesList[_selectedKeywordsIndex[i]];
                 _selectedKeywords[i] = _keywordManager.GetKeywordByName(selectedKeywordName);

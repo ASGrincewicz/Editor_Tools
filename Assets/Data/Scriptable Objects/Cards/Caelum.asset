@@ -40,5 +40,20 @@ MonoBehaviour:
     _statName: 5
     _statValue: 1
     _statDescription: Amount of Upgrades that can be equipped.
-  _keywords: []
+  _keywords:
+  - keywordName: Overcharge
+    keywordValue: 10
+    definition: 'Shuffle X cards from your hand into
+
+      your deck. This card
+      has +5X Attack.'
+    abilityType: 1
+  - keywordName: Pulse
+    keywordValue: 11
+    definition: "Deal 5 Damage to every card at this \ncard's location."
+    abilityType: 3
+  - keywordName: None
+    keywordValue: 0
+    definition: 
+    abilityType: 0
   _cardText: Discard any Upgrades in your hand to deal 10 damage to target unit.

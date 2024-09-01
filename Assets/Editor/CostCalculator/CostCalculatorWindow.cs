@@ -19,6 +19,7 @@ namespace Editor.CostCalculator
         // Class Variables
         private CardSO _loadedCard = null;
         private string _message = "";
+        private string _keywordSumString;
 
         // GUI Variables
         private Rect _cardInfoRect;
@@ -88,7 +89,7 @@ namespace Editor.CostCalculator
             DrawLabel($"Hit Points: {_loadedCard?.HitPoints.StatValue}");
             DrawLabel($"Speed: {_loadedCard?.Speed.StatValue}");
             DrawLabel($"Upgrade Slots: {_loadedCard?.UpgradeSlots.StatValue}");
-            DrawLabel($"Keywords: {_loadedCard?.GetKeywordsSumString()}");
+            DrawLabel($"Keywords: {_keywordSumString}");
             GUILayout.EndArea();
         }
 
@@ -151,6 +152,7 @@ namespace Editor.CostCalculator
                cost = calculator.NormalizeCost();
             }
 
+            _keywordSumString = _loadedCard?.GetKeywordsSumString();
             _message = $"Cost is {cost}";
         }
     }

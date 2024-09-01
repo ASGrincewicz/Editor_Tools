@@ -194,7 +194,7 @@ namespace Editor.KeywordSystem
             _keywordDefinition = "";
             _keywordValue = 0;
             _keywordName = "";
-            _abilityType = AbilityType.Block;
+            _abilityType = AbilityType.None;
         }
     }
 }

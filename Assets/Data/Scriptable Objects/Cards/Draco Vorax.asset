@@ -47,11 +47,11 @@ MonoBehaviour:
       higher to succeed \nor they take the damage."
     abilityType: 0
   - keywordName: Nullify
-    keywordValue: 12
+    keywordValue: 11
     definition: Cancel an enemy's ability and all effects.
-    abilityType: 2
-  - keywordName: 0 None
-    keywordValue: 0
-    definition: 
-    abilityType: 0
+    abilityType: 3
+  - keywordName: Parasitic
+    keywordValue: 6
+    definition: Gross stuff here.
+    abilityType: 1
   _cardText: 

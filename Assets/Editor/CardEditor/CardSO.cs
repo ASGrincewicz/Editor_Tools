@@ -1,5 +1,6 @@
 using Editor.AttributesWeights;
 using Editor.KeywordSystem;
+using UnityEditor;
 using UnityEngine;
 
 namespace Editor.CardEditor
@@ -27,6 +28,8 @@ namespace Editor.CardEditor
         [HideInInspector] [SerializeField] private Keyword[] _keywords;
         
         [HideInInspector] [SerializeField][Multiline]
+        
+        
         private string _cardText;
 
         /// <summary>
@@ -119,6 +122,7 @@ namespace Editor.CardEditor
 
         public int GetKeywordsTotalValue()
         {
+            GetCurrentKeywordInfo();
             int total = 0;
             foreach (Keyword keyword in _keywords)
             {
@@ -129,7 +133,27 @@ namespace Editor.CardEditor
 
         public string GetKeywordsSumString()
         {
+            if (Keywords == null || Keywords.Length == 0)
+            {
+                return "No Keywords Assigned to this card.";
+            }
             return $"{Keywords[0].keywordName}({Keywords[0].keywordValue}) + {Keywords[1].keywordName}({Keywords[1].keywordValue}) + {Keywords[2].keywordName}({Keywords[2].keywordValue}) = {GetKeywordsTotalValue()}";
+        }
+
+        public void GetCurrentKeywordInfo()
+        {
+            KeywordManager manager =
+                AssetDatabase.LoadAssetAtPath<KeywordManager>(
+                    "Assets/Data/Scriptable Objects/Keywords/KeywordManager.asset");
+            if(!ReferenceEquals(manager, null))
+            {
+                for(int i=0; i<Keywords.Length; i++)
+                {
+                     Keyword temp = manager.keywordList.Find(x => x.keywordName == _keywords[i].keywordName);
+                     _keywords[i].keywordValue = temp.keywordValue;
+                     Debug.Log($"{_keywords[i].keywordName} value was updated to {temp.keywordValue}");
+                }
+            }
         }
 
         public WeightContainer WeightData
