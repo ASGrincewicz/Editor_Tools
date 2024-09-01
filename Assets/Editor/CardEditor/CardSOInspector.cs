@@ -111,13 +111,17 @@ namespace Editor.CardEditor
 
         private void DrawKeywordArrayProperty()
         {
-            GUILayout.Label("Keywords:");
+            GUILayout.Label("Keywords:",EditorStyles.boldLabel);
             for (int i = 0; i < _keywordsProperty.arraySize; i++)
             {
                 
                 SerializedProperty keywordProperty = _keywordsProperty.GetArrayElementAtIndex(i);
                 SerializedProperty keywordNameProperty = keywordProperty.FindPropertyRelative("keywordName");
-                DrawLabel(keywordNameProperty.stringValue, EditorStyles.boldLabel);
+                string keywordName = keywordNameProperty.stringValue;
+                if (!string.IsNullOrEmpty(keywordName))
+                {
+                    DrawLabel(keywordNameProperty.stringValue, EditorStyles.boldLabel);
+                }
             }
         }
 

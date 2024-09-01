@@ -40,4 +40,18 @@ MonoBehaviour:
     _statName: 0
     _statValue: 0
     _statDescription: 
+  _keywords:
+  - keywordName: Deflect
+    keywordValue: 4
+    definition: "When this card is attacked, roll a die, \nthe attacker must roll
+      higher to succeed \nor they take the damage."
+    abilityType: 0
+  - keywordName: Nullify
+    keywordValue: 12
+    definition: Cancel an enemy's ability and all effects.
+    abilityType: 2
+  - keywordName: 0 None
+    keywordValue: 0
+    definition: 
+    abilityType: 0
   _cardText: 

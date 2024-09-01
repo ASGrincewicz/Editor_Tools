@@ -168,31 +168,36 @@ namespace Editor.CardEditor
                     throw new ArgumentOutOfRangeException();
             }
           
-           GUILayout.BeginHorizontal(GUILayout.Width(FIELD_WIDTH));
-           EditorGUIUtility.labelWidth = 100;
-           GUILayout.Label("Keywords");
-           if (_selectedKeywords is not { Length: 3 })
-           {
-               _selectedKeywords = new Keyword[3];
-               _selectedKeywordsIndex = new int[3]; // Initialize the index array only once.
-           }
-
-           for (int i = 0; i < _selectedKeywords.Length; i++)
-           {
-               _selectedKeywordsIndex[i] = EditorGUILayout.Popup(
-                   _selectedKeywordsIndex[i],
-                   _keywordNamesList.ToArray(),
-                   GUILayout.Width(FIELD_WIDTH / 3)
-               );
-
-               // Use Find method to assign Keyword to _selectedKeywords
-               string selectedKeywordName = _keywordNamesList[_selectedKeywordsIndex[i]];
-               _selectedKeywords[i] = _keywordManager.GetKeywordByName(selectedKeywordName);
-           }
-          
-           GUILayout.EndHorizontal();
+            DrawKeywordArea();
             GUILayout.Label("Card Text");
             _cardText = EditorGUILayout.TextArea(_cardText, GUILayout.Height(100), GUILayout.Width(FIELD_WIDTH));
+        }
+
+        private void DrawKeywordArea()
+        {
+            GUILayout.BeginHorizontal(GUILayout.Width(FIELD_WIDTH));
+            EditorGUIUtility.labelWidth = 100;
+            GUILayout.Label("Keywords");
+            if (_selectedKeywords is not { Length: 3 })
+            {
+                _selectedKeywords = new Keyword[3];
+                _selectedKeywordsIndex = new int[3]; // Initialize the index array only once.
+            }
+
+            for (int i = 0; i < _selectedKeywords.Length; i++)
+            {
+                _selectedKeywordsIndex[i] = EditorGUILayout.Popup(
+                    _selectedKeywordsIndex[i],
+                    _keywordNamesList.ToArray(),
+                    GUILayout.Width(FIELD_WIDTH / 3)
+                );
+
+                // Use Find method to assign Keyword to _selectedKeywords
+                string selectedKeywordName = _keywordNamesList[_selectedKeywordsIndex[i]];
+                _selectedKeywords[i] = _keywordManager.GetKeywordByName(selectedKeywordName);
+            }
+          
+            GUILayout.EndHorizontal();
         }
 
         private void DrawControlButtons()
@@ -285,6 +290,7 @@ namespace Editor.CardEditor
             card.CardType = _cardTypes;
             card.CardName = _cardName;
             card.ArtWork = _artwork;
+            card.Keywords = _selectedKeywords;
             card.CardText = _cardText;
             switch (_cardTypes)
             {
@@ -388,6 +394,11 @@ namespace Editor.CardEditor
                 _cardTypes = _selectedCard.CardType;
                 _cardName = _selectedCard.CardName;
                 _artwork = _selectedCard.ArtWork;
+                _selectedKeywords = _selectedCard.Keywords;
+                for (int i = 0; i < _selectedKeywords.Length; i++)
+                {
+                    _selectedKeywordsIndex[i] = _keywordNamesList.IndexOf(_selectedKeywords[i].keywordName);
+                }
                 _cardText += _stringBuilder.Append(_selectedCard.CardText);
                 switch (_cardTypes)
                 {
@@ -439,7 +450,7 @@ namespace Editor.CardEditor
             _focus = null;
             _explore = null;
             _upgradeSlots = null;
-            
+            _selectedKeywords = null;
             _artwork = null;
         }
 
@@ -453,15 +464,6 @@ namespace Editor.CardEditor
                 AssetDatabase.Refresh();
             }
             UnloadCard();
-            SelectAllCards(false);
-        }
-
-        private void SelectAllCards(bool select)
-        {
-            foreach (CardSO card in _selectedCards.Keys.ToList())
-            {
-               _selectedCards[card] = select;
-            }
         }
         private void EditSelectedCard()
         {
