@@ -13,10 +13,6 @@ MonoBehaviour:
   m_Name: KeywordManager
   m_EditorClassIdentifier: 
   keywordList:
-  - keywordName: 
-    keywordValue: 0
-    definition: 
-    abilityType: 0
   - keywordName: Barrage
     keywordValue: 1
     definition: "Attack X Targets this turn.\nYou must roll X or higher for \neach
@@ -101,3 +97,11 @@ MonoBehaviour:
     definition: Activate this ability to redirect a successful enemy attack on an
       ally towards this card.
     abilityType: 5
+  - keywordName: None
+    keywordValue: 0
+    definition: 
+    abilityType: 0
+  - keywordName: _None
+    keywordValue: 0
+    definition: 
+    abilityType: 0

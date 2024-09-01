@@ -20,33 +20,33 @@ namespace Editor.CardEditor
         private const string KeywordsPropertyName = "_keywords";
         private const string CardTextPropertyName = "_cardText";
         
-        private SerializedProperty WeightDataProperty;
-        private SerializedProperty CardTypeProperty;
-        private SerializedProperty CardNameProperty;
-        private SerializedProperty ArtWorkProperty;
-        private SerializedProperty AttackProperty;
-        private SerializedProperty ExploreProperty;
-        private SerializedProperty HitPointsProperty;
-        private SerializedProperty SpeedProperty;
-        private SerializedProperty FocusProperty;
-        private SerializedProperty UpgradeSlotsProperty;
-        private SerializedProperty KeywordsProperty;
-        private SerializedProperty CardTextProperty;
+        private SerializedProperty _weightDataProperty;
+        private SerializedProperty _cardTypeProperty;
+        private SerializedProperty _cardNameProperty;
+        private SerializedProperty _artWorkProperty;
+        private SerializedProperty _attackProperty;
+        private SerializedProperty _exploreProperty;
+        private SerializedProperty _hitPointsProperty;
+        private SerializedProperty _speedProperty;
+        private SerializedProperty _focusProperty;
+        private SerializedProperty _upgradeSlotsProperty;
+        private SerializedProperty _keywordsProperty;
+        private SerializedProperty _cardTextProperty;
 
         private void OnEnable()
         {
-            WeightDataProperty = serializedObject.FindProperty(WeightDataPropertyName);
-            CardTypeProperty = serializedObject.FindProperty(CardTypePropertyName);
-            CardNameProperty = serializedObject.FindProperty(CardNamePropertyName);
-            ArtWorkProperty = serializedObject.FindProperty(ArtWorkPropertyName);
-            AttackProperty = serializedObject.FindProperty(AttackStatPropertyName);
-            ExploreProperty = serializedObject.FindProperty(ExploreStatPropertyName);
-            HitPointsProperty = serializedObject.FindProperty(HitPointsStatPropertyName);
-            SpeedProperty = serializedObject.FindProperty(SpeedStatPropertyName);
-            FocusProperty = serializedObject.FindProperty(FocusStatPropertyName);
-            UpgradeSlotsProperty = serializedObject.FindProperty(UpgradeSlotsPropertyName);
-            KeywordsProperty = serializedObject.FindProperty(KeywordsPropertyName);
-            CardTextProperty = serializedObject.FindProperty(CardTextPropertyName);
+            _weightDataProperty = serializedObject.FindProperty(WeightDataPropertyName);
+            _cardTypeProperty = serializedObject.FindProperty(CardTypePropertyName);
+            _cardNameProperty = serializedObject.FindProperty(CardNamePropertyName);
+            _artWorkProperty = serializedObject.FindProperty(ArtWorkPropertyName);
+            _attackProperty = serializedObject.FindProperty(AttackStatPropertyName);
+            _exploreProperty = serializedObject.FindProperty(ExploreStatPropertyName);
+            _hitPointsProperty = serializedObject.FindProperty(HitPointsStatPropertyName);
+            _speedProperty = serializedObject.FindProperty(SpeedStatPropertyName);
+            _focusProperty = serializedObject.FindProperty(FocusStatPropertyName);
+            _upgradeSlotsProperty = serializedObject.FindProperty(UpgradeSlotsPropertyName);
+            _keywordsProperty = serializedObject.FindProperty(KeywordsPropertyName);
+            _cardTextProperty = serializedObject.FindProperty(CardTextPropertyName);
         }
         
         public override void OnInspectorGUI()
@@ -80,17 +80,17 @@ namespace Editor.CardEditor
 
         private void DrawProperties() 
         {
-            DrawProperty(WeightDataProperty);
-            CardTypes cardTypes = (CardTypes)CardTypeProperty.enumValueIndex;
+            DrawProperty(_weightDataProperty);
+            CardTypes cardTypes = (CardTypes)_cardTypeProperty.enumValueIndex;
             DrawLabel($"Card Type: {cardTypes.GetDescription()}", EditorStyles.boldLabel, GUILayout.Width(200), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
 
-            DrawLabel($"Card Name: {CardNameProperty.stringValue}", EditorStyles.boldLabel, GUILayout.Width(200), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+            DrawLabel($"Card Name: {_cardNameProperty.stringValue}", EditorStyles.boldLabel, GUILayout.Width(200), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
 
             DrawArtWorkProperty();
             
             DrawKeywordArrayProperty();
 
-            DrawLabel($"Card Text: {CardTextProperty.stringValue}", EditorStyles.wordWrappedLabel, GUILayout.Width(200), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+            DrawLabel($"Card Text: {_cardTextProperty.stringValue}", EditorStyles.wordWrappedLabel, GUILayout.Width(200), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
 
             DrawLabel($"STATS:", EditorStyles.whiteLargeLabel, GUILayout.Width(200), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
 
@@ -99,7 +99,7 @@ namespace Editor.CardEditor
 
         private void DrawArtWorkProperty() 
         {
-            if (!(ArtWorkProperty.objectReferenceValue is Texture2D artworkTexture)) 
+            if (!(_artWorkProperty.objectReferenceValue is Texture2D artworkTexture)) 
             {
                 return;
             }
@@ -112,10 +112,10 @@ namespace Editor.CardEditor
         private void DrawKeywordArrayProperty()
         {
             GUILayout.Label("Keywords:");
-            for (int i = 0; i < KeywordsProperty.arraySize; i++)
+            for (int i = 0; i < _keywordsProperty.arraySize; i++)
             {
                 
-                SerializedProperty keywordProperty = KeywordsProperty.GetArrayElementAtIndex(i);
+                SerializedProperty keywordProperty = _keywordsProperty.GetArrayElementAtIndex(i);
                 SerializedProperty keywordNameProperty = keywordProperty.FindPropertyRelative("keywordName");
                 DrawLabel(keywordNameProperty.stringValue, EditorStyles.boldLabel);
             }
@@ -129,7 +129,7 @@ namespace Editor.CardEditor
                 case CardTypes.TBD:
                 case CardTypes.Action:
                 case CardTypes.Environment:
-                    DrawProperty(ExploreProperty);
+                    DrawProperty(_exploreProperty);
                     break;
                 case CardTypes.Gear_Equipment:
                 case CardTypes.Gear_Upgrade:
@@ -139,7 +139,7 @@ namespace Editor.CardEditor
                     DrawCommonStatsProperties();
                     if (cardTypes == CardTypes.Character_Hunter)
                     {
-                        DrawProperty(UpgradeSlotsProperty);
+                        DrawProperty(_upgradeSlotsProperty);
                     }
                     break;
             }
@@ -147,10 +147,10 @@ namespace Editor.CardEditor
 
         private void DrawCommonStatsProperties()
         {
-            DrawProperty(AttackProperty);
-            DrawProperty(HitPointsProperty);
-            DrawProperty(SpeedProperty);
-            DrawProperty(FocusProperty);
+            DrawProperty(_attackProperty);
+            DrawProperty(_hitPointsProperty);
+            DrawProperty(_speedProperty);
+            DrawProperty(_focusProperty);
         }
 
         private void DrawProperty(SerializedProperty property) 

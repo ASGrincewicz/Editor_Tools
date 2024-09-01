@@ -2,6 +2,7 @@ namespace Editor.KeywordSystem
 {
     public enum AbilityType
     {
+        None,
         Block,
         Buff,
         Counter,

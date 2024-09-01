@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Editor.AttributesWeights;
+using Editor.KeywordSystem;
 using Editor.Utilities;
+using JetBrains.Annotations;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using static Editor.CardEditor.StatDataReference;
@@ -12,6 +15,7 @@ namespace Editor.CardEditor
 {
     public class CardEditor : EditorWindow
     {
+        [SerializeField] private KeywordManager _keywordManager;
         // Constants
         private const string ASSET_PATH = "Assets/Data/Scriptable Objects/Cards/";
 
@@ -52,7 +56,11 @@ namespace Editor.CardEditor
         private int _speedValue;
         private CardStat? _upgradeSlots;
         private int _upgradeSlotsValue;
-        private Texture2D _artwork;
+        [CanBeNull] private Texture2D _artwork;
+        private List<Keyword> _keywordsList;
+        private List<string> _keywordNamesList;
+        private Keyword[] _selectedKeywords;
+        private int[] _selectedKeywordsIndex;
         [Multiline] private string _cardText;
         private CardSO _selectedCard;
         
@@ -87,6 +95,8 @@ namespace Editor.CardEditor
                     _selectedCards[card] = false; // Initialize all cards as unselected
                 }
             }
+            RefreshKeywordsList();
+            
             _stringBuilder = new StringBuilder();
         }
 
@@ -157,7 +167,30 @@ namespace Editor.CardEditor
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-           
+          
+           GUILayout.BeginHorizontal(GUILayout.Width(FIELD_WIDTH));
+           EditorGUIUtility.labelWidth = 100;
+           GUILayout.Label("Keywords");
+           if (_selectedKeywords is not { Length: 3 })
+           {
+               _selectedKeywords = new Keyword[3];
+               _selectedKeywordsIndex = new int[3]; // Initialize the index array only once.
+           }
+
+           for (int i = 0; i < _selectedKeywords.Length; i++)
+           {
+               _selectedKeywordsIndex[i] = EditorGUILayout.Popup(
+                   _selectedKeywordsIndex[i],
+                   _keywordNamesList.ToArray(),
+                   GUILayout.Width(FIELD_WIDTH / 3)
+               );
+
+               // Use Find method to assign Keyword to _selectedKeywords
+               string selectedKeywordName = _keywordNamesList[_selectedKeywordsIndex[i]];
+               _selectedKeywords[i] = _keywordManager.GetKeywordByName(selectedKeywordName);
+           }
+          
+           GUILayout.EndHorizontal();
             GUILayout.Label("Card Text");
             _cardText = EditorGUILayout.TextArea(_cardText, GUILayout.Height(100), GUILayout.Width(FIELD_WIDTH));
         }
@@ -230,13 +263,13 @@ namespace Editor.CardEditor
             {
                 EditSelectedCard();
             }
-            if (GUILayout.Button("Select All", GUILayout.ExpandWidth(true)))
+            if (GUILayout.Button("Refresh Keywords", GUILayout.ExpandWidth(true)))
             {
-                SelectAllCards(true);
+               RefreshKeywordsList();
             }
-            if (GUILayout.Button("Deselect All", GUILayout.ExpandWidth(true)))
+            if (GUILayout.Button("Refresh Card List", GUILayout.ExpandWidth(true)))
             {
-                SelectAllCards(false);
+               RefreshCardList(true);
             }
             GUILayout.EndHorizontal();
     
@@ -469,6 +502,27 @@ namespace Editor.CardEditor
 
                 return compare == 0 ? card1.CardName.CompareTo(card2.CardName) : compare;
             });
+        }
+
+        private void RefreshKeywordsList()
+        {
+            _keywordsList = new List<Keyword>();
+            foreach (Keyword keyword in _keywordManager.keywordList)
+            {
+                if (!keyword.IsDefault())
+                {
+                    _keywordsList.Add(keyword);
+                }
+            }
+            _keywordNamesList = new List<string>();
+            foreach (Keyword keyword in _keywordsList.ToList())
+            {
+                if (!keyword.IsDefault())
+                {
+                    _keywordsList.Add(keyword);
+                    _keywordNamesList.Add(keyword.keywordName);
+                }
+            }
         }
         private void DrawStatLayout(StatNames statName, ref int statValue, string statDescription)
         {

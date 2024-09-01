@@ -9,7 +9,7 @@ namespace Editor.KeywordSystem
     {
         public List<Keyword> keywordList;
 
-        private void OnValidate()
+        public void OnValidate()
         {
             if (keywordList == null)
                 return;
@@ -65,6 +65,23 @@ namespace Editor.KeywordSystem
                 keywordList.Add(new Keyword { keywordName = string.Empty });
             }
             keywordList.Sort((a, b) => string.Compare(a.keywordName, b.keywordName, StringComparison.Ordinal));
+        }
+        
+        // Method to get all keyword names as a list of strings
+        public List<string> GetKeywordNames()
+        {
+            List<string> keywordNames = new List<string>();
+            foreach (var keyword in keywordList)
+            {
+                keywordNames.Add(keyword.keywordName);
+            }
+            return keywordNames;
+        }
+
+        // Method to get a Keyword by name using the Find method
+        public Keyword GetKeywordByName(string name)
+        {
+            return keywordList.Find(keyword => keyword.keywordName == name);
         }
     }
 }

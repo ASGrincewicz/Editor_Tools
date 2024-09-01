@@ -40,5 +40,6 @@ MonoBehaviour:
     _statName: 5
     _statValue: 4
     _statDescription: Amount of Upgrades that can be equipped.
+  _keywords: []
   _cardText: "Main Character of the game.  \nThis Hunter card should be well-rounded\n
     and adapt to most strategies."
