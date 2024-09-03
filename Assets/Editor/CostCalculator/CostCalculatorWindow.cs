@@ -11,13 +11,19 @@ namespace Editor.CostCalculator
         // Constants
         private const string Window_Title = "Card Cost Calculator";
         private const bool Is_Utility_Window = false;
-        private const string submitButtonText = "Calculate";
-        private const string loadButtonText = "Load";
+        private const string CalculateButtonText = "Calculate";
+        private const string EditButtonText = "Edit Card";
         private const float Label_Height = 30;
         private const float Rect_Width = 300;
 
         // Class Variables
         private CardSO _loadedCard = null;
+
+        public CardSO LoadedCard
+        {
+            get => _loadedCard;
+            set => _loadedCard = value;
+        }
         private string _message = "";
         private string _keywordSumString;
 
@@ -93,14 +99,10 @@ namespace Editor.CostCalculator
             GUILayout.EndArea();
         }
 
-        private void DrawCalculationArea()
+        public void OpenInCostCalculatorWindow(CardSO card)
         {
-            // 600w * 200h
-            // Display Card Weight Values for the loaded card.
-            GUILayout.BeginArea(_calculationRect);
-            //GUILayout.Space(50);
-            DrawLabel($"Calculation: ");
-            GUILayout.EndArea();
+            _loadedCard = card;
+            RunCalculation();
         }
 
         private void DrawMessageBox()
@@ -116,20 +118,15 @@ namespace Editor.CostCalculator
             GUILayout.BeginHorizontal(GUILayout.Width(position.width * 0.33f),GUILayout.ExpandHeight(true));
             // Calculate Cost Button
             // 200w * 60h
-            if (GUILayout.Button(submitButtonText, GUILayout.Width(position.width * 0.33f), GUILayout.Height(_buttonRect.height * 0.25f)))
+            if (GUILayout.Button(CalculateButtonText, GUILayout.Width(position.width * 0.25f), GUILayout.Height(_buttonRect.height * 0.25f)))
             {
                 RunCalculation();
             }
-            /*GUILayout.Space(50);
-            if (GUILayout.Button(loadButtonText, GUILayout.Width(150)))
+            if (GUILayout.Button(EditButtonText, GUILayout.Width(position.width * 0.25f), GUILayout.Height(_buttonRect.height * 0.25f)))
             {
-                // Load
-            }*/
-        
-            // 200w space
-        
-            // Load button
-            // 200w * 60h
+                CardEditor.CardEditorWindow instance = EditorWindow.GetWindow<CardEditor.CardEditorWindow>();
+                instance.OpenCardInEditor(_loadedCard);
+            }
             GUILayout.EndHorizontal();
             GUILayout.EndArea();
         }

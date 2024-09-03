@@ -40,4 +40,17 @@ MonoBehaviour:
     _statName: 0
     _statValue: 0
     _statDescription: 
+  _keywords:
+  - keywordName: Unveil
+    keywordValue: 6
+    definition: Deactivate an opponent's 'Cloak'.
+    abilityType: 2
+  - keywordName: None
+    keywordValue: 0
+    definition: 
+    abilityType: 0
+  - keywordName: None
+    keywordValue: 0
+    definition: 
+    abilityType: 0
   _cardText: Equip to a Hunter.

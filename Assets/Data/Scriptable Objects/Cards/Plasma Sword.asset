@@ -40,4 +40,18 @@ MonoBehaviour:
     _statName: 0
     _statValue: 0
     _statDescription: 
+  _keywords:
+  - keywordName: Charge
+    keywordValue: 3
+    definition: This cards next attack does 2x Damage
+    abilityType: 1
+  - keywordName: Deflect
+    keywordValue: 4
+    definition: "When this card is attacked, roll a die, \nthe attacker must roll
+      higher to succeed \nor they take the damage."
+    abilityType: 0
+  - keywordName: None
+    keywordValue: 0
+    definition: 
+    abilityType: 0
   _cardText: 

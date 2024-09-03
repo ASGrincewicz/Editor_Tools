@@ -18,7 +18,7 @@ MonoBehaviour:
   _artWork: {fileID: 2800000, guid: 960df1e29a527114bb4c85e6fa29098a, type: 3}
   _attack:
     _statName: 0
-    _statValue: 15
+    _statValue: 5
     _statDescription: Amount of damage dealt.
   _explore:
     _statName: 0
@@ -30,14 +30,28 @@ MonoBehaviour:
     _statDescription: Resources generated
   _hitPoints:
     _statName: 3
-    _statValue: 65
+    _statValue: 75
     _statDescription: Amount of health
   _speed:
     _statName: 4
-    _statValue: 5
+    _statValue: 6
     _statDescription: Determines Attack Sequence and Move Rate.
   _upgradeSlots:
     _statName: 0
     _statValue: 0
     _statDescription: 
-  _cardText: Text goes here...
+  _keywords:
+  - keywordName: Blink
+    keywordValue: 2
+    definition: "Move this card from the melee zone \nto the ranged zone or vice
+      versa."
+    abilityType: 10
+  - keywordName: Mend
+    keywordValue: 1
+    definition: Heal any ally by 5.
+    abilityType: 9
+  - keywordName: Pulse
+    keywordValue: 11
+    definition: "Deal 5 Damage to every card at this \ncard's location."
+    abilityType: 3
+  _cardText: 

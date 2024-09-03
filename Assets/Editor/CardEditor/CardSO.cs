@@ -12,6 +12,7 @@ namespace Editor.CardEditor
     [CreateAssetMenu(menuName="Config/CardData")] 
     public class CardSO : ScriptableObject, ICardData
     {
+        private const string KeywordManagerPath = "Assets/Data/Scriptable Objects/Keywords/KeywordManager.asset";
         [HideInInspector] [SerializeField] private WeightContainer _weightData;
         [HideInInspector] [SerializeField] private CardTypes _cardType;
         [HideInInspector] [SerializeField] private string _cardName;
@@ -28,8 +29,6 @@ namespace Editor.CardEditor
         [HideInInspector] [SerializeField] private Keyword[] _keywords;
         
         [HideInInspector] [SerializeField][Multiline]
-        
-        
         private string _cardText;
 
         /// <summary>
@@ -62,7 +61,14 @@ namespace Editor.CardEditor
         /// </summary>
         public Keyword[] Keywords
         {
-            get { return _keywords; }
+            get
+            {
+                if (_keywords == null)
+                {
+                    _keywords = new Keyword[3];
+                }
+                return _keywords;
+            }
             set { _keywords = value; }
         }
         /// <summary>
@@ -120,7 +126,7 @@ namespace Editor.CardEditor
             return stats;
         }
 
-        public int GetKeywordsTotalValue()
+        private int GetKeywordsTotalValue()
         {
             GetCurrentKeywordInfo();
             int total = 0;
@@ -140,19 +146,26 @@ namespace Editor.CardEditor
             return $"{Keywords[0].keywordName}({Keywords[0].keywordValue}) + {Keywords[1].keywordName}({Keywords[1].keywordValue}) + {Keywords[2].keywordName}({Keywords[2].keywordValue}) = {GetKeywordsTotalValue()}";
         }
 
-        public void GetCurrentKeywordInfo()
+        private void GetCurrentKeywordInfo()
         {
-            KeywordManager manager =
-                AssetDatabase.LoadAssetAtPath<KeywordManager>(
-                    "Assets/Data/Scriptable Objects/Keywords/KeywordManager.asset");
-            if(!ReferenceEquals(manager, null))
+            KeywordManager manager = LoadKeywordManager();
+            if (manager != null)
             {
-                for(int i=0; i<Keywords.Length; i++)
-                {
-                     Keyword temp = manager.keywordList.Find(x => x.keywordName == _keywords[i].keywordName);
-                     _keywords[i].keywordValue = temp.keywordValue;
-                     Debug.Log($"{_keywords[i].keywordName} value was updated to {temp.keywordValue}");
-                }
+                UpdateKeywords(manager);
+            }
+        }
+
+        private KeywordManager LoadKeywordManager()
+        {
+            return AssetDatabase.LoadAssetAtPath<KeywordManager>(KeywordManagerPath);
+        }
+
+        private void UpdateKeywords(KeywordManager manager)
+        {
+            for (int i = 0; i < _keywords.Length; i++)
+            {
+                Keyword keyword = manager.keywordList.Find(x => x.keywordName == _keywords[i].keywordName);
+                _keywords[i].keywordValue = keyword.keywordValue;
             }
         }
 

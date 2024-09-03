@@ -40,6 +40,22 @@ MonoBehaviour:
     _statName: 0
     _statValue: 0
     _statDescription: 
+  _keywords:
+  - keywordName: Cloak
+    keywordValue: 7
+    definition: This card cannot be targeted this turn.
+    abilityType: 0
+  - keywordName: Overcharge
+    keywordValue: 10
+    definition: 'Shuffle X cards from your hand into
+
+      your deck. This card
+      has +5X Attack.'
+    abilityType: 1
+  - keywordName: None
+    keywordValue: 0
+    definition: 
+    abilityType: 0
   _cardText: 'Equip to Nova Solaris.
 
     Search your Deck for any upgrade with ''Phase''

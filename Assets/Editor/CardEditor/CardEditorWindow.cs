@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Editor.AttributesWeights;
+using Editor.CostCalculator;
 using Editor.KeywordSystem;
 using Editor.Utilities;
 using JetBrains.Annotations;
@@ -13,7 +14,7 @@ using static Editor.CardEditor.StatDataReference;
 
 namespace Editor.CardEditor
 {
-    public class CardEditor : EditorWindow
+    public class CardEditorWindow : EditorWindow
     {
         [SerializeField] private KeywordManager _keywordManager;
         // Constants
@@ -74,7 +75,7 @@ namespace Editor.CardEditor
         [MenuItem("Tools/Card Editor")]
         public static void Init()
         {
-            EditorWindow window = GetWindow<CardEditor>("Card Editor");
+            EditorWindow window = GetWindow<CardEditorWindow>("Card Editor");
             window.position = new Rect(50f, 50f, 700f, 800f);
             window.Show();
         }
@@ -224,6 +225,12 @@ namespace Editor.CardEditor
                 {
                     UnloadCard();
                 }
+
+                if (GUILayout.Button("Calculate Cost") && !ReferenceEquals(_selectedCard, null))
+                {
+                    CostCalculatorWindow instance = EditorWindow.GetWindow<CostCalculatorWindow>();
+                    instance.OpenInCostCalculatorWindow(_selectedCard);
+                }
             }
         }
 
@@ -335,6 +342,7 @@ namespace Editor.CardEditor
                 EditorUtility.FocusProjectWindow();
                 Selection.activeObject = newCard;
                 RefreshCardList(true);
+                _cardToEdit = newCard;
             }
             else
             {
@@ -463,7 +471,6 @@ namespace Editor.CardEditor
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
             }
-            UnloadCard();
         }
         private void EditSelectedCard()
         {

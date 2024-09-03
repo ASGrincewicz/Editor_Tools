@@ -1,4 +1,5 @@
-﻿using Editor.KeywordSystem;
+﻿using Editor.CostCalculator;
+using Editor.KeywordSystem;
 using Editor.Utilities;
 using UnityEditor;
 using UnityEngine;
@@ -62,21 +63,33 @@ namespace Editor.CardEditor
             GUILayout.BeginVertical(GUILayout.Width(300));
             EditorGUIUtility.labelWidth = 80;
 
-            DrawOpenButton(card);
+            DrawOpenCardEditorButton(card);
+            DrawOpenCostCalculatorButton(card);
             DrawProperties();
 
             GUILayout.EndVertical();
         }
 
-        private void DrawOpenButton(CardSO card) 
+        private void DrawOpenCardEditorButton(CardSO card) 
         {
             if (!GUILayout.Button("Open in Card Editor")) 
             {
                 return;
             }
-            CardEditor instance = EditorWindow.GetWindow<CardEditor>();
+            CardEditorWindow instance = EditorWindow.GetWindow<CardEditorWindow>();
             instance.OpenCardInEditor(card);
         }
+
+        private void DrawOpenCostCalculatorButton(CardSO card)
+        {
+            if (!GUILayout.Button("Open Cost Calculator"))
+            {
+                return;
+            }
+            CostCalculatorWindow instance = EditorWindow.GetWindow<CostCalculatorWindow>();
+            instance.OpenInCostCalculatorWindow(card);
+        }
+        
 
         private void DrawProperties() 
         {
@@ -127,7 +140,6 @@ namespace Editor.CardEditor
 
         private void DrawStatsProperties(CardTypes cardTypes) 
         {
-            //Debug.Log($"Card Type: {cardTypes.GetDescription()}");
             switch (cardTypes)
             {
                 case CardTypes.TBD:
