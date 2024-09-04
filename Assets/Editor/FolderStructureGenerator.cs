@@ -6,7 +6,7 @@ namespace Editor
 {
     public static class FolderStructureGenerator
     {
-        [MenuItem("Tools/Create Project Folders")]
+        [MenuItem("Tools/Utilities/Create Project Folders")]
         private static void CreateFolders()
         {
             // Define your folder hierarchy here

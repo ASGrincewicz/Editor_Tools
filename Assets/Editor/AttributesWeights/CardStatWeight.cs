@@ -8,7 +8,7 @@ namespace Editor.AttributesWeights
     {
         //public CardTypes cardType;
         public StatNames statName;
-        [Range(0.01f, 1.0f)]
+        [Range(0.00f, 1.0f)]
         public float statWeight;
         
     }

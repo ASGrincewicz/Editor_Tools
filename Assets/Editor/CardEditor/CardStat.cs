@@ -13,6 +13,7 @@ namespace Editor.CardEditor
         [SerializeField] private string _statDescription;
 
         //Properties
+        public StatNames RawStatName => _statName;
         public string StatName
         {
             get { return _statName.GetDescription(); }

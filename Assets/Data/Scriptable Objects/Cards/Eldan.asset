@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85c2db69d287cba46a63d7dc92203786, type: 3}
   m_Name: Eldan
   m_EditorClassIdentifier: 
+  _weightData: {fileID: 11400000, guid: 2765bd0e5cf8642e1b657d07d186cd61, type: 2}
   _cardType: 3
   _cardName: Eldan
   _artWork: {fileID: 2800000, guid: 1cfdc142c7aca32438a78fcee7fcf426, type: 3}
@@ -39,4 +40,17 @@ MonoBehaviour:
     _statName: 0
     _statValue: 0
     _statDescription: 
+  _keywords:
+  - keywordName: Fortify
+    keywordValue: 3
+    definition: Take -5 Damage from the next successful attack.
+    abilityType: 5
+  - keywordName: None
+    keywordValue: 0
+    definition: 
+    abilityType: 0
+  - keywordName: None
+    keywordValue: 0
+    definition: 
+    abilityType: 0
   _cardText: 

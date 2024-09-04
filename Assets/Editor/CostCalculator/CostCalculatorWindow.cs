@@ -11,14 +11,21 @@ namespace Editor.CostCalculator
         // Constants
         private const string Window_Title = "Card Cost Calculator";
         private const bool Is_Utility_Window = false;
-        private const string submitButtonText = "Calculate";
-        private const string loadButtonText = "Load";
+        private const string CalculateButtonText = "Calculate";
+        private const string EditButtonText = "Edit Card";
         private const float Label_Height = 30;
         private const float Rect_Width = 300;
 
         // Class Variables
         private CardSO _loadedCard = null;
+
+        public CardSO LoadedCard
+        {
+            get => _loadedCard;
+            set => _loadedCard = value;
+        }
         private string _message = "";
+        private string _keywordSumString;
 
         // GUI Variables
         private Rect _cardInfoRect;
@@ -32,7 +39,7 @@ namespace Editor.CostCalculator
             CostCalculatorWindow window =
                 (CostCalculatorWindow)GetWindow(typeof(CostCalculatorWindow), Is_Utility_Window, Window_Title);
             // Set window position
-            window.position = new Rect(50, 50, 300, 700);
+            window.position = new Rect(50, 50, 300, 500);
             window.Show();
         }
 
@@ -41,7 +48,7 @@ namespace Editor.CostCalculator
             SetupAreaRects();
             DrawCardObjectField();
             DrawCardInfoArea();
-            DrawCalculationArea();
+            //DrawCalculationArea();
             DrawMessageBox();
             DrawControlButtons();
         }
@@ -49,14 +56,14 @@ namespace Editor.CostCalculator
         private void SetupAreaRects()
         {
             // Initialize Card Info rect
-            _cardInfoRect = new Rect(position.width * 0.10f, 100,position.width * 0.5f, position.height * 0.40f );
+            _cardInfoRect = new Rect(position.width * 0.10f, 50,position.width * 0.5f, position.height * 0.5f );
             // Initialize Calc area rect
-            _calculationRect = new Rect(position.width * 0.10f,360,position.width * 0.5f,position.height * 0.30f);
+            //_calculationRect = new Rect(position.width * 0.10f,_cardInfoRect.y + _cardInfoRect.height + 10,position.width * 0.5f,position.height * 0.1f);
             // Initialize Message area rect
-            _messageRect = new Rect(position.width * 0.10f, 465,position.width * 0.5f,position.height * 0.10f);
+            _messageRect = new Rect(position.width * 0.10f, _cardInfoRect.y + _cardInfoRect.height + 10,position.width * 0.5f,position.height * 0.10f);
             // Initialize Button area rect
-            _buttonRect = new Rect(position.width * 0.10f, 525, position.width * 0.5f, position.height * 0.20f);
-        }
+            _buttonRect = new Rect(position.width * 0.10f, _messageRect.y + _messageRect.height + 5, position.width * 0.5f, position.height * 0.20f);
+            }
 
         
         /// <summary>
@@ -88,46 +95,38 @@ namespace Editor.CostCalculator
             DrawLabel($"Hit Points: {_loadedCard?.HitPoints.StatValue}");
             DrawLabel($"Speed: {_loadedCard?.Speed.StatValue}");
             DrawLabel($"Upgrade Slots: {_loadedCard?.UpgradeSlots.StatValue}");
+            DrawLabel($"Keywords: {_keywordSumString}");
             GUILayout.EndArea();
         }
 
-        private void DrawCalculationArea()
+        public void OpenInCostCalculatorWindow(CardSO card)
         {
-            // 600w * 200h
-            // Display Card Weight Values for the loaded card.
-            GUILayout.BeginArea(_calculationRect);
-            GUILayout.Space(50);
-            DrawLabel("Calculation Info will go here.");
-            GUILayout.EndArea();
+            _loadedCard = card;
+            RunCalculation();
         }
 
         private void DrawMessageBox()
         {
             GUILayout.BeginArea(_messageRect);
-            EditorGUILayout.LabelField(_message, EditorStyles.wordWrappedLabel, GUILayout.Height(_messageRect.height));
+            EditorGUILayout.LabelField(_message,  EditorStyles.whiteLargeLabel, GUILayout.Height(_messageRect.height));
             GUILayout.EndArea();
         }
 
         private void DrawControlButtons()
         {
             GUILayout.BeginArea(_buttonRect);
-            GUILayout.BeginHorizontal(GUILayout.Width(position.width * 0.33f));
+            GUILayout.BeginHorizontal(GUILayout.Width(position.width * 0.33f),GUILayout.ExpandHeight(true));
             // Calculate Cost Button
             // 200w * 60h
-            if (GUILayout.Button(submitButtonText, GUILayout.Width(position.width * 0.33f), GUILayout.Height(_buttonRect.height * 0.25f)))
+            if (GUILayout.Button(CalculateButtonText, GUILayout.Width(position.width * 0.25f), GUILayout.Height(_buttonRect.height * 0.25f)))
             {
                 RunCalculation();
             }
-            /*GUILayout.Space(50);
-            if (GUILayout.Button(loadButtonText, GUILayout.Width(150)))
+            if (GUILayout.Button(EditButtonText, GUILayout.Width(position.width * 0.25f), GUILayout.Height(_buttonRect.height * 0.25f)))
             {
-                // Load
-            }*/
-        
-            // 200w space
-        
-            // Load button
-            // 200w * 60h
+                CardEditor.CardEditorWindow instance = EditorWindow.GetWindow<CardEditor.CardEditorWindow>();
+                instance.OpenCardInEditor(_loadedCard);
+            }
             GUILayout.EndHorizontal();
             GUILayout.EndArea();
         }
@@ -141,7 +140,17 @@ namespace Editor.CostCalculator
         {
             // Call method on Settings to run calculation.
             // Display Message "Cost: n"
+            float cost = 0.0f;
             _message = $"Calculating cost for {_loadedCard?.CardName}";
+            if (!ReferenceEquals(_loadedCard, null))
+            {
+                CostCalculator calculator = new CostCalculator(_loadedCard.WeightData,_loadedCard.GetCardStats(), _loadedCard.Keywords);
+                ;
+               cost = calculator.NormalizeCost();
+            }
+
+            _keywordSumString = _loadedCard?.GetKeywordsSumString();
+            _message = $"Cost is {cost}";
         }
     }
 }

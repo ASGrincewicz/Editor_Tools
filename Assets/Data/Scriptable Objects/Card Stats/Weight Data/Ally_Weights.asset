@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b1aa697563d41d1953a3f47018af1e9, type: 3}
+  m_Name: Ally_Weights
+  m_EditorClassIdentifier: 
+  weightType: 0
+  cardStatWeights:
+  - {fileID: 11400000, guid: 9b607d64addffc74db71694290dddd97, type: 2}
+  - {fileID: 11400000, guid: af40feb2935686548a10a7a8ab29de29, type: 2}
+  - {fileID: 11400000, guid: 62c7fbdf5edebcf469a5fe047237ab70, type: 2}
+  - {fileID: 11400000, guid: 4a2977930f4a88e46b3c6982290ca79a, type: 2}
+  - {fileID: 11400000, guid: 5cd57afa144578649a837759a87e3d8e, type: 2}

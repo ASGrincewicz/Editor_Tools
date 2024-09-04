@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85c2db69d287cba46a63d7dc92203786, type: 3}
   m_Name: Plasma Sword
   m_EditorClassIdentifier: 
+  _weightData: {fileID: 11400000, guid: af1ceeef313a042509ec5b3245208423, type: 2}
   _cardType: 7
   _cardName: Plasma Sword
   _artWork: {fileID: 0}
@@ -39,4 +40,18 @@ MonoBehaviour:
     _statName: 0
     _statValue: 0
     _statDescription: 
+  _keywords:
+  - keywordName: Charge
+    keywordValue: 3
+    definition: This cards next attack does 2x Damage
+    abilityType: 1
+  - keywordName: Deflect
+    keywordValue: 4
+    definition: "When this card is attacked, roll a die, \nthe attacker must roll
+      higher to succeed \nor they take the damage."
+    abilityType: 0
+  - keywordName: None
+    keywordValue: 0
+    definition: 
+    abilityType: 0
   _cardText: 

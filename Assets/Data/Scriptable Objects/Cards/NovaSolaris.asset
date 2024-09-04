@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85c2db69d287cba46a63d7dc92203786, type: 3}
   m_Name: NovaSolaris
   m_EditorClassIdentifier: 
+  _weightData: {fileID: 11400000, guid: 32fd2d69de8ff43ce9976f51c89fdd94, type: 2}
   _cardType: 4
   _cardName: Nova Solaris
   _artWork: {fileID: 2800000, guid: 10bb3ca4f95c26b4e9c86cb4b22206eb, type: 3}
@@ -29,7 +30,7 @@ MonoBehaviour:
     _statDescription: Resources generated
   _hitPoints:
     _statName: 3
-    _statValue: 45
+    _statValue: 100
     _statDescription: Amount of health
   _speed:
     _statName: 4
@@ -39,5 +40,19 @@ MonoBehaviour:
     _statName: 5
     _statValue: 4
     _statDescription: Amount of Upgrades that can be equipped.
+  _keywords:
+  - keywordName: Barrage
+    keywordValue: 1
+    definition: "Attack X Targets this turn.\nYou must roll X or higher for \neach
+      attack to succeed."
+    abilityType: 4
+  - keywordName: Fortify
+    keywordValue: 3
+    definition: Take -5 Damage from the next successful attack.
+    abilityType: 5
+  - keywordName: Strafe
+    keywordValue: 6
+    definition: Negate an opponent's 'Deflect'.
+    abilityType: 2
   _cardText: "Main Character of the game.  \nThis Hunter card should be well-rounded\n
     and adapt to most strategies."

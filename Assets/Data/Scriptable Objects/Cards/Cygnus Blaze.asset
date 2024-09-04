@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85c2db69d287cba46a63d7dc92203786, type: 3}
   m_Name: Cygnus Blaze
   m_EditorClassIdentifier: 
+  _weightData: {fileID: 11400000, guid: 32fd2d69de8ff43ce9976f51c89fdd94, type: 2}
   _cardType: 4
   _cardName: Cygnus Blaze
   _artWork: {fileID: 0}
@@ -39,4 +40,17 @@ MonoBehaviour:
     _statName: 5
     _statValue: 1
     _statDescription: Amount of Upgrades that can be equipped.
+  _keywords:
+  - keywordName: Fortify
+    keywordValue: 3
+    definition: Take -5 Damage from the next successful attack.
+    abilityType: 5
+  - keywordName: None
+    keywordValue: 0
+    definition: 
+    abilityType: 0
+  - keywordName: None
+    keywordValue: 0
+    definition: 
+    abilityType: 0
   _cardText: 

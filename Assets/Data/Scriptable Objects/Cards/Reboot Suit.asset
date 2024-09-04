@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85c2db69d287cba46a63d7dc92203786, type: 3}
   m_Name: Reboot Suit
   m_EditorClassIdentifier: 
+  _weightData: {fileID: 11400000, guid: af1ceeef313a042509ec5b3245208423, type: 2}
   _cardType: 8
   _cardName: Reboot Suit
   _artWork: {fileID: 0}
@@ -39,6 +40,22 @@ MonoBehaviour:
     _statName: 0
     _statValue: 0
     _statDescription: 
+  _keywords:
+  - keywordName: Cloak
+    keywordValue: 7
+    definition: This card cannot be targeted this turn.
+    abilityType: 0
+  - keywordName: Overcharge
+    keywordValue: 10
+    definition: 'Shuffle X cards from your hand into
+
+      your deck. This card
+      has +5X Attack.'
+    abilityType: 1
+  - keywordName: None
+    keywordValue: 0
+    definition: 
+    abilityType: 0
   _cardText: 'Equip to Nova Solaris.
 
     Search your Deck for any upgrade with ''Phase''
