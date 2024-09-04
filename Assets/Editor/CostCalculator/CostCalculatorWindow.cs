@@ -152,6 +152,12 @@ namespace Editor.CostCalculator
 
             _keywordSumString = _loadedCard?.GetKeywordsSumString();
             _message = $"Cost is {cost}";
+            AssignCostToCard((int)cost);
+        }
+
+        private void AssignCostToCard(int cost)
+        {
+            _loadedCard.CardCost = cost;
         }
     }
 }

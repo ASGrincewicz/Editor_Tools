@@ -63,6 +63,7 @@ namespace Editor.CardEditor
         private Keyword[] _selectedKeywords;
         private int[] _selectedKeywordsIndex;
         [Multiline] private string _cardText;
+        private int _cardCost;
         private CardSO _selectedCard;
         
         
@@ -169,6 +170,7 @@ namespace Editor.CardEditor
             }
           
             DrawKeywordArea();
+            GUILayout.Label($"Card Cost: {_cardCost}");
             GUILayout.Label("Card Text");
             _cardText = EditorGUILayout.TextArea(_cardText, GUILayout.Height(100), GUILayout.Width(FIELD_WIDTH));
         }
@@ -298,6 +300,7 @@ namespace Editor.CardEditor
             card.ArtWork = _artwork;
             card.Keywords = _selectedKeywords;
             card.CardText = _cardText;
+            card.CardCost = _cardCost;
             switch (_cardTypes)
             {
                 case CardTypes.TBD:
@@ -372,6 +375,37 @@ namespace Editor.CardEditor
             }
             card.WeightData = weights;
         }
+        private void UpdateSelectedKeywordsIndices()
+        {
+            // Check if _selectedCard and its Keywords are not null
+            if (_selectedCard?.Keywords == null)
+            {
+                Debug.LogError("Selected card or its keywords are null");
+                return;
+            }
+
+            _selectedKeywords = _selectedCard.Keywords;
+
+            // Ensure _selectedKeywordsIndex has the correct size
+            if (_selectedKeywordsIndex == null || _selectedKeywordsIndex.Length != _selectedKeywords.Length)
+            {
+                _selectedKeywordsIndex = new int[_selectedKeywords.Length];
+            }
+
+            // Populate the indices for the selected keywords
+            for (int i = 0; i < _selectedKeywords.Length; i++)
+            {
+                if (_keywordNamesList != null)
+                {
+                    _selectedKeywordsIndex[i] = _keywordNamesList.IndexOf(_selectedKeywords[i].keywordName);
+                }
+                else
+                {
+                    Debug.LogError("Keyword names list is null");
+                    _selectedKeywordsIndex[i] = -1; // or another default/failure value
+                }
+            }
+        }
 
         private void LoadCardFromFile()
         {
@@ -396,11 +430,9 @@ namespace Editor.CardEditor
                 _cardTypes = _selectedCard.CardType;
                 _cardName = _selectedCard.CardName;
                 _artwork = _selectedCard.ArtWork;
-                _selectedKeywords = _selectedCard.Keywords;
-                for (int i = 0; i < _selectedKeywords.Length; i++)
-                {
-                    _selectedKeywordsIndex[i] = _keywordNamesList.IndexOf(_selectedKeywords[i].keywordName);
-                }
+                _cardCost = _selectedCard.CardCost;
+                
+               UpdateSelectedKeywordsIndices();
                 _cardText += _stringBuilder.Append(_selectedCard.CardText);
                 switch (_cardTypes)
                 {

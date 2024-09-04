@@ -31,6 +31,8 @@ namespace Editor.CardEditor
         [HideInInspector] [SerializeField][Multiline]
         private string _cardText;
 
+        [HideInInspector] [SerializeField] private int _cost;
+
         /// <summary>
         /// Type of the card.
         /// </summary>
@@ -78,6 +80,12 @@ namespace Editor.CardEditor
         {
             get { return _cardText; }
             set { _cardText = value; }
+        }
+
+        public int CardCost
+        {
+            get { return _cost; }
+            set { _cost = value; }
         }
         
         // The following properties are the CardStat type properties representing different stats for a card

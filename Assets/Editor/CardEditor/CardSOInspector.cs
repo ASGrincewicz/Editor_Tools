@@ -19,6 +19,7 @@ namespace Editor.CardEditor
         private const string UpgradeSlotsPropertyName = "_upgradeSlots";
         private const string KeywordsPropertyName = "_keywords";
         private const string CardTextPropertyName = "_cardText";
+        private const string CostPropertyName = "_cost";
         
         private SerializedProperty _weightDataProperty;
         private SerializedProperty _cardTypeProperty;
@@ -32,6 +33,7 @@ namespace Editor.CardEditor
         private SerializedProperty _upgradeSlotsProperty;
         private SerializedProperty _keywordsProperty;
         private SerializedProperty _cardTextProperty;
+        private SerializedProperty _costProperty;
 
         private void OnEnable()
         {
@@ -47,6 +49,7 @@ namespace Editor.CardEditor
             _upgradeSlotsProperty = serializedObject.FindProperty(UpgradeSlotsPropertyName);
             _keywordsProperty = serializedObject.FindProperty(KeywordsPropertyName);
             _cardTextProperty = serializedObject.FindProperty(CardTextPropertyName);
+            _costProperty = serializedObject.FindProperty(CostPropertyName);
         }
         
         public override void OnInspectorGUI()
@@ -92,7 +95,10 @@ namespace Editor.CardEditor
 
         private void DrawProperties() 
         {
+            GUI.enabled = false;
             DrawProperty(_weightDataProperty);
+            GUI.enabled = true;
+            DrawLabel($"Card Cost: {_costProperty.intValue}",EditorStyles.boldLabel, GUILayout.Width(200), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
             CardTypes cardTypes = (CardTypes)_cardTypeProperty.enumValueIndex;
             DrawLabel($"Card Type: {cardTypes.GetDescription()}", EditorStyles.boldLabel, GUILayout.Width(200), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
 
@@ -118,7 +124,6 @@ namespace Editor.CardEditor
             GUILayout.Label("Artwork Preview:");
             Rect rect = GUILayoutUtility.GetRect(400 * 0.75f, 225 * 0.75f);
             EditorGUI.DrawPreviewTexture(rect, artworkTexture);
-            EditorGUILayout.LabelField(artworkTexture.name);
         }
 
         private void DrawKeywordArrayProperty()

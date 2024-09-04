@@ -40,4 +40,18 @@ MonoBehaviour:
     _statName: 0
     _statValue: 0
     _statDescription: 
+  _keywords:
+  - keywordName: None
+    keywordValue: 0
+    definition: 
+    abilityType: 0
+  - keywordName: None
+    keywordValue: 0
+    definition: 
+    abilityType: 0
+  - keywordName: None
+    keywordValue: 0
+    definition: 
+    abilityType: 0
   _cardText: Space Environment
+  _cost: 0
