@@ -1,4 +1,3 @@
-using Editor.CardEditor;
 using UnityEngine;
 
 namespace Editor.AttributesWeights

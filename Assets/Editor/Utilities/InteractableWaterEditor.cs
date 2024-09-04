@@ -1,9 +1,5 @@
-﻿using System;
-using Unity.VisualScripting;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
-using UnityEditor.UIElements;
-using UnityEngine.UIElements;
 using Water;
 
 namespace Editor

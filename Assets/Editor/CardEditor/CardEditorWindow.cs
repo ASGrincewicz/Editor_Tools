@@ -7,7 +7,6 @@ using Editor.CostCalculator;
 using Editor.KeywordSystem;
 using Editor.Utilities;
 using JetBrains.Annotations;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using static Editor.CardEditor.StatDataReference;
@@ -29,6 +28,7 @@ namespace Editor.CardEditor
         private const string CREATURE_WEIGHT_ASSET_PATH =
             "Assets/Data/Scriptable Objects/Card Stats/Weight Data/Creature_Weights.asset";
         private const string ENVIRONMENT_WEIGHT_ASSET_PATH = "Assets/Data/Scriptable Objects/Card Stats/Weight Data/Environment_Weights.asset";
+        private const string GEAR_WEIGHT_ASSET_PATH = "Assets/Data/Scriptable Objects/Card Stats/Weight Data/Gear_Weights.asset";
         private const string HUNTER_WEIGHT_ASSET_PATH = "Assets/Data/Scriptable Objects/Card Stats/Weight Data/Hunter_Weights.asset";
 
         private const string KEYWORD_ONLY_WEIGHT_ASSET_PATH =
@@ -154,7 +154,6 @@ namespace Editor.CardEditor
                     break;
                 case CardTypes.Gear_Equipment:
                 case CardTypes.Gear_Upgrade:
-                    break;
                 case CardTypes.Character_Ally:
                 case CardTypes.Character_Hunter:
                 case CardTypes.Creature:
@@ -310,7 +309,6 @@ namespace Editor.CardEditor
                     break;
                 case CardTypes.Gear_Equipment:
                 case CardTypes.Gear_Upgrade:
-                    break;
                 case CardTypes.Character_Ally:
                 case CardTypes.Character_Hunter:
                 case CardTypes.Creature:
@@ -352,21 +350,17 @@ namespace Editor.CardEditor
         // Method to Get Weight Container based on Card Type
         private WeightContainer GetWeightContainer(CardTypes cardType)
         {
-            switch(cardType)
+            return cardType switch
             {
-                case CardTypes.Character_Ally:
-                    return AssetDatabase.LoadAssetAtPath<WeightContainer>(ALLY_WEIGHT_ASSET_PATH);
-                case CardTypes.Environment:
-                    return AssetDatabase.LoadAssetAtPath<WeightContainer>(ENVIRONMENT_WEIGHT_ASSET_PATH);
-                case CardTypes.Creature:
-                    return AssetDatabase.LoadAssetAtPath<WeightContainer>(CREATURE_WEIGHT_ASSET_PATH);
-                case CardTypes.Boss:
-                    return AssetDatabase.LoadAssetAtPath<WeightContainer>(BOSS_WEIGHT_ASSET_PATH);
-                case CardTypes.Character_Hunter:
-                    return AssetDatabase.LoadAssetAtPath<WeightContainer>(HUNTER_WEIGHT_ASSET_PATH);
-                default:
-                    return AssetDatabase.LoadAssetAtPath<WeightContainer>(KEYWORD_ONLY_WEIGHT_ASSET_PATH);
-            }
+                CardTypes.Character_Ally => AssetDatabase.LoadAssetAtPath<WeightContainer>(ALLY_WEIGHT_ASSET_PATH),
+                CardTypes.Environment => AssetDatabase.LoadAssetAtPath<WeightContainer>(ENVIRONMENT_WEIGHT_ASSET_PATH),
+                CardTypes.Creature => AssetDatabase.LoadAssetAtPath<WeightContainer>(CREATURE_WEIGHT_ASSET_PATH),
+                CardTypes.Boss => AssetDatabase.LoadAssetAtPath<WeightContainer>(BOSS_WEIGHT_ASSET_PATH),
+                CardTypes.Character_Hunter => AssetDatabase.LoadAssetAtPath<WeightContainer>(HUNTER_WEIGHT_ASSET_PATH),
+                CardTypes.Gear_Equipment=> AssetDatabase.LoadAssetAtPath<WeightContainer>(GEAR_WEIGHT_ASSET_PATH),
+                CardTypes.Gear_Upgrade => AssetDatabase.LoadAssetAtPath<WeightContainer>(GEAR_WEIGHT_ASSET_PATH),
+                _ => AssetDatabase.LoadAssetAtPath<WeightContainer>(KEYWORD_ONLY_WEIGHT_ASSET_PATH)
+            };
         }
 
         private void SetWeightData(CardSO card)
@@ -382,7 +376,7 @@ namespace Editor.CardEditor
         private void LoadCardFromFile()
         {
             UnloadCard();
-            if (_cardToEdit != null)
+            if (!ReferenceEquals(_cardToEdit, null))
             {
                 _selectedCard = _cardToEdit;
             }
@@ -411,15 +405,15 @@ namespace Editor.CardEditor
                 switch (_cardTypes)
                 {
                     case CardTypes.TBD:
-                    break;
+                    case CardTypes.Starship:
                     case CardTypes.Action:
                     break;
                     case CardTypes.Environment:
                     _explore = _selectedCard.Explore;
+                    _exploreValue = _selectedCard.Explore.StatValue;
                     break;
                     case CardTypes.Gear_Equipment:
                     case CardTypes.Gear_Upgrade:
-                        break;
                     case CardTypes.Character_Ally:
                     case CardTypes.Character_Hunter:
                     case CardTypes.Boss:
@@ -467,6 +461,7 @@ namespace Editor.CardEditor
             Undo.RecordObject(_selectedCard, "Edited Card");
             if (InitializeCard(_selectedCard))
             {
+                SetWeightData(_selectedCard);
                 EditorUtility.SetDirty(_selectedCard);
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
@@ -509,7 +504,7 @@ namespace Editor.CardEditor
             {
                 int compare = card1.CardType.CompareTo(card2.CardType);
 
-                return compare == 0 ? card1.CardName.CompareTo(card2.CardName) : compare;
+                return compare == 0 ? string.Compare(card1.CardName, card2.CardName, StringComparison.Ordinal) : compare;
             });
         }
 

@@ -21,9 +21,10 @@ namespace Editor.CostCalculator
 
         public CardSO LoadedCard
         {
-            get => _loadedCard;
-            set => _loadedCard = value;
+            get { return _loadedCard; }
+            set { _loadedCard = value; }
         }
+
         private string _message = "";
         private string _keywordSumString;
 

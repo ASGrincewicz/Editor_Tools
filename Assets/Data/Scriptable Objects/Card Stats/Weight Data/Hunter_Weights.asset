@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b1aa697563d41d1953a3f47018af1e9, type: 3}
   m_Name: Hunter_Weights
   m_EditorClassIdentifier: 
-  weightType: 4
+  weightType: 5
   cardStatWeights:
   - {fileID: 11400000, guid: f0dbcd670958a46499b2f6fc90ef411b, type: 2}
   - {fileID: 11400000, guid: 1173db8a3da7ad94d94c01b9454f9371, type: 2}

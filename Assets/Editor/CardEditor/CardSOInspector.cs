@@ -1,5 +1,4 @@
 ﻿using Editor.CostCalculator;
-using Editor.KeywordSystem;
 using Editor.Utilities;
 using UnityEditor;
 using UnityEngine;
@@ -149,8 +148,6 @@ namespace Editor.CardEditor
                     break;
                 case CardTypes.Gear_Equipment:
                 case CardTypes.Gear_Upgrade:
-                    // These cases don't require any properties to be drawn.
-                    break;
                 default:
                     DrawCommonStatsProperties();
                     if (cardTypes == CardTypes.Character_Hunter)

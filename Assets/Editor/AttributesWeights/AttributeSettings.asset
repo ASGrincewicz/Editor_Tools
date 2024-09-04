@@ -30,6 +30,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 30cc45e65a46e024aa65e82fd5074bfd, type: 2}
   - {fileID: 11400000, guid: 1e201d3a28802824fb81831d2be1e1bf, type: 2}
   - {fileID: 11400000, guid: 975b369470ad8d842a0bd832312cee81, type: 2}
+  gearCardStatWeights:
+  - {fileID: 11400000, guid: e82f9ff9d7575434dad6deeb9feb89c1, type: 2}
+  - {fileID: 11400000, guid: aba9c77e3e28b4324a911114919f5af8, type: 2}
+  - {fileID: 11400000, guid: 2e5562afee0c34d4d812cb1457d01d96, type: 2}
+  - {fileID: 11400000, guid: 5d23a0601c709410fa8d5839cb7d16cc, type: 2}
+  - {fileID: 11400000, guid: 9f3b957fe3e9f436fb04a7e20f65b6fb, type: 2}
   hunterCardStatWeights:
   - {fileID: 11400000, guid: f0dbcd670958a46499b2f6fc90ef411b, type: 2}
   - {fileID: 11400000, guid: 1173db8a3da7ad94d94c01b9454f9371, type: 2}

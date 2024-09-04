@@ -12,30 +12,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85c2db69d287cba46a63d7dc92203786, type: 3}
   m_Name: Plasma Sword
   m_EditorClassIdentifier: 
-  _weightData: {fileID: 11400000, guid: af1ceeef313a042509ec5b3245208423, type: 2}
+  _weightData: {fileID: 11400000, guid: 8450eb473c9c74119a579d9c683c4c64, type: 2}
   _cardType: 7
   _cardName: Plasma Sword
   _artWork: {fileID: 0}
   _attack:
     _statName: 0
-    _statValue: 0
-    _statDescription: 
+    _statValue: 25
+    _statDescription: Amount of damage dealt.
   _explore:
     _statName: 0
     _statValue: 0
     _statDescription: 
   _focus:
-    _statName: 0
+    _statName: 2
     _statValue: 0
-    _statDescription: 
+    _statDescription: Resources generated
   _hitPoints:
-    _statName: 0
+    _statName: 3
     _statValue: 0
-    _statDescription: 
+    _statDescription: Amount of health
   _speed:
-    _statName: 0
-    _statValue: 0
-    _statDescription: 
+    _statName: 4
+    _statValue: 5
+    _statDescription: Determines Attack Sequence and Move Rate.
   _upgradeSlots:
     _statName: 0
     _statValue: 0
