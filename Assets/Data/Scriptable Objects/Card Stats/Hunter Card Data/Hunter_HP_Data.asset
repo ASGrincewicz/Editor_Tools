@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Hunter_HP_Data
   m_EditorClassIdentifier: 
   statName: 3
-  statWeight: 0.25
+  statWeight: 1

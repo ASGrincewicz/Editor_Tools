@@ -188,17 +188,39 @@ namespace Editor.CardEditor
 
             for (int i = 0; i < _selectedKeywords.Length; i++)
             {
+                // Ensure _selectedKeywordsIndex has the same length as _selectedKeywords
+                if (_selectedKeywordsIndex.Length <= i)
+                {
+                    Debug.LogError($"Index {i} is out of range for _selectedKeywordsIndex");
+                    continue;
+                }
+
+                // If the value is -1, initialize it to 0
+                if (_selectedKeywordsIndex[i] == -1)
+                {
+                    _selectedKeywordsIndex[i] = 0;
+                }
+
                 _selectedKeywordsIndex[i] = EditorGUILayout.Popup(
                     _selectedKeywordsIndex[i],
                     _keywordNamesList.ToArray(),
                     GUILayout.Width(FIELD_WIDTH / 3)
                 );
-                //TODO: Need error checking on this.
+
+                // Check if the selected index is within the bounds of _keywordNamesList
+                if (_selectedKeywordsIndex[i] < 0 || _selectedKeywordsIndex[i] >= _keywordNamesList.Count)
+                {
+                    Debug.LogError($"Index {_selectedKeywordsIndex[i]} is out of range for _keywordNamesList with count {_keywordNamesList.Count}");
+                    continue;
+                }
+
                 // Use Find method to assign Keyword to _selectedKeywords
-                string selectedKeywordName = _keywordNamesList[_selectedKeywordsIndex[i]];
-                _selectedKeywords[i] = _keywordManager.GetKeywordByName(selectedKeywordName);
+                if (_keywordNamesList.Count > 0)
+                {
+                    string selectedKeywordName = _keywordNamesList[_selectedKeywordsIndex[i]];
+                    _selectedKeywords[i] = _keywordManager.GetKeywordByName(selectedKeywordName);
+                }
             }
-          
             GUILayout.EndHorizontal();
         }
 

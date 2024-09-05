@@ -54,3 +54,4 @@ MonoBehaviour:
     definition: 
     abilityType: 0
   _cardText: 
+  _cost: 5

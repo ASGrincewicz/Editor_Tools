@@ -12,39 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c83ea5914714ac1a61b603ebebcbbdd, type: 3}
   m_Name: AttributeSettings
   m_EditorClassIdentifier: 
-  allyCardStatWeights:
-  - {fileID: 11400000, guid: 9b607d64addffc74db71694290dddd97, type: 2}
-  - {fileID: 11400000, guid: af40feb2935686548a10a7a8ab29de29, type: 2}
-  - {fileID: 11400000, guid: 62c7fbdf5edebcf469a5fe047237ab70, type: 2}
-  - {fileID: 11400000, guid: 4a2977930f4a88e46b3c6982290ca79a, type: 2}
-  - {fileID: 11400000, guid: 5cd57afa144578649a837759a87e3d8e, type: 2}
-  bossCardStatWeights:
-  - {fileID: 11400000, guid: 82d87bf0bfea2574c83e2be20048132a, type: 2}
-  - {fileID: 11400000, guid: 1015329cc0a84ef4290d2b0607c38302, type: 2}
-  - {fileID: 11400000, guid: b2b9900f1dfa2f4469157ed34960ba71, type: 2}
-  - {fileID: 11400000, guid: a1190fbc54ee0cc469b2a74783347b47, type: 2}
-  - {fileID: 11400000, guid: e86813104c111764d8fc2c57f3be9eda, type: 2}
-  creatureCardStatWeights:
-  - {fileID: 11400000, guid: d5568afb6466a96429a20af4656ac40b, type: 2}
-  - {fileID: 11400000, guid: d0e212130e72597489bc6311b11ddbd2, type: 2}
-  - {fileID: 11400000, guid: 30cc45e65a46e024aa65e82fd5074bfd, type: 2}
-  - {fileID: 11400000, guid: 1e201d3a28802824fb81831d2be1e1bf, type: 2}
-  - {fileID: 11400000, guid: 975b369470ad8d842a0bd832312cee81, type: 2}
-  gearCardStatWeights:
-  - {fileID: 11400000, guid: e82f9ff9d7575434dad6deeb9feb89c1, type: 2}
-  - {fileID: 11400000, guid: aba9c77e3e28b4324a911114919f5af8, type: 2}
-  - {fileID: 11400000, guid: 2e5562afee0c34d4d812cb1457d01d96, type: 2}
-  - {fileID: 11400000, guid: 5d23a0601c709410fa8d5839cb7d16cc, type: 2}
-  - {fileID: 11400000, guid: 9f3b957fe3e9f436fb04a7e20f65b6fb, type: 2}
-  hunterCardStatWeights:
-  - {fileID: 11400000, guid: f0dbcd670958a46499b2f6fc90ef411b, type: 2}
-  - {fileID: 11400000, guid: 1173db8a3da7ad94d94c01b9454f9371, type: 2}
-  - {fileID: 11400000, guid: 11051082b48f8784fb8921c5a607de9c, type: 2}
-  - {fileID: 11400000, guid: 773234536c4f2ac4d86e5519a64f7c6a, type: 2}
-  - {fileID: 11400000, guid: 381ef9915222bfa498c5d30bdb8f133d, type: 2}
-  - {fileID: 11400000, guid: e00fecb7c4f7fb244857d261788c47ee, type: 2}
-  environmentCardStatWeights:
-  - {fileID: 11400000, guid: 388a9020a4adbf340a4da24191d63765, type: 2}
-  - {fileID: 11400000, guid: 1b0d4b60a100b7d4e8ba6b38f4439d9f, type: 2}
-  keywordOnlyCardStatWeights:
-  - {fileID: 11400000, guid: b67d8670a097d50498b4f06026c2cbbc, type: 2}
+  allyCardStatWeights: {fileID: 11400000, guid: 2765bd0e5cf8642e1b657d07d186cd61, type: 2}
+  bossCardStatWeights: {fileID: 11400000, guid: 731fca09734bd4b2e9f5c4ce06b4d915, type: 2}
+  creatureCardStatWeights: {fileID: 11400000, guid: c1b82eff57c6a4250aa4121cefbfdb82, type: 2}
+  gearCardStatWeights: {fileID: 11400000, guid: 8450eb473c9c74119a579d9c683c4c64, type: 2}
+  hunterCardStatWeights: {fileID: 11400000, guid: 32fd2d69de8ff43ce9976f51c89fdd94, type: 2}
+  environmentCardStatWeights: {fileID: 11400000, guid: 56caa87437fef4999967d87c20e6890e, type: 2}
+  keywordOnlyCardStatWeights: {fileID: 11400000, guid: af1ceeef313a042509ec5b3245208423, type: 2}

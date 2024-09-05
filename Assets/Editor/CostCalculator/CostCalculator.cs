@@ -14,6 +14,7 @@ namespace Editor.CostCalculator
         // card stats
         private CardStat[] _cardStats;
         private Keyword[] _keywords;
+        
 
         public CostCalculator(WeightContainer weightContainer, CardStat[] cardStats, Keyword[] keywords)
         {
@@ -29,7 +30,7 @@ namespace Editor.CostCalculator
 
             if (_weightContainer.weightType == WeightType.Keyword)
             {
-                totalCost += AddKeywordValues(_weightContainer.cardStatWeights[0].statWeight);
+                totalCost += AddKeywordValues(_weightContainer.cardStatWeights[6].statWeight);
             }
             else
             {
@@ -44,16 +45,11 @@ namespace Editor.CostCalculator
         {
             for (int i = 0; i <= count - 2; i++)
             {
-                if (_cardStats[i].StatValue == 0 && i + 1 < count)
-                {
-                    _weightContainer.cardStatWeights[i + 1].statWeight += _weightContainer.cardStatWeights[i].statWeight;
-                }
-                else
-                {
-                    totalCost += _weightContainer.cardStatWeights[i].statWeight * _cardStats[i].StatValue;
-                }
+                totalCost += _weightContainer.cardStatWeights[i].statWeight * _cardStats[i].StatValue;
+               
             }
             totalCost += AddKeywordValues(_weightContainer.cardStatWeights[count - 1].statWeight);
+            Debug.Log($"Total cost after adding keyword weights: {totalCost}");
             return totalCost;
         }
 

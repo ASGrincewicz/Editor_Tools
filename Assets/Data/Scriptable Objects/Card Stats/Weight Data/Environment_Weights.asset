@@ -14,5 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weightType: 3
   cardStatWeights:
+  - {fileID: 11400000, guid: c6f6bcf33912b4954b2efae756b1a79d, type: 2}
   - {fileID: 11400000, guid: 388a9020a4adbf340a4da24191d63765, type: 2}
+  - {fileID: 11400000, guid: c6f6bcf33912b4954b2efae756b1a79d, type: 2}
+  - {fileID: 11400000, guid: c6f6bcf33912b4954b2efae756b1a79d, type: 2}
+  - {fileID: 11400000, guid: c6f6bcf33912b4954b2efae756b1a79d, type: 2}
+  - {fileID: 11400000, guid: c6f6bcf33912b4954b2efae756b1a79d, type: 2}
   - {fileID: 11400000, guid: 1b0d4b60a100b7d4e8ba6b38f4439d9f, type: 2}

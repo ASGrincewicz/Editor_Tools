@@ -10,7 +10,7 @@ namespace Editor.AttributesWeights
     {
         public AttributeSettings attributeSettings;
         // Class variables
-        private CardTypes _cardType;
+        private WeightType _weightType;
         private float _attackWeight = 0.0f;
         private float _exploreWeight = 0.0f;
         private float _focusWeight = 0.0f;
@@ -61,7 +61,7 @@ namespace Editor.AttributesWeights
 
         private void DrawEnumPopup()
         {
-            _cardType = (CardTypes)EditorGUILayout.EnumPopup("Card Type", _cardType,
+            _weightType = (WeightType)EditorGUILayout.EnumPopup("Weight Type", _weightType,
                 GUILayout.Width(300));
         }
 
@@ -104,23 +104,22 @@ namespace Editor.AttributesWeights
 
         private void DrawEditableFields()
         {
-             switch (_cardType)
+             switch (_weightType)
             {
-                case CardTypes.TBD:
-                case CardTypes.Starship:
+                case WeightType.None:
+                case WeightType.Starship:
                         break;
-                case CardTypes.Environment:
+                case WeightType.Environment:
                     DrawEnvironmentFields();
                     break;
-                case CardTypes.Action:
+                case WeightType.Keyword:
                     DrawKeywordOnlyFields();
                     break;
-                case CardTypes.Gear_Equipment:
-                case CardTypes.Gear_Upgrade:
-                case CardTypes.Character_Ally:
-                case CardTypes.Character_Hunter:
-                case CardTypes.Creature:
-                case CardTypes.Boss:
+                case WeightType.Gear:
+                case WeightType.Ally:
+                case WeightType.Boss:
+                case WeightType.Creature:
+                case WeightType.Hunter:
                     DrawCharacterLikeFields();
                     break;
                 default:
@@ -150,7 +149,7 @@ namespace Editor.AttributesWeights
             GUILayout.Space(5);
             DrawFloatField("Speed Weight", ref _speedWeight);
             GUILayout.Space(5);
-            if (_cardType == CardTypes.Character_Hunter)
+            if (_weightType == WeightType.Hunter)
             {
                 DrawFloatField("Upgrade Slots Weight", ref _upgradeSlotsWeight);
                 GUILayout.Space(5);
@@ -174,162 +173,103 @@ namespace Editor.AttributesWeights
             _keywordsWeight = 0;
         }
 
-        private void SaveWeightData()
+        private void SetWeightsAccordingToWeightType()
         {
-            switch (_cardType)
+            switch (_weightType)
             {
-                case CardTypes.Action:
-                    SetCardStatWeight(attributeSettings.keywordOnlyCardStatWeights, _keywordsWeight, 0);
+                case WeightType.Ally:
+                    SaveWeightsToAssets(attributeSettings.allyCardStatWeights.cardStatWeights);
                     break;
-                case CardTypes.Gear_Equipment:
-                case CardTypes.Gear_Upgrade:
-                   SetGearCardStatWeights();
+                case WeightType.Boss:
+                    SaveWeightsToAssets(attributeSettings.bossCardStatWeights.cardStatWeights);
                     break;
-                case CardTypes.Boss:
-                    SetBossCardStatWeights();
+                case WeightType.Creature:
+                    SaveWeightsToAssets(attributeSettings.creatureCardStatWeights.cardStatWeights);
                     break;
-                case CardTypes.Character_Ally:
-                    SetCharacterAllyStatWeights();
+                case WeightType.Environment:
+                    SaveWeightsToAssets(attributeSettings.environmentCardStatWeights.cardStatWeights);
                     break;
-                case CardTypes.Character_Hunter:
-                    SetHunterCardStatWeights();
+                case WeightType.Gear:
+                    SaveWeightsToAssets(attributeSettings.gearCardStatWeights.cardStatWeights);
                     break;
-                case CardTypes.Creature:
-                    SetCreatureCardStatWeights();
+                case WeightType.Hunter:
+                    SaveWeightsToAssets(attributeSettings.hunterCardStatWeights.cardStatWeights);
                     break;
-                case CardTypes.Environment:
-                    SetEnvironmentCardStatWeights();
+                case WeightType.Keyword:
+                    SaveWeightsToAssets(attributeSettings.keywordOnlyCardStatWeights.cardStatWeights);
                     break;
-                case CardTypes.Starship:
-                case CardTypes.TBD:
+                case WeightType.Starship:
+                case WeightType.None:
                     // No-op
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(_cardType), _cardType, null);
+                    throw new ArgumentOutOfRangeException(nameof(_weightType), _weightType, null);
             }
         }
 
-        private void SetCardStatWeight(CardStatWeight[] cardStatWeights, float weight, int index)
-        {
-            cardStatWeights[index].statWeight = weight;
-        }
+        
 
-        private void SetMultipleCardStatWeights(CardStatWeight[] cardStatWeights, params (float weight, int index)[] weights)
+        private void SaveWeightsToAssets(CardStatWeight[] weights)
         {
-            foreach ((float weight, int index) in weights)
-            {
-                SetCardStatWeight(cardStatWeights, weight, index);
-            }
+            weights[0].statWeight = _attackWeight;
+            weights[1].statWeight = _exploreWeight;
+            weights[2].statWeight = _focusWeight;
+            weights[3].statWeight = _hitPointsWeight;
+            weights[4].statWeight = _speedWeight;
+            weights[5].statWeight = _upgradeSlotsWeight;
+            weights[6].statWeight = _keywordsWeight;
         }
-
-        private void SetBossCardStatWeights()
+        
+        private void SetWeightsFromAssets(CardStatWeight[] weights) 
         {
-            SetMultipleCardStatWeights(attributeSettings.bossCardStatWeights,
-                (_attackWeight, 0),
-                (_focusWeight, 1),
-                (_hitPointsWeight, 2),
-                (_speedWeight, 3),
-                (_keywordsWeight, 4)
-            );
+            _attackWeight = weights[0].statWeight;
+            _exploreWeight = weights[1].statWeight;
+            _focusWeight = weights[2].statWeight;
+            _hitPointsWeight = weights[3].statWeight;
+            _speedWeight = weights[4].statWeight;
+            _upgradeSlotsWeight = weights[5].statWeight;
+            _keywordsWeight = weights[6].statWeight;
         }
-
-        private void SetCharacterAllyStatWeights()
+        
+        private void SaveWeightData()
         {
-            SetMultipleCardStatWeights(attributeSettings.allyCardStatWeights,
-                (_attackWeight, 0),
-                (_focusWeight, 1),
-                (_hitPointsWeight, 2),
-                (_speedWeight, 3),
-                (_keywordsWeight, 4)
-            );
-        }
-
-        private void SetHunterCardStatWeights()
-        {
-            SetMultipleCardStatWeights(attributeSettings.hunterCardStatWeights,
-                (_attackWeight, 0),
-                (_focusWeight, 1),
-                (_hitPointsWeight, 2),
-                (_speedWeight, 3),
-                (_keywordsWeight, 4),
-                (_upgradeSlotsWeight, 5)
-            );
-        }
-
-        private void SetCreatureCardStatWeights()
-        {
-            SetMultipleCardStatWeights(attributeSettings.creatureCardStatWeights,
-                (_attackWeight, 0),
-                (_focusWeight, 1),
-                (_hitPointsWeight, 2),
-                (_speedWeight, 3),
-                (_keywordsWeight, 4)
-            );
-        }
-
-        private void SetEnvironmentCardStatWeights()
-        {
-            SetMultipleCardStatWeights(attributeSettings.environmentCardStatWeights,
-                (_exploreWeight, 0),
-                (_keywordsWeight, 1)
-            );
-        }
-
-        private void SetGearCardStatWeights()
-        {
-            SetMultipleCardStatWeights(attributeSettings.gearCardStatWeights,
-                (_attackWeight, 0),
-                (_focusWeight, 1),
-                (_hitPointsWeight, 2),
-                (_speedWeight, 3),
-                (_keywordsWeight, 4)
-            );
-        }
-        private void SetWeights(float[] weights) 
-        {
-            _attackWeight = weights[0];
-            _focusWeight = weights[1];
-            _hitPointsWeight = weights[2];
-            _speedWeight = weights[3];
-            _keywordsWeight = weights[4];
-            if (weights.Length > 5) 
-            {
-                _upgradeSlotsWeight = weights[5];
-            }
+            SetWeightsAccordingToWeightType();
+            EditorUtility.SetDirty(attributeSettings);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
         }
 
         private void LoadWeightData()
         {
-            switch (_cardType)
+            switch (_weightType)
             {
-                case CardTypes.Action:
-                    _keywordsWeight = attributeSettings.keywordOnlyCardStatWeights[0].statWeight;
+                case WeightType.Ally:
+                    SetWeightsFromAssets(attributeSettings.allyCardStatWeights.cardStatWeights);
                     break;
-                case CardTypes.Gear_Equipment:
-                case CardTypes.Gear_Upgrade:
-                    SetWeights(attributeSettings.gearCardStatWeights.Select(w => w.statWeight).ToArray());
+                case WeightType.Boss:
+                    SetWeightsFromAssets(attributeSettings.bossCardStatWeights.cardStatWeights);
                     break;
-                case CardTypes.Boss:
-                    SetWeights(attributeSettings.bossCardStatWeights.Select(w => w.statWeight).ToArray());
+                case WeightType.Creature:
+                    SetWeightsFromAssets(attributeSettings.creatureCardStatWeights.cardStatWeights);
                     break;
-                case CardTypes.Character_Ally:
-                    SetWeights(attributeSettings.allyCardStatWeights.Select(w => w.statWeight).ToArray());
+                case WeightType.Environment:
+                    SetWeightsFromAssets(attributeSettings.environmentCardStatWeights.cardStatWeights);
                     break;
-                case CardTypes.Character_Hunter:
-                    SetWeights(attributeSettings.hunterCardStatWeights.Select(w => w.statWeight).ToArray());
+                case WeightType.Gear:
+                    SetWeightsFromAssets(attributeSettings.gearCardStatWeights.cardStatWeights);
                     break;
-                case CardTypes.Creature:
-                    SetWeights(attributeSettings.creatureCardStatWeights.Select(w => w.statWeight).ToArray());
+                case WeightType.Hunter:
+                    SetWeightsFromAssets(attributeSettings.hunterCardStatWeights.cardStatWeights);
                     break;
-                case CardTypes.Environment:
-                    _exploreWeight = attributeSettings.environmentCardStatWeights[0].statWeight;
-                    _keywordsWeight = attributeSettings.environmentCardStatWeights[1].statWeight;
+                case WeightType.Keyword:
+                    SetWeightsFromAssets(attributeSettings.keywordOnlyCardStatWeights.cardStatWeights);
                     break;
-                case CardTypes.Starship:
-                case CardTypes.TBD:
+                case WeightType.Starship:
+                case WeightType.None:
+                    // No-op
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(_weightType), _weightType, null);
             }
         }
 

@@ -5,14 +5,14 @@ namespace Editor.AttributesWeights
     [CreateAssetMenu(fileName = "AttributeSettings", menuName = "Settings/Attributes", order = 0)]
     public class AttributeSettings : ScriptableObject
     {
-        public CardStatWeight[] allyCardStatWeights;
-        public CardStatWeight[] bossCardStatWeights;
-        public CardStatWeight[] creatureCardStatWeights;
-        public CardStatWeight[] gearCardStatWeights;
-        public CardStatWeight[] hunterCardStatWeights;
-        public CardStatWeight[] environmentCardStatWeights;
+        public WeightContainer allyCardStatWeights;
+        public WeightContainer bossCardStatWeights;
+        public WeightContainer creatureCardStatWeights;
+        public WeightContainer gearCardStatWeights;
+        public WeightContainer hunterCardStatWeights;
+        public WeightContainer environmentCardStatWeights;
         
         [Tooltip("Keyword Only Card Types: Action")]
-        public CardStatWeight[] keywordOnlyCardStatWeights;
+        public WeightContainer keywordOnlyCardStatWeights;
     }
 }

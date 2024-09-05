@@ -15,7 +15,9 @@ MonoBehaviour:
   weightType: 2
   cardStatWeights:
   - {fileID: 11400000, guid: d5568afb6466a96429a20af4656ac40b, type: 2}
+  - {fileID: 11400000, guid: c6f6bcf33912b4954b2efae756b1a79d, type: 2}
   - {fileID: 11400000, guid: d0e212130e72597489bc6311b11ddbd2, type: 2}
   - {fileID: 11400000, guid: 30cc45e65a46e024aa65e82fd5074bfd, type: 2}
   - {fileID: 11400000, guid: 1e201d3a28802824fb81831d2be1e1bf, type: 2}
+  - {fileID: 11400000, guid: c6f6bcf33912b4954b2efae756b1a79d, type: 2}
   - {fileID: 11400000, guid: 975b369470ad8d842a0bd832312cee81, type: 2}

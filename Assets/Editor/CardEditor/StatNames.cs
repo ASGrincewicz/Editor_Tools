@@ -12,6 +12,7 @@
 
         [System.ComponentModel.Description("Upgrade Slots")]
         Upgrades,
-        Keyword
+        Keyword,
+        None
     }
 }
