@@ -55,3 +55,5 @@ MonoBehaviour:
     abilityType: 0
   _cardText: "Attach to target after a successful attack.  \nAt the beginning of
     each turn, this 'Parasite' gains +5 HP and the target loses -5HP."
+  _cost: 0
+  _rarity: 2

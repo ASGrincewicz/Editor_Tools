@@ -38,21 +38,22 @@ MonoBehaviour:
     _statDescription: Determines Attack Sequence and Move Rate.
   _upgradeSlots:
     _statName: 5
-    _statValue: 4
+    _statValue: 3
     _statDescription: Amount of Upgrades that can be equipped.
   _keywords:
   - keywordName: Barrage
     keywordValue: 1
     definition: "Attack X Targets this turn.\nYou must roll X or higher for \neach
       attack to succeed."
-    abilityType: 4
+    abilityType: 3
   - keywordName: Fortify
     keywordValue: 3
     definition: Take -5 Damage from the next successful attack.
     abilityType: 5
   - keywordName: Strafe
-    keywordValue: 6
+    keywordValue: 5
     definition: Negate an opponent's 'Deflect'.
-    abilityType: 2
+    abilityType: 3
   _cardText: "Main Character of the game.  \nThis Hunter card should be well-rounded\n
     and adapt to most strategies."
+  _cost: 10

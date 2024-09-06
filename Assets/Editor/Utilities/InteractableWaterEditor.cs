@@ -1,12 +1,7 @@
-﻿using System;
-using Unity.VisualScripting;
+﻿using UnityEditor;
 using UnityEngine;
-using UnityEditor;
-using UnityEditor.UIElements;
-using UnityEngine.UIElements;
-using Water;
 
-namespace Editor
+namespace Editor.Utilities
 {
     [CustomEditor(typeof(InteractableWater))]
     public class InteractableWaterEditor : UnityEditor.Editor

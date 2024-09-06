@@ -1,4 +1,4 @@
-using Editor.CardEditor;
+using Editor.CardData;
 using UnityEditor;
 using UnityEngine;
 
@@ -21,9 +21,10 @@ namespace Editor.CostCalculator
 
         public CardSO LoadedCard
         {
-            get => _loadedCard;
-            set => _loadedCard = value;
+            get { return _loadedCard; }
+            set { _loadedCard = value; }
         }
+
         private string _message = "";
         private string _keywordSumString;
 
@@ -151,6 +152,12 @@ namespace Editor.CostCalculator
 
             _keywordSumString = _loadedCard?.GetKeywordsSumString();
             _message = $"Cost is {cost}";
+            AssignCostToCard((int)cost);
+        }
+
+        private void AssignCostToCard(int cost)
+        {
+            _loadedCard.CardCost = cost;
         }
     }
 }

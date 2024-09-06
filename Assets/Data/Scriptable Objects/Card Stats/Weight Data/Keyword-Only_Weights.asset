@@ -12,6 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b1aa697563d41d1953a3f47018af1e9, type: 3}
   m_Name: Keyword-Only_Weights
   m_EditorClassIdentifier: 
-  weightType: 5
+  weightType: 6
   cardStatWeights:
+  - {fileID: 11400000, guid: c6f6bcf33912b4954b2efae756b1a79d, type: 2}
+  - {fileID: 11400000, guid: c6f6bcf33912b4954b2efae756b1a79d, type: 2}
+  - {fileID: 11400000, guid: c6f6bcf33912b4954b2efae756b1a79d, type: 2}
+  - {fileID: 11400000, guid: c6f6bcf33912b4954b2efae756b1a79d, type: 2}
+  - {fileID: 11400000, guid: c6f6bcf33912b4954b2efae756b1a79d, type: 2}
+  - {fileID: 11400000, guid: c6f6bcf33912b4954b2efae756b1a79d, type: 2}
   - {fileID: 11400000, guid: b67d8670a097d50498b4f06026c2cbbc, type: 2}

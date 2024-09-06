@@ -40,4 +40,19 @@ MonoBehaviour:
     _statName: 0
     _statValue: 0
     _statDescription: 
+  _keywords:
+  - keywordName: Fortify
+    keywordValue: 3
+    definition: Take -5 Damage from the next successful attack.
+    abilityType: 5
+  - keywordName: None
+    keywordValue: 0
+    definition: 
+    abilityType: 0
+  - keywordName: None
+    keywordValue: 0
+    definition: 
+    abilityType: 0
   _cardText: 
+  _cost: 12
+  _rarity: 3

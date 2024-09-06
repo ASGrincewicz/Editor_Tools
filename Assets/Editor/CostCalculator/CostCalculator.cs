@@ -1,6 +1,6 @@
 using System;
 using Editor.AttributesWeights;
-using Editor.CardEditor;
+using Editor.CardData;
 using Editor.KeywordSystem;
 using UnityEngine;
 
@@ -14,6 +14,7 @@ namespace Editor.CostCalculator
         // card stats
         private CardStat[] _cardStats;
         private Keyword[] _keywords;
+        
 
         public CostCalculator(WeightContainer weightContainer, CardStat[] cardStats, Keyword[] keywords)
         {
@@ -29,7 +30,7 @@ namespace Editor.CostCalculator
 
             if (_weightContainer.weightType == WeightType.Keyword)
             {
-                totalCost += AddKeywordValues(_weightContainer.cardStatWeights[0].statWeight);
+                totalCost += AddKeywordValues(_weightContainer.cardStatWeights[6].statWeight);
             }
             else
             {
@@ -37,16 +38,18 @@ namespace Editor.CostCalculator
                 Debug.Log($"Weights Size:{_weightContainer.cardStatWeights.Length}'");
             }
             Debug.Log($"Pre-normalized cost is: {totalCost}");
-            return totalCost;
+            return Mathf.Ceil(totalCost);
         }
 
         private float AddCardStats(float totalCost, int count)
         {
-            for (int i = 0; i <= count - 2 ; i++)
+            for (int i = 0; i <= count - 2; i++)
             {
                 totalCost += _weightContainer.cardStatWeights[i].statWeight * _cardStats[i].StatValue;
+               
             }
             totalCost += AddKeywordValues(_weightContainer.cardStatWeights[count - 1].statWeight);
+            Debug.Log($"Total cost after adding keyword weights: {totalCost}");
             return totalCost;
         }
 
@@ -62,7 +65,7 @@ namespace Editor.CostCalculator
        
         public int NormalizeCost()
         {
-            float normal = 3.5f;
+            float normal = 3.0f;
             float cardWeight = CalculateCost();
             if (cardWeight is <= 65.0f and >= 45.0f)
             {
@@ -70,7 +73,7 @@ namespace Editor.CostCalculator
             }
             else if (cardWeight is < 45.0f and >= 25.0f)
             {
-                normal = 3.0f;
+                normal = 2.5f;
             }
             
             float normalizedCost = cardWeight / normal;

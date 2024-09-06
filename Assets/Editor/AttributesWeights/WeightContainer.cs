@@ -1,4 +1,3 @@
-using Editor.CardEditor;
 using UnityEngine;
 
 namespace Editor.AttributesWeights
@@ -8,5 +7,8 @@ namespace Editor.AttributesWeights
     {
         public WeightType weightType;
         public CardStatWeight[] cardStatWeights;
+
+        private const string PLACEHOLDER_PATH =
+            "Assets/Data/Scriptable Objects/Card Stats/Other/PlaceHolder_Data.asset";
     }
 }

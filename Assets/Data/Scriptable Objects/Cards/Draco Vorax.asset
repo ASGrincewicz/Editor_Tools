@@ -55,3 +55,5 @@ MonoBehaviour:
     definition: Gross stuff here.
     abilityType: 1
   _cardText: 
+  _cost: 12
+  _rarity: 4

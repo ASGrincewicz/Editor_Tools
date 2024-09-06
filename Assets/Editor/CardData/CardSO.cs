@@ -3,7 +3,7 @@ using Editor.KeywordSystem;
 using UnityEditor;
 using UnityEngine;
 
-namespace Editor.CardEditor
+namespace Editor.CardData
 {
     /// <summary>
     /// This class represents a card configuration as a ScriptableObject.
@@ -30,6 +30,9 @@ namespace Editor.CardEditor
         
         [HideInInspector] [SerializeField][Multiline]
         private string _cardText;
+
+        [HideInInspector] [SerializeField] private int _cost;
+        [HideInInspector] [SerializeField] private CardRarity _rarity;
 
         /// <summary>
         /// Type of the card.
@@ -78,6 +81,18 @@ namespace Editor.CardEditor
         {
             get { return _cardText; }
             set { _cardText = value; }
+        }
+
+        public int CardCost
+        {
+            get { return _cost; }
+            set { _cost = value; }
+        }
+
+        public CardRarity Rarity
+        {
+            get { return _rarity; }
+            set { _rarity = value; }
         }
         
         // The following properties are the CardStat type properties representing different stats for a card

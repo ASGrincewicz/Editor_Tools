@@ -59,3 +59,5 @@ MonoBehaviour:
     abilityType: 1
   _cardText: You may skip the draw phase to deal 5 damage to any target in the melee
     row.
+  _cost: 12
+  _rarity: 3

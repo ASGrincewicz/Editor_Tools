@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Creature_Attack_Data
   m_EditorClassIdentifier: 
   statName: 0
-  statWeight: 0.01
+  statWeight: 0.2

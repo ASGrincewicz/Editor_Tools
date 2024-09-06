@@ -1,5 +1,5 @@
-﻿using Editor.CostCalculator;
-using Editor.KeywordSystem;
+﻿using Editor.CardData;
+using Editor.CostCalculator;
 using Editor.Utilities;
 using UnityEditor;
 using UnityEngine;
@@ -20,6 +20,8 @@ namespace Editor.CardEditor
         private const string UpgradeSlotsPropertyName = "_upgradeSlots";
         private const string KeywordsPropertyName = "_keywords";
         private const string CardTextPropertyName = "_cardText";
+        private const string CostPropertyName = "_cost";
+        private const string RarityPropertyName = "_rarity";
         
         private SerializedProperty _weightDataProperty;
         private SerializedProperty _cardTypeProperty;
@@ -33,6 +35,8 @@ namespace Editor.CardEditor
         private SerializedProperty _upgradeSlotsProperty;
         private SerializedProperty _keywordsProperty;
         private SerializedProperty _cardTextProperty;
+        private SerializedProperty _costProperty;
+        private SerializedProperty _rarityProperty;
 
         private void OnEnable()
         {
@@ -48,6 +52,8 @@ namespace Editor.CardEditor
             _upgradeSlotsProperty = serializedObject.FindProperty(UpgradeSlotsPropertyName);
             _keywordsProperty = serializedObject.FindProperty(KeywordsPropertyName);
             _cardTextProperty = serializedObject.FindProperty(CardTextPropertyName);
+            _costProperty = serializedObject.FindProperty(CostPropertyName);
+            _rarityProperty = serializedObject.FindProperty(RarityPropertyName);
         }
         
         public override void OnInspectorGUI()
@@ -72,28 +78,31 @@ namespace Editor.CardEditor
 
         private void DrawOpenCardEditorButton(CardSO card) 
         {
-            if (!GUILayout.Button("Open in Card Editor")) 
+            if (GUILayout.Button("Open in Card Editor")) 
             {
-                return;
+                CardEditorWindow instance = EditorWindow.GetWindow<CardEditorWindow>();
+                instance.OpenCardInEditor(card);
             }
-            CardEditorWindow instance = EditorWindow.GetWindow<CardEditorWindow>();
-            instance.OpenCardInEditor(card);
         }
 
         private void DrawOpenCostCalculatorButton(CardSO card)
         {
-            if (!GUILayout.Button("Open Cost Calculator"))
+            if (GUILayout.Button("Open Cost Calculator"))
             {
-                return;
+                CostCalculatorWindow instance = EditorWindow.GetWindow<CostCalculatorWindow>();
+                instance.OpenInCostCalculatorWindow(card);
             }
-            CostCalculatorWindow instance = EditorWindow.GetWindow<CostCalculatorWindow>();
-            instance.OpenInCostCalculatorWindow(card);
         }
         
 
         private void DrawProperties() 
         {
+            GUI.enabled = false;
             DrawProperty(_weightDataProperty);
+            GUI.enabled = true;
+            CardRarity cardRarity = (CardRarity) _rarityProperty.enumValueIndex;
+            DrawLabel($"Rarity: {cardRarity.GetDescription()}",EditorStyles.boldLabel, GUILayout.Width(200), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+            DrawLabel($"Card Cost: {_costProperty.intValue}",EditorStyles.boldLabel, GUILayout.Width(200), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
             CardTypes cardTypes = (CardTypes)_cardTypeProperty.enumValueIndex;
             DrawLabel($"Card Type: {cardTypes.GetDescription()}", EditorStyles.boldLabel, GUILayout.Width(200), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
 
@@ -119,7 +128,6 @@ namespace Editor.CardEditor
             GUILayout.Label("Artwork Preview:");
             Rect rect = GUILayoutUtility.GetRect(400 * 0.75f, 225 * 0.75f);
             EditorGUI.DrawPreviewTexture(rect, artworkTexture);
-            EditorGUILayout.LabelField(artworkTexture.name);
         }
 
         private void DrawKeywordArrayProperty()
@@ -149,8 +157,6 @@ namespace Editor.CardEditor
                     break;
                 case CardTypes.Gear_Equipment:
                 case CardTypes.Gear_Upgrade:
-                    // These cases don't require any properties to be drawn.
-                    break;
                 default:
                     DrawCommonStatsProperties();
                     if (cardTypes == CardTypes.Character_Hunter)

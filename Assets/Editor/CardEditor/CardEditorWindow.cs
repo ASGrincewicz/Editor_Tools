@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Editor.AttributesWeights;
+using Editor.CardData;
 using Editor.CostCalculator;
 using Editor.KeywordSystem;
 using Editor.Utilities;
 using JetBrains.Annotations;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
-using static Editor.CardEditor.StatDataReference;
+using static Editor.CardData.StatDataReference;
 
 namespace Editor.CardEditor
 {
@@ -29,6 +29,7 @@ namespace Editor.CardEditor
         private const string CREATURE_WEIGHT_ASSET_PATH =
             "Assets/Data/Scriptable Objects/Card Stats/Weight Data/Creature_Weights.asset";
         private const string ENVIRONMENT_WEIGHT_ASSET_PATH = "Assets/Data/Scriptable Objects/Card Stats/Weight Data/Environment_Weights.asset";
+        private const string GEAR_WEIGHT_ASSET_PATH = "Assets/Data/Scriptable Objects/Card Stats/Weight Data/Gear_Weights.asset";
         private const string HUNTER_WEIGHT_ASSET_PATH = "Assets/Data/Scriptable Objects/Card Stats/Weight Data/Hunter_Weights.asset";
 
         private const string KEYWORD_ONLY_WEIGHT_ASSET_PATH =
@@ -44,6 +45,7 @@ namespace Editor.CardEditor
         // Method specific variables
         private StringBuilder _stringBuilder;
         private CardTypes _cardTypes;
+        private CardRarity _cardRarity;
         private string _cardName;
         private CardStat? _attack;
         private int _attackValue;
@@ -63,6 +65,7 @@ namespace Editor.CardEditor
         private Keyword[] _selectedKeywords;
         private int[] _selectedKeywordsIndex;
         [Multiline] private string _cardText;
+        private int _cardCost;
         private CardSO _selectedCard;
         
         
@@ -139,6 +142,7 @@ namespace Editor.CardEditor
             _cardTypes = (CardTypes)EditorGUILayout.EnumPopup("Card Type",_cardTypes, GUILayout.Width(FIELD_WIDTH));
            
             _cardName = EditorGUILayout.TextField("Card Name", _cardName, GUILayout.Width(FIELD_WIDTH));
+            _cardRarity = (CardRarity)EditorGUILayout.EnumPopup("Card Rarity",_cardRarity,GUILayout.Width(FIELD_WIDTH));
             _artwork = (Texture2D)EditorGUILayout.ObjectField("Artwork", _artwork, typeof(Texture2D), false,
                 GUILayout.Height(200), GUILayout.Width(FIELD_WIDTH));
 
@@ -154,7 +158,6 @@ namespace Editor.CardEditor
                     break;
                 case CardTypes.Gear_Equipment:
                 case CardTypes.Gear_Upgrade:
-                    break;
                 case CardTypes.Character_Ally:
                 case CardTypes.Character_Hunter:
                 case CardTypes.Creature:
@@ -170,6 +173,7 @@ namespace Editor.CardEditor
             }
           
             DrawKeywordArea();
+            GUILayout.Label($"Card Cost: {_cardCost}"); ;
             GUILayout.Label("Card Text");
             _cardText = EditorGUILayout.TextArea(_cardText, GUILayout.Height(100), GUILayout.Width(FIELD_WIDTH));
         }
@@ -187,17 +191,39 @@ namespace Editor.CardEditor
 
             for (int i = 0; i < _selectedKeywords.Length; i++)
             {
+                // Ensure _selectedKeywordsIndex has the same length as _selectedKeywords
+                if (_selectedKeywordsIndex.Length <= i)
+                {
+                    Debug.LogError($"Index {i} is out of range for _selectedKeywordsIndex");
+                    continue;
+                }
+
+                // If the value is -1, initialize it to 0
+                if (_selectedKeywordsIndex[i] == -1)
+                {
+                    _selectedKeywordsIndex[i] = 0;
+                }
+
                 _selectedKeywordsIndex[i] = EditorGUILayout.Popup(
                     _selectedKeywordsIndex[i],
                     _keywordNamesList.ToArray(),
                     GUILayout.Width(FIELD_WIDTH / 3)
                 );
-                //TODO: Need error checking on this.
+
+                // Check if the selected index is within the bounds of _keywordNamesList
+                if (_selectedKeywordsIndex[i] < 0 || _selectedKeywordsIndex[i] >= _keywordNamesList.Count)
+                {
+                    Debug.LogError($"Index {_selectedKeywordsIndex[i]} is out of range for _keywordNamesList with count {_keywordNamesList.Count}");
+                    continue;
+                }
+
                 // Use Find method to assign Keyword to _selectedKeywords
-                string selectedKeywordName = _keywordNamesList[_selectedKeywordsIndex[i]];
-                _selectedKeywords[i] = _keywordManager.GetKeywordByName(selectedKeywordName);
+                if (_keywordNamesList.Count > 0)
+                {
+                    string selectedKeywordName = _keywordNamesList[_selectedKeywordsIndex[i]];
+                    _selectedKeywords[i] = _keywordManager.GetKeywordByName(selectedKeywordName);
+                }
             }
-          
             GUILayout.EndHorizontal();
         }
 
@@ -252,7 +278,7 @@ namespace Editor.CardEditor
                 }
         
                 GUILayout.BeginVertical(GUILayout.Width(_secondAreaRect.width / ColumnsDesired));
-                _selectedCards[card] = EditorGUILayout.ToggleLeft($"{card.CardName}/{card.CardType}", _selectedCards[card], GUILayout.ExpandWidth(true));
+                _selectedCards[card] = EditorGUILayout.ToggleLeft($"{card.CardName}/{card.CardType}/{card.Rarity}", _selectedCards[card], GUILayout.ExpandWidth(true));
                 GUILayout.EndVertical();
 
                 if (columnCounter % ColumnsDesired == ColumnsDesired - 1)
@@ -295,10 +321,12 @@ namespace Editor.CardEditor
                 return false;
             }
             card.CardType = _cardTypes;
+            card.Rarity = _cardRarity;
             card.CardName = _cardName;
             card.ArtWork = _artwork;
             card.Keywords = _selectedKeywords;
             card.CardText = _cardText;
+            card.CardCost = _cardCost;
             switch (_cardTypes)
             {
                 case CardTypes.TBD:
@@ -310,7 +338,6 @@ namespace Editor.CardEditor
                     break;
                 case CardTypes.Gear_Equipment:
                 case CardTypes.Gear_Upgrade:
-                    break;
                 case CardTypes.Character_Ally:
                 case CardTypes.Character_Hunter:
                 case CardTypes.Creature:
@@ -352,21 +379,17 @@ namespace Editor.CardEditor
         // Method to Get Weight Container based on Card Type
         private WeightContainer GetWeightContainer(CardTypes cardType)
         {
-            switch(cardType)
+            return cardType switch
             {
-                case CardTypes.Character_Ally:
-                    return AssetDatabase.LoadAssetAtPath<WeightContainer>(ALLY_WEIGHT_ASSET_PATH);
-                case CardTypes.Environment:
-                    return AssetDatabase.LoadAssetAtPath<WeightContainer>(ENVIRONMENT_WEIGHT_ASSET_PATH);
-                case CardTypes.Creature:
-                    return AssetDatabase.LoadAssetAtPath<WeightContainer>(CREATURE_WEIGHT_ASSET_PATH);
-                case CardTypes.Boss:
-                    return AssetDatabase.LoadAssetAtPath<WeightContainer>(BOSS_WEIGHT_ASSET_PATH);
-                case CardTypes.Character_Hunter:
-                    return AssetDatabase.LoadAssetAtPath<WeightContainer>(HUNTER_WEIGHT_ASSET_PATH);
-                default:
-                    return AssetDatabase.LoadAssetAtPath<WeightContainer>(KEYWORD_ONLY_WEIGHT_ASSET_PATH);
-            }
+                CardTypes.Character_Ally => AssetDatabase.LoadAssetAtPath<WeightContainer>(ALLY_WEIGHT_ASSET_PATH),
+                CardTypes.Environment => AssetDatabase.LoadAssetAtPath<WeightContainer>(ENVIRONMENT_WEIGHT_ASSET_PATH),
+                CardTypes.Creature => AssetDatabase.LoadAssetAtPath<WeightContainer>(CREATURE_WEIGHT_ASSET_PATH),
+                CardTypes.Boss => AssetDatabase.LoadAssetAtPath<WeightContainer>(BOSS_WEIGHT_ASSET_PATH),
+                CardTypes.Character_Hunter => AssetDatabase.LoadAssetAtPath<WeightContainer>(HUNTER_WEIGHT_ASSET_PATH),
+                CardTypes.Gear_Equipment=> AssetDatabase.LoadAssetAtPath<WeightContainer>(GEAR_WEIGHT_ASSET_PATH),
+                CardTypes.Gear_Upgrade => AssetDatabase.LoadAssetAtPath<WeightContainer>(GEAR_WEIGHT_ASSET_PATH),
+                _ => AssetDatabase.LoadAssetAtPath<WeightContainer>(KEYWORD_ONLY_WEIGHT_ASSET_PATH)
+            };
         }
 
         private void SetWeightData(CardSO card)
@@ -378,13 +401,45 @@ namespace Editor.CardEditor
             }
             card.WeightData = weights;
         }
+        private void UpdateSelectedKeywordsIndices()
+        {
+            // Check if _selectedCard and its Keywords are not null
+            if (_selectedCard?.Keywords == null)
+            {
+                Debug.LogError("Selected card or its keywords are null");
+                return;
+            }
+
+            _selectedKeywords = _selectedCard.Keywords;
+
+            // Ensure _selectedKeywordsIndex has the correct size
+            if (_selectedKeywordsIndex == null || _selectedKeywordsIndex.Length != _selectedKeywords.Length)
+            {
+                _selectedKeywordsIndex = new int[_selectedKeywords.Length];
+            }
+
+            // Populate the indices for the selected keywords
+            for (int i = 0; i < _selectedKeywords.Length; i++)
+            {
+                if (_keywordNamesList != null)
+                {
+                    _selectedKeywordsIndex[i] = _keywordNamesList.IndexOf(_selectedKeywords[i].keywordName);
+                }
+                else
+                {
+                    Debug.LogError("Keyword names list is null");
+                    _selectedKeywordsIndex[i] = -1; // or another default/failure value
+                }
+            }
+        }
 
         private void LoadCardFromFile()
         {
             UnloadCard();
-            if (_cardToEdit != null)
+            if (!ReferenceEquals(_cardToEdit, null))
             {
                 _selectedCard = _cardToEdit;
+                _selectedCards[_cardToEdit] = true;
             }
             else
             {
@@ -401,25 +456,24 @@ namespace Editor.CardEditor
             {
                 _cardTypes = _selectedCard.CardType;
                 _cardName = _selectedCard.CardName;
+                _cardRarity = _selectedCard.Rarity;
                 _artwork = _selectedCard.ArtWork;
-                _selectedKeywords = _selectedCard.Keywords;
-                for (int i = 0; i < _selectedKeywords.Length; i++)
-                {
-                    _selectedKeywordsIndex[i] = _keywordNamesList.IndexOf(_selectedKeywords[i].keywordName);
-                }
+                _cardCost = _selectedCard.CardCost;
+                
+               UpdateSelectedKeywordsIndices();
                 _cardText += _stringBuilder.Append(_selectedCard.CardText);
                 switch (_cardTypes)
                 {
                     case CardTypes.TBD:
-                    break;
+                    case CardTypes.Starship:
                     case CardTypes.Action:
                     break;
                     case CardTypes.Environment:
                     _explore = _selectedCard.Explore;
+                    _exploreValue = _selectedCard.Explore.StatValue;
                     break;
                     case CardTypes.Gear_Equipment:
                     case CardTypes.Gear_Upgrade:
-                        break;
                     case CardTypes.Character_Ally:
                     case CardTypes.Character_Hunter:
                     case CardTypes.Boss:
@@ -448,9 +502,11 @@ namespace Editor.CardEditor
 
         private void UnloadCard()
         {
+            _selectedCards[_selectedCard] = false;
             _selectedCard = null;
             _cardTypes = CardTypes.TBD;
             _cardName = string.Empty;
+            _cardRarity = CardRarity.None;
             _cardText = string.Empty;
             _attack = null;
             _hitPoints = null;
@@ -467,6 +523,7 @@ namespace Editor.CardEditor
             Undo.RecordObject(_selectedCard, "Edited Card");
             if (InitializeCard(_selectedCard))
             {
+                SetWeightData(_selectedCard);
                 EditorUtility.SetDirty(_selectedCard);
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
@@ -509,7 +566,7 @@ namespace Editor.CardEditor
             {
                 int compare = card1.CardType.CompareTo(card2.CardType);
 
-                return compare == 0 ? card1.CardName.CompareTo(card2.CardName) : compare;
+                return compare == 0 ? string.Compare(card1.CardName, card2.CardName, StringComparison.Ordinal) : compare;
             });
         }
 

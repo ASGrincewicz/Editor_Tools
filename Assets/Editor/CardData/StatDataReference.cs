@@ -1,4 +1,4 @@
-﻿namespace Editor.CardEditor
+﻿namespace Editor.CardData
 {
     public static class StatDataReference
     {

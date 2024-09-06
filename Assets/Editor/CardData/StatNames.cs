@@ -1,4 +1,4 @@
-﻿namespace Editor.CardEditor
+﻿namespace Editor.CardData
 {
     public enum StatNames
     {
@@ -12,6 +12,7 @@
 
         [System.ComponentModel.Description("Upgrade Slots")]
         Upgrades,
-        Keyword
+        Keyword,
+        None
     }
 }

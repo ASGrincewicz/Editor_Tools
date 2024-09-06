@@ -40,4 +40,20 @@ MonoBehaviour:
     _statName: 0
     _statValue: 0
     _statDescription: 
+  _keywords:
+  - keywordName: Blink
+    keywordValue: 2
+    definition: "Move this card from the melee zone \nto the ranged zone or vice
+      versa."
+    abilityType: 10
+  - keywordName: Mend
+    keywordValue: 1
+    definition: Heal any ally by 5.
+    abilityType: 9
+  - keywordName: None
+    keywordValue: 0
+    definition: 
+    abilityType: 0
   _cardText: 
+  _cost: 4
+  _rarity: 3

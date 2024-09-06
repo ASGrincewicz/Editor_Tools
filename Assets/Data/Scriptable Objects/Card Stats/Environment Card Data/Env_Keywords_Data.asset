@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Env_Keywords_Data
   m_EditorClassIdentifier: 
   statName: 6
-  statWeight: 0.01
+  statWeight: 0.8
