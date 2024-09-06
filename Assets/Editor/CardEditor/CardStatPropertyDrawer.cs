@@ -1,4 +1,5 @@
-﻿using Editor.Utilities;
+﻿using Editor.CardData;
+using Editor.Utilities;
 using UnityEditor;
 using UnityEngine;
 

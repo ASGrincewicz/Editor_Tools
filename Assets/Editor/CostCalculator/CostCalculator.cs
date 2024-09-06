@@ -1,6 +1,6 @@
 using System;
 using Editor.AttributesWeights;
-using Editor.CardEditor;
+using Editor.CardData;
 using Editor.KeywordSystem;
 using UnityEngine;
 

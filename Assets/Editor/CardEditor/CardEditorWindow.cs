@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Editor.AttributesWeights;
+using Editor.CardData;
 using Editor.CostCalculator;
 using Editor.KeywordSystem;
 using Editor.Utilities;
 using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
-using static Editor.CardEditor.StatDataReference;
+using static Editor.CardData.StatDataReference;
 
 namespace Editor.CardEditor
 {
@@ -44,6 +45,7 @@ namespace Editor.CardEditor
         // Method specific variables
         private StringBuilder _stringBuilder;
         private CardTypes _cardTypes;
+        private CardRarity _cardRarity;
         private string _cardName;
         private CardStat? _attack;
         private int _attackValue;
@@ -140,6 +142,7 @@ namespace Editor.CardEditor
             _cardTypes = (CardTypes)EditorGUILayout.EnumPopup("Card Type",_cardTypes, GUILayout.Width(FIELD_WIDTH));
            
             _cardName = EditorGUILayout.TextField("Card Name", _cardName, GUILayout.Width(FIELD_WIDTH));
+            _cardRarity = (CardRarity)EditorGUILayout.EnumPopup("Card Rarity",_cardRarity,GUILayout.Width(FIELD_WIDTH));
             _artwork = (Texture2D)EditorGUILayout.ObjectField("Artwork", _artwork, typeof(Texture2D), false,
                 GUILayout.Height(200), GUILayout.Width(FIELD_WIDTH));
 
@@ -170,7 +173,7 @@ namespace Editor.CardEditor
             }
           
             DrawKeywordArea();
-            GUILayout.Label($"Card Cost: {_cardCost}");
+            GUILayout.Label($"Card Cost: {_cardCost}"); ;
             GUILayout.Label("Card Text");
             _cardText = EditorGUILayout.TextArea(_cardText, GUILayout.Height(100), GUILayout.Width(FIELD_WIDTH));
         }
@@ -275,7 +278,7 @@ namespace Editor.CardEditor
                 }
         
                 GUILayout.BeginVertical(GUILayout.Width(_secondAreaRect.width / ColumnsDesired));
-                _selectedCards[card] = EditorGUILayout.ToggleLeft($"{card.CardName}/{card.CardType}", _selectedCards[card], GUILayout.ExpandWidth(true));
+                _selectedCards[card] = EditorGUILayout.ToggleLeft($"{card.CardName}/{card.CardType}/{card.Rarity}", _selectedCards[card], GUILayout.ExpandWidth(true));
                 GUILayout.EndVertical();
 
                 if (columnCounter % ColumnsDesired == ColumnsDesired - 1)
@@ -318,6 +321,7 @@ namespace Editor.CardEditor
                 return false;
             }
             card.CardType = _cardTypes;
+            card.Rarity = _cardRarity;
             card.CardName = _cardName;
             card.ArtWork = _artwork;
             card.Keywords = _selectedKeywords;
@@ -435,6 +439,7 @@ namespace Editor.CardEditor
             if (!ReferenceEquals(_cardToEdit, null))
             {
                 _selectedCard = _cardToEdit;
+                _selectedCards[_cardToEdit] = true;
             }
             else
             {
@@ -451,6 +456,7 @@ namespace Editor.CardEditor
             {
                 _cardTypes = _selectedCard.CardType;
                 _cardName = _selectedCard.CardName;
+                _cardRarity = _selectedCard.Rarity;
                 _artwork = _selectedCard.ArtWork;
                 _cardCost = _selectedCard.CardCost;
                 
@@ -496,9 +502,11 @@ namespace Editor.CardEditor
 
         private void UnloadCard()
         {
+            _selectedCards[_selectedCard] = false;
             _selectedCard = null;
             _cardTypes = CardTypes.TBD;
             _cardName = string.Empty;
+            _cardRarity = CardRarity.None;
             _cardText = string.Empty;
             _attack = null;
             _hitPoints = null;

@@ -1,9 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Water
+public class WaterTriggerHandler : MonoBehaviour
 {
-    public class WaterTriggerHandler : MonoBehaviour
-    {
         
-    }
 }

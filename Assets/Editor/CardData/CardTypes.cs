@@ -1,4 +1,4 @@
-﻿namespace Editor.CardEditor
+﻿namespace Editor.CardData
 {
     public enum CardTypes{TBD, Action, Boss,
         [System.ComponentModel.Description("Character: Ally")]

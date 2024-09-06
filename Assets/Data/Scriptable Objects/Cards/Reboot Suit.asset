@@ -60,3 +60,5 @@ MonoBehaviour:
 
     Search your Deck for any upgrade with ''Phase''
     in the title and place on top of your deck.'
+  _cost: 5
+  _rarity: 3

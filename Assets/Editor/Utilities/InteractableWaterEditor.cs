@@ -1,8 +1,7 @@
-﻿using UnityEngine;
-using UnityEditor;
-using Water;
+﻿using UnityEditor;
+using UnityEngine;
 
-namespace Editor
+namespace Editor.Utilities
 {
     [CustomEditor(typeof(InteractableWater))]
     public class InteractableWaterEditor : UnityEditor.Editor

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Editor.CardEditor
+namespace Editor.CardData
 {
     public interface ICardData
     {
@@ -9,6 +9,7 @@ namespace Editor.CardEditor
         // Add other stats and text fields
         public Texture2D ArtWork { get; set; }
         public string CardText { get; set; }
+        public CardRarity Rarity { get; set; }
 
         public CardStat Attack { get; set; }
         public CardStat Explore{ get; set; }

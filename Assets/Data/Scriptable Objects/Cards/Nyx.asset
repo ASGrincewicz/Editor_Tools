@@ -40,4 +40,22 @@ MonoBehaviour:
     _statName: 0
     _statValue: 0
     _statDescription: 
+  _keywords:
+  - keywordName: Barrage
+    keywordValue: 1
+    definition: "Attack X Targets this turn.\nYou must roll X or higher for \neach
+      attack to succeed."
+    abilityType: 3
+  - keywordName: Barrage
+    keywordValue: 1
+    definition: "Attack X Targets this turn.\nYou must roll X or higher for \neach
+      attack to succeed."
+    abilityType: 3
+  - keywordName: Barrage
+    keywordValue: 1
+    definition: "Attack X Targets this turn.\nYou must roll X or higher for \neach
+      attack to succeed."
+    abilityType: 3
   _cardText: 
+  _cost: 4
+  _rarity: 2
