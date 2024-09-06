@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6c83ea5914714ac1a61b603ebebcbbdd, type: 3}
-  m_Name: AttributeSettings
+  m_Name: AttributeWeightSettings
   m_EditorClassIdentifier: 
   allyCardStatWeights: {fileID: 11400000, guid: 2765bd0e5cf8642e1b657d07d186cd61, type: 2}
   bossCardStatWeights: {fileID: 11400000, guid: 731fca09734bd4b2e9f5c4ce06b4d915, type: 2}

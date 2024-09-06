@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Editor.AttributesWeights
 {
-    public class AttributeDataSetup : EditorWindow
+    public class WeightDataEditorWindow : EditorWindow
     {
         public AttributeSettings attributeSettings;
         // Class variables
@@ -28,7 +28,7 @@ namespace Editor.AttributesWeights
         [MenuItem("Tools/Utilities/Attribute Data Setup")]
         private static void ShowWindow()
         {
-            AttributeDataSetup window = GetWindow<AttributeDataSetup>();
+            WeightDataEditorWindow window = GetWindow<WeightDataEditorWindow>();
             window.titleContent = new GUIContent("Attribute Data Setup");
             window.position = new Rect(50, 50, 400, 300);
             window.Show();
