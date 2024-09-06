@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Linq;
-using Editor.CardEditor;
 using UnityEditor;
 using UnityEngine;
 
@@ -25,11 +23,11 @@ namespace Editor.AttributesWeights
         private Rect _buttonAreaRect;
         private Rect _bottomAreaRect;
         
-        [MenuItem("Tools/Utilities/Attribute Data Setup")]
+        [MenuItem("Tools/Utilities/Stat Weight Data Setup")]
         private static void ShowWindow()
         {
             WeightDataEditorWindow window = GetWindow<WeightDataEditorWindow>();
-            window.titleContent = new GUIContent("Attribute Data Setup");
+            window.titleContent = new GUIContent("Stat Weight Data Setup");
             window.position = new Rect(50, 50, 400, 300);
             window.Show();
         }
@@ -218,6 +216,15 @@ namespace Editor.AttributesWeights
             weights[4].statWeight = _speedWeight;
             weights[5].statWeight = _upgradeSlotsWeight;
             weights[6].statWeight = _keywordsWeight;
+            SetWeightDataToDirty(weights);
+        }
+
+        private void SetWeightDataToDirty(CardStatWeight[] weights)
+        {
+            foreach (CardStatWeight w in weights)
+            {
+                EditorUtility.SetDirty(w);
+            }
         }
         
         private void SetWeightsFromAssets(CardStatWeight[] weights) 

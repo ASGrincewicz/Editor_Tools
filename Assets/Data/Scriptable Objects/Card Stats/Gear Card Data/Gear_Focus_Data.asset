@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Gear_Focus_Data
   m_EditorClassIdentifier: 
   statName: 2
-  statWeight: 0
+  statWeight: 0.2
