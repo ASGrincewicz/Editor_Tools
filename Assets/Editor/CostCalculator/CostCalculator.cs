@@ -9,80 +9,77 @@ namespace Editor.CostCalculator
     public class CostCalculator
     {
         private const float InitialTotalCost = 0.0f;
-        // weight container
-        private WeightContainer _weightContainer;
-        // card stats
-        private CardStat[] _cardStats;
-        private Keyword[] _keywords;
+        
+        private CostCalculatorSettings CostCalculatorSettings { get; set; }
+        private WeightContainer WeightContainer { get; set; }
+        private CardStat[] CardStatsArray { get; set; }
+        private Keyword[] KeywordsArray { get; set; }
         
 
-        public CostCalculator(WeightContainer weightContainer, CardStat[] cardStats, Keyword[] keywords)
+        public CostCalculator(CostCalculatorSettings settings, WeightContainer weightContainer, CardStat[] cardStatsArray, Keyword[] keywordsArray)
         {
-            _weightContainer = weightContainer;
-            _cardStats = cardStats;
-            _keywords = keywords;
-        }
-        
-        // multiply stat values by corresponding weights
-        private float CalculateCost()
-        {
-            float totalCost = InitialTotalCost;
-
-            if (_weightContainer.weightType == WeightType.Keyword)
-            {
-                totalCost += AddKeywordValues(_weightContainer.cardStatWeights[6].statWeight);
-            }
-            else
-            {
-                totalCost = AddCardStats(totalCost, _weightContainer.cardStatWeights.Length);
-                Debug.Log($"Weights Size:{_weightContainer.cardStatWeights.Length}'");
-            }
-            Debug.Log($"Pre-normalized cost is: {totalCost}");
-            return Mathf.Ceil(totalCost);
-        }
-
-        private float AddCardStats(float totalCost, int count)
-        {
-            for (int i = 0; i <= count - 2; i++)
-            {
-                totalCost += _weightContainer.cardStatWeights[i].statWeight * _cardStats[i].StatValue;
-               
-            }
-            totalCost += AddKeywordValues(_weightContainer.cardStatWeights[count - 1].statWeight);
-            Debug.Log($"Total cost after adding keyword weights: {totalCost}");
-            return totalCost;
-        }
-
-        private int AddKeywordValues(float keywordWeight)
-        {
-            int keywordCost = 0;
-            for (int i = 0; i < _keywords.Length; i++)
-            {
-                keywordCost += _keywords[i].keywordValue;
-            }
-            return (int)(keywordCost * keywordWeight);
+            CostCalculatorSettings = settings;
+            WeightContainer = weightContainer;
+            CardStatsArray = cardStatsArray;
+            KeywordsArray = keywordsArray;
         }
        
         public int NormalizeCost()
         {
-            float normal = 3.0f;
+            float normal = CostCalculatorSettings.baseNormalizationRate;
             float cardWeight = CalculateCost();
             if (cardWeight is <= 65.0f and >= 45.0f)
             {
-                normal = 2.0f;
+                normal = CostCalculatorSettings.secondTierNormalizationRate;
             }
             else if (cardWeight is < 45.0f and >= 25.0f)
             {
-                normal = 2.5f;
+                normal = CostCalculatorSettings.thirdTierNormalizationRate;
             }
             
             float normalizedCost = cardWeight / normal;
-    
-            // Clamp the value between 1 and 12
-            normalizedCost = Math.Max(1, normalizedCost);
-            normalizedCost = Math.Min(12, normalizedCost);
+            
+            normalizedCost = Math.Max(CostCalculatorSettings.normalizationMinimum, normalizedCost);
+            normalizedCost = Math.Min(CostCalculatorSettings.normalizationMaximum, normalizedCost);
 
             return (int)normalizedCost;
+        }
+        private float CalculateCost()
+        {
+            float totalCost = InitialTotalCost;
+
+            if (WeightContainer.weightType == WeightType.Keyword)
+            {
+                totalCost += AddKeywordValues(WeightContainer.cardStatWeights[6].statWeight);
+            }
+            else
+            {
+                totalCost = AddCardStats(totalCost, WeightContainer.cardStatWeights.Length);
+                Debug.Log($"Weights Size:{WeightContainer.cardStatWeights.Length}'");
+            }
+            Debug.Log($"Pre-normalized cost is: {totalCost}");
+            return Mathf.Ceil(totalCost);
+        }
+        private float AddCardStats(float totalCost, int count)
+        {
+            for (int i = 0; i <= count - 2; i++)
+            {
+                totalCost += WeightContainer.cardStatWeights[i].statWeight * CardStatsArray[i].StatValue;
+               
+            }
+            totalCost += AddKeywordValues(WeightContainer.cardStatWeights[count - 1].statWeight);
+            Debug.Log($"Total cost after adding keyword weights: {totalCost}");
+            return totalCost;
+        }
+        
+        private int AddKeywordValues(float keywordWeight)
+        {
+            int keywordCost = 0;
+            for (int i = 0; i < KeywordsArray.Length; i++)
+            {
+                keywordCost += KeywordsArray[i].keywordValue;
+            }
+            return (int)(keywordCost * keywordWeight);
         }
     }
 }

@@ -358,19 +358,35 @@ namespace Editor.CardEditor
         private void DrawCardListAreaButtons()
         {
             GUILayout.BeginHorizontal();
+            DrawEditSelectedCardButton();
+            DrawRefreshKeywordsButton();
+            DrawRefreshCardListButton();
+           
+            GUILayout.EndHorizontal();
+        }
+
+        private void DrawEditSelectedCardButton()
+        {
             if (IsEditSelectedCardButtonPressed)
             {
                 EditSelectedCard();
             }
+        }
+
+        private void DrawRefreshKeywordsButton()
+        {
             if (IsRefreshKeywordsButtonPressed)
             {
                 RefreshKeywordsList();
             }
+        }
+
+        private void DrawRefreshCardListButton()
+        {
             if (IsRefreshCardListButtonPressed)
             {
                 RefreshCardList(true);
             }
-            GUILayout.EndHorizontal();
         }
         private void CreateNewCard()
         {
