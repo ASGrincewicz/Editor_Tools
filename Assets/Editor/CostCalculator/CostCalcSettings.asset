@@ -12,3 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47dad893b4684026bd4eb69f51e98ebc, type: 3}
   m_Name: CostCalcSettings
   m_EditorClassIdentifier: 
+  attributeSettings: {fileID: 11400000, guid: 03f9e610cd07f7d45a7b79f09e04b803, type: 2}
+  baseNormalizationRate: 3
+  secondTierNormalizationRate: 2.5
+  thirdTierNormalizationRate: 2
+  normalizationMaximum: 12
+  normalizationMinimum: 1
