@@ -127,12 +127,12 @@ namespace Editor.CostCalculator
 
         private void RunCalculation()
         {
-            CostCalculator calculator;
+           
             float cost = 0.0f;
             Message = $"Calculating cost for {LoadedCardData?.CardName}";
             if (!ReferenceEquals(LoadedCardData, null))
             {
-                calculator = new(calculationSettings,LoadedCardData.WeightData,LoadedCardData.GetCardStats(), LoadedCardData.Keywords);
+               CostCalculator calculator = new(calculationSettings,LoadedCardData.WeightData,LoadedCardData.GetCardStats(), LoadedCardData.Keywords);
                 ;
                cost = calculator.NormalizeCost();
             }

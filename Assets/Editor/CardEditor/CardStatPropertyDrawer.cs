@@ -10,7 +10,6 @@ namespace Editor.CardEditor
     {
 
         private const string DIVIDER = "_____________________";
-        private StatNames _statName;
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             EditorGUI.BeginProperty(position, label, property);

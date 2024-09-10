@@ -1,21 +1,24 @@
 ﻿using System;
+using Editor.CardData;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Editor.AttributesWeights
 {
     public class WeightDataEditorWindow : EditorWindow
     {
-        public AttributeSettings attributeSettings;
+        [FormerlySerializedAs("attributeSettings")] public AttributeSettings _attributeSettings;
 
-        private WeightType _weightType;
+        private WeightType WeightType { get; set; }
         private WeightAttributes _weightAttributes;
 
-        private Rect _topAreaRect;
-        private Rect _statInputAreaRect;
-        private Rect _buttonAreaRect;
-        private Rect _bottomAreaRect;
-
+        private Rect TopAreaRect { get; set; }
+        private Rect StatInputAreaRect { get; set; }
+        private Rect ButtonAreaRect { get; set; }
+        private Rect BottomAreaRect { get; set; }
+        
+        
         [MenuItem("Tools/Utilities/Stat Weight Data Setup")]
         private static void ShowWindow()
         {
@@ -36,40 +39,40 @@ namespace Editor.AttributesWeights
 
         private void SetupAreaRects()
         {
-            _topAreaRect = new Rect(20, 5, position.width, position.height * 0.1f);
-            _statInputAreaRect = new Rect(20, 50, position.width * 0.5f, position.height * 0.65f);
-            _buttonAreaRect = new Rect(_statInputAreaRect.width + 50, 50, position.width * 0.33f, position.height * 0.75f);
-            _bottomAreaRect = new Rect(20, _statInputAreaRect.height + 20, position.width * 0.66f, position.height * 0.25f);
+            TopAreaRect = new Rect(20, 5, position.width, position.height * 0.1f);
+            StatInputAreaRect = new Rect(20, 50, position.width * 0.5f, position.height * 0.65f);
+            ButtonAreaRect = new Rect(StatInputAreaRect.width + 50, 50, position.width * 0.33f, position.height * 0.75f);
+            BottomAreaRect = new Rect(20, StatInputAreaRect.height + 20, position.width * 0.66f, position.height * 0.25f);
         }
 
         private void DrawTopArea()
         {
-            GUILayout.BeginArea(_topAreaRect);
-            _weightType = (WeightType)EditorGUILayout.EnumPopup("Weight Type", _weightType, GUILayout.Width(300));
+            GUILayout.BeginArea(TopAreaRect);
+            WeightType = (WeightType)EditorGUILayout.EnumPopup("Weight Type", WeightType, GUILayout.Width(300));
             GUILayout.EndArea();
         }
 
         private void DrawStatInputArea()
         {
-            GUILayout.BeginArea(_statInputAreaRect);
+            GUILayout.BeginArea(StatInputAreaRect);
             DrawStatFields();
             GUILayout.EndArea();
         }
 
         private void DrawButtonArea()
         {
-            GUILayout.BeginArea(_buttonAreaRect);
+            GUILayout.BeginArea(ButtonAreaRect);
 
-            if (GUILayout.Button("Load Data", GUILayout.Width(_buttonAreaRect.width * 0.75f), GUILayout.Height(50)))
+            if (GUILayout.Button("Load Data", GUILayout.Width(ButtonAreaRect.width * 0.75f), GUILayout.Height(50)))
             {
                 ResetWeights();
                 LoadWeightData();
             }
-            if (GUILayout.Button("Save Data", GUILayout.Width(_buttonAreaRect.width * 0.75f), GUILayout.Height(50)))
+            if (GUILayout.Button("Save Data", GUILayout.Width(ButtonAreaRect.width * 0.75f), GUILayout.Height(50)))
             {
                 SaveWeightData();
             }
-            if (GUILayout.Button("Reset Values", GUILayout.Width(_buttonAreaRect.width * 0.75f), GUILayout.Height(50)))
+            if (GUILayout.Button("Reset Values", GUILayout.Width(ButtonAreaRect.width * 0.75f), GUILayout.Height(50)))
             {
                 ResetWeights();
             }
@@ -79,14 +82,14 @@ namespace Editor.AttributesWeights
 
         private void DrawBottomArea()
         {
-            GUILayout.BeginArea(_bottomAreaRect);
-            attributeSettings = EditorGUILayout.ObjectField("Attribute Settings", attributeSettings, typeof(AttributeSettings), false) as AttributeSettings;
+            GUILayout.BeginArea(BottomAreaRect);
+            _attributeSettings = EditorGUILayout.ObjectField("Attribute Settings", _attributeSettings, typeof(AttributeSettings), false) as AttributeSettings;
             GUILayout.EndArea();
         }
 
         private void DrawStatFields()
         {
-            switch (_weightType)
+            switch (WeightType)
             {
                 case WeightType.None:
                 case WeightType.Starship:
@@ -111,32 +114,32 @@ namespace Editor.AttributesWeights
 
         private void DrawEnvironmentFields()
         {
-            DrawFloatField("Explore Weight", ref _weightAttributes.ExploreWeight);
+            DrawFloatField("Explore Weight", ref _weightAttributes.exploreWeight);
             GUILayout.Space(5);
-            DrawFloatField("Keywords Weight", ref _weightAttributes.KeywordsWeight);
+            DrawFloatField("Keywords Weight", ref _weightAttributes.keywordsWeight);
         }
 
         private void DrawKeywordOnlyFields()
         {
-            DrawFloatField("Keywords Weight", ref _weightAttributes.KeywordsWeight);
+            DrawFloatField("Keywords Weight", ref _weightAttributes.keywordsWeight);
         }
 
         private void DrawCharacterFields()
         {
-            DrawFloatField("Attack Weight", ref _weightAttributes.AttackWeight);
+            DrawFloatField("Attack Weight", ref _weightAttributes.attackWeight);
             GUILayout.Space(5);
-            DrawFloatField("Focus Weight", ref _weightAttributes.FocusWeight);
+            DrawFloatField("Focus Weight", ref _weightAttributes.focusWeight);
             GUILayout.Space(5);
-            DrawFloatField("Hit Points Weight", ref _weightAttributes.HitPointsWeight);
+            DrawFloatField("Hit Points Weight", ref _weightAttributes.hitPointsWeight);
             GUILayout.Space(5);
-            DrawFloatField("Speed Weight", ref _weightAttributes.SpeedWeight);
+            DrawFloatField("Speed Weight", ref _weightAttributes.speedWeight);
             GUILayout.Space(5);
-            if (_weightType == WeightType.Hunter)
+            if (WeightType == WeightType.Hunter)
             {
-                DrawFloatField("Upgrade Slots Weight", ref _weightAttributes.UpgradeSlotsWeight);
+                DrawFloatField("Upgrade Slots Weight", ref _weightAttributes.upgradeSlotsWeight);
                 GUILayout.Space(5);
             }
-            DrawFloatField("Keywords Weight", ref _weightAttributes.KeywordsWeight);
+            DrawFloatField("Keywords Weight", ref _weightAttributes.keywordsWeight);
         }
 
         private void DrawFloatField(string label, ref float value)
@@ -156,13 +159,13 @@ namespace Editor.AttributesWeights
             {
                 _weightAttributes = new WeightAttributes
                 {
-                    AttackWeight = weights[0].statWeight,
-                    ExploreWeight = weights[1].statWeight,
-                    FocusWeight = weights[2].statWeight,
-                    HitPointsWeight = weights[3].statWeight,
-                    SpeedWeight = weights[4].statWeight,
-                    UpgradeSlotsWeight = weights[5].statWeight,
-                    KeywordsWeight = weights[6].statWeight
+                    attackWeight = weights[0].statWeight,
+                    exploreWeight = weights[1].statWeight,
+                    focusWeight = weights[2].statWeight,
+                    hitPointsWeight = weights[3].statWeight,
+                    speedWeight = weights[4].statWeight,
+                    upgradeSlotsWeight = weights[5].statWeight,
+                    keywordsWeight = weights[6].statWeight
                 };
             }
         }
@@ -172,20 +175,20 @@ namespace Editor.AttributesWeights
             CardStatWeight[] weights = GetWeightsByType();
             if (weights != null)
             {
-                weights[0].statWeight = _weightAttributes.AttackWeight;
-                weights[1].statWeight = _weightAttributes.ExploreWeight;
-                weights[2].statWeight = _weightAttributes.FocusWeight;
-                weights[3].statWeight = _weightAttributes.HitPointsWeight;
-                weights[4].statWeight = _weightAttributes.SpeedWeight;
-                weights[5].statWeight = _weightAttributes.UpgradeSlotsWeight;
-                weights[6].statWeight = _weightAttributes.KeywordsWeight;
+                weights[0].statWeight = _weightAttributes.attackWeight;
+                weights[1].statWeight = _weightAttributes.exploreWeight;
+                weights[2].statWeight = _weightAttributes.focusWeight;
+                weights[3].statWeight = _weightAttributes.hitPointsWeight;
+                weights[4].statWeight = _weightAttributes.speedWeight;
+                weights[5].statWeight = _weightAttributes.upgradeSlotsWeight;
+                weights[6].statWeight = _weightAttributes.keywordsWeight;
 
                 foreach (CardStatWeight weight in weights)
                 {
                     EditorUtility.SetDirty(weight);
                 }
 
-                EditorUtility.SetDirty(attributeSettings);
+                EditorUtility.SetDirty(_attributeSettings);
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
             }
@@ -193,28 +196,28 @@ namespace Editor.AttributesWeights
 
         private CardStatWeight[] GetWeightsByType()
         {
-            return _weightType switch
+            return WeightType switch
             {
-                WeightType.Ally => attributeSettings.allyCardStatWeights.cardStatWeights,
-                WeightType.Boss => attributeSettings.bossCardStatWeights.cardStatWeights,
-                WeightType.Creature => attributeSettings.creatureCardStatWeights.cardStatWeights,
-                WeightType.Environment => attributeSettings.environmentCardStatWeights.cardStatWeights,
-                WeightType.Gear => attributeSettings.gearCardStatWeights.cardStatWeights,
-                WeightType.Hunter => attributeSettings.hunterCardStatWeights.cardStatWeights,
-                WeightType.Keyword => attributeSettings.keywordOnlyCardStatWeights.cardStatWeights,
+                WeightType.Ally => _attributeSettings.allyCardStatWeights.cardStatWeights,
+                WeightType.Boss => _attributeSettings.bossCardStatWeights.cardStatWeights,
+                WeightType.Creature => _attributeSettings.creatureCardStatWeights.cardStatWeights,
+                WeightType.Environment => _attributeSettings.environmentCardStatWeights.cardStatWeights,
+                WeightType.Gear => _attributeSettings.gearCardStatWeights.cardStatWeights,
+                WeightType.Hunter => _attributeSettings.hunterCardStatWeights.cardStatWeights,
+                WeightType.Keyword => _attributeSettings.keywordOnlyCardStatWeights.cardStatWeights,
                 _ => null,
             };
         }
 
         private struct WeightAttributes
         {
-            public float AttackWeight;
-            public float ExploreWeight;
-            public float FocusWeight;
-            public float HitPointsWeight;
-            public float SpeedWeight;
-            public float UpgradeSlotsWeight;
-            public float KeywordsWeight;
+            public float attackWeight;
+            public float exploreWeight;
+            public float focusWeight;
+            public float hitPointsWeight;
+            public float speedWeight;
+            public float upgradeSlotsWeight;
+            public float keywordsWeight;
         }
     }
 }

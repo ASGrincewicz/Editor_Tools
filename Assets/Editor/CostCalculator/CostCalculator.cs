@@ -55,9 +55,9 @@ namespace Editor.CostCalculator
             else
             {
                 totalCost = AddCardStats(totalCost, WeightContainer.cardStatWeights.Length);
-                Debug.Log($"Weights Size:{WeightContainer.cardStatWeights.Length}'");
+                //Debug.Log($"Weights Size:{WeightContainer.cardStatWeights.Length}'");
             }
-            Debug.Log($"Pre-normalized cost is: {totalCost}");
+            //Debug.Log($"Pre-normalized cost is: {totalCost}");
             return Mathf.Ceil(totalCost);
         }
         private float AddCardStats(float totalCost, int count)
@@ -68,7 +68,7 @@ namespace Editor.CostCalculator
                
             }
             totalCost += AddKeywordValues(WeightContainer.cardStatWeights[count - 1].statWeight);
-            Debug.Log($"Total cost after adding keyword weights: {totalCost}");
+            //Debug.Log($"Total cost after adding keyword weights: {totalCost}");
             return totalCost;
         }
         

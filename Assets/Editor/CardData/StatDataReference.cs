@@ -4,7 +4,7 @@
     {
         public const string ATTACK_DESCRIPTION = "Amount of damage dealt.";
         
-        public const string EXPLORE_DESCRIPTION = "";
+        public const string EXPLORE_DESCRIPTION = "Actions needed to complete this card.";
         
         public const string FOCUS_DESCRIPTION = "Resources generated";
         

@@ -16,7 +16,6 @@ namespace Editor.CardData
         public string StatName
         {
             get { return _statName.GetDescription(); }
-            //set { _statName = value; }
         }
 
         public int StatValue
