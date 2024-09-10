@@ -1,9 +1,11 @@
-﻿using Editor.CardData;
+﻿using Editor.CardEditor;
 using Editor.CostCalculator;
 using Editor.Utilities;
+using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
-namespace Editor.CardEditor
+
+namespace Editor.CardData
 {
     [CustomEditor(typeof(CardSO))]
     public class CardSoInspector: UnityEditor.Editor
@@ -39,8 +41,8 @@ namespace Editor.CardEditor
         private SerializedProperty RarityProperty { get; set; }
         
         // GUI Properties
-        private bool IsOpenInCardEditorButtonPressed => GUILayout.Button("Open in Card Editor");
-        private bool IsOpenInCostCalculatorButtonPressed => GUILayout.Button("Open in Cost Calculator");
+        private bool IsOpenInCardEditorButtonPressed => GUILayout.Button("Open in Card Editor", EditorStyles.toolbarButton);
+        private bool IsOpenInCostCalculatorButtonPressed => GUILayout.Button("Open in Cost Calculator", EditorStyles.toolbarButton);
 
         private void OnEnable()
         {
@@ -72,9 +74,11 @@ namespace Editor.CardEditor
             CardSO card = target as CardSO;
             GUILayout.BeginVertical(GUILayout.Width(300));
             EditorGUIUtility.labelWidth = 80;
-
+            GUILayout.BeginHorizontal(EditorStyles.toolbar);
             DrawOpenCardEditorButton(card);
             DrawOpenCostCalculatorButton(card);
+            GUILayout.EndHorizontal();
+            
             DrawProperties();
 
             GUILayout.EndVertical();
@@ -105,27 +109,27 @@ namespace Editor.CardEditor
             DrawProperty(WeightDataProperty);
             GUI.enabled = true;
             CardRarity cardRarity = (CardRarity) RarityProperty.enumValueIndex;
-            DrawLabel($"Rarity: {cardRarity.GetDescription()}",EditorStyles.boldLabel, GUILayout.Width(200), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
-            DrawLabel($"Card Cost: {CostProperty.intValue}",EditorStyles.boldLabel, GUILayout.Width(200), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+            DrawLabel($"Rarity: ",$"{cardRarity.GetDescription()}");
+            DrawLabel($"Card Cost: ",$"{CostProperty.intValue}");
             CardTypes cardTypes = (CardTypes)CardTypeProperty.enumValueIndex;
-            DrawLabel($"Card Type: {cardTypes.GetDescription()}", EditorStyles.boldLabel, GUILayout.Width(200), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+            DrawLabel($"Card Type: ", $"{cardTypes.GetDescription()}");
 
-            DrawLabel($"Card Name: {CardNameProperty.stringValue}", EditorStyles.boldLabel, GUILayout.Width(200), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+            DrawLabel($"Card Name: ", $"{CardNameProperty.stringValue}");
 
             DrawArtWorkProperty();
             
             DrawKeywordArrayProperty();
 
-            DrawLabel($"Card Text: {CardTextProperty.stringValue}", EditorStyles.wordWrappedLabel, GUILayout.Width(200), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+            DrawCardTextLabel();
 
-            DrawLabel($"STATS:", EditorStyles.whiteLargeLabel, GUILayout.Width(200), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+            DrawLabel($"STATS:");
 
             DrawStatsProperties(cardTypes);
         }
 
         private void DrawArtWorkProperty() 
         {
-            if (!(ArtWorkProperty.objectReferenceValue is Texture2D artworkTexture)) 
+            if (ArtWorkProperty.objectReferenceValue is not Texture2D artworkTexture) 
             {
                 return;
             }
@@ -136,7 +140,8 @@ namespace Editor.CardEditor
 
         private void DrawKeywordArrayProperty()
         {
-            GUILayout.Label("Keywords:",EditorStyles.boldLabel);
+            GUILayout.Label("Keywords:",EditorStyles.boldLabel, GUILayout.ExpandWidth(true));
+            GUILayout.BeginHorizontal(EditorStyles.boldLabel);
             for (int i = 0; i < KeywordsProperty.arraySize; i++)
             {
                 
@@ -145,14 +150,24 @@ namespace Editor.CardEditor
                 string keywordName = keywordNameProperty.stringValue;
                 if (!string.IsNullOrEmpty(keywordName))
                 {
-                    DrawLabel(keywordNameProperty.stringValue, EditorStyles.boldLabel);
+                    DrawLabel("",keywordNameProperty.stringValue);
                 }
             }
+            GUILayout.EndHorizontal();
         }
         
-        private void DrawLabel(string text, GUIStyle editorStyles, params GUILayoutOption[] options) 
+        private void DrawLabel(string labelText = "", string fieldText = "") 
         {
-            EditorGUILayout.LabelField(text, editorStyles, options);
+            GUILayout.BeginHorizontal(GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+            EditorGUILayout.LabelField(labelText,EditorStyles.boldLabel, GUILayout.Width(10), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+            EditorGUILayout.LabelField(fieldText,EditorStyles.label, GUILayout.Width(100), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+            GUILayout.EndHorizontal();
+        }
+
+        private void DrawCardTextLabel()
+        {
+            EditorGUILayout.LabelField("Card Text: ",EditorStyles.boldLabel, GUILayout.Width(10), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+            EditorGUILayout.LabelField($"{CardTextProperty.stringValue}",EditorStyles.wordWrappedLabel, GUILayout.Width(100), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
         }
 
         private void DrawStatsProperties(CardTypes cardTypes) 
@@ -161,9 +176,18 @@ namespace Editor.CardEditor
             {
                 case CardTypes.TBD:
                 case CardTypes.Action:
+                case CardTypes.Starship:
+                    break;
                 case CardTypes.Environment:
                     DrawProperty(ExploreProperty);
                     break;
+                case CardTypes.Boss:
+                case CardTypes.Character_Ally:
+                case CardTypes.Character_Hunter:
+                case CardTypes.Creature:
+                case CardTypes.Gear_Equipment:
+                case CardTypes.Gear_Upgrade:
+                
                 default:
                     DrawCommonStatsProperties();
                     if (cardTypes == CardTypes.Character_Hunter)

@@ -77,25 +77,25 @@ namespace Editor.CardEditor
         private Vector2 ScrollPosition2 { get; set; }
         private Rect MainAreaRect { get; set; }
         private Rect SecondAreaRect { get; set; }
-        private int _cardListAreaColumns = 3;
+        private int _cardListAreaColumns = 2;
         
         // Main Area Buttons Setup
-        private bool IsCreateCardButtonPressed => GUILayout.Button("Create");
+        private bool IsCreateCardButtonPressed => GUILayout.Button("Create", EditorStyles.toolbarButton);
 
-        private bool IsLoadCardButtonPressed => GUILayout.Button("Load Card");
+        private bool IsLoadCardButtonPressed => GUILayout.Button("Load Card", EditorStyles.toolbarButton);
 
-        private bool IsSaveCardButtonPressed => GUILayout.Button("Save Card");
+        private bool IsSaveCardButtonPressed => GUILayout.Button("Save Card", EditorStyles.toolbarButton);
 
-        private bool IsUnloadCardButtonPressed => GUILayout.Button("Unload Card");
+        private bool IsUnloadCardButtonPressed => GUILayout.Button("Unload Card", EditorStyles.toolbarButton);
 
-        private bool IsCalculateCostButtonPressed => GUILayout.Button("Calculate Cost");
+        private bool IsCalculateCostButtonPressed => GUILayout.Button("Calculate Cost", EditorStyles.toolbarButton);
 
         // Card list area buttons setup
-        private bool IsEditSelectedCardButtonPressed => GUILayout.Button("Edit Selected Card", GUILayout.ExpandWidth(true));
+        private bool IsEditSelectedCardButtonPressed => GUILayout.Button("Edit Selected Card", EditorStyles.toolbarButton);
 
-        private bool IsRefreshKeywordsButtonPressed => GUILayout.Button("Refresh Keywords", GUILayout.ExpandWidth(true));
+        private bool IsRefreshKeywordsButtonPressed => GUILayout.Button("Refresh Keywords", EditorStyles.toolbarButton);
 
-        private bool IsRefreshCardListButtonPressed => GUILayout.Button("Refresh Card List", GUILayout.ExpandWidth(true));
+        private bool IsRefreshCardListButtonPressed => GUILayout.Button("Refresh Card List", EditorStyles.toolbarButton);
 
         [MenuItem("Tools/Card Editor")]
         public static void Init()
@@ -148,9 +148,12 @@ namespace Editor.CardEditor
         private void DrawMainArea()
         {
             GUILayout.BeginArea(MainAreaRect);
+            GUILayout.BeginHorizontal(EditorStyles.toolbar);
+            DrawControlButtons();
+            GUILayout.EndHorizontal();
             ScrollPosition = GUILayout.BeginScrollView(ScrollPosition,GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
             DrawEditableFields();
-            DrawControlButtons();
+            //DrawControlButtons();
             GUILayout.EndScrollView();
             GUILayout.EndArea();
         }
@@ -279,7 +282,6 @@ namespace Editor.CardEditor
 
         private void DrawControlButtons()
         {
-            using GUILayout.HorizontalScope horizontalScope = new();
             if (ReferenceEquals(SelectedCard, null) )
             {
                 if (IsCreateCardButtonPressed)
@@ -313,10 +315,10 @@ namespace Editor.CardEditor
         private void DrawCardListArea()
         {
             GUILayout.BeginArea(SecondAreaRect);
+            GUILayout.Label("Card List", EditorStyles.boldLabel);
+            DrawCardListAreaButtons();
             ScrollPosition2 = GUILayout.BeginScrollView(ScrollPosition2, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
     
-            GUILayout.Label("Card List", EditorStyles.boldLabel);
-            
             int columnCounter = 0;
     
             foreach (CardSO card in AllCards)
@@ -343,8 +345,6 @@ namespace Editor.CardEditor
 
             GUILayout.EndScrollView();
     
-            DrawCardListAreaButtons();
-    
             GUILayout.EndArea();
         }
 
@@ -357,7 +357,7 @@ namespace Editor.CardEditor
 
         private void DrawCardListAreaButtons()
         {
-            GUILayout.BeginHorizontal();
+            GUILayout.BeginHorizontal(EditorStyles.toolbar);
             DrawEditSelectedCardButton();
             DrawRefreshKeywordsButton();
             DrawRefreshCardListButton();

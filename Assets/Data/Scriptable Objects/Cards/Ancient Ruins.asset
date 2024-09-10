@@ -23,7 +23,7 @@ MonoBehaviour:
   _explore:
     _statName: 1
     _statValue: 5
-    _statDescription: 
+    _statDescription: Actions needed to complete this card.
   _focus:
     _statName: 0
     _statValue: 0
@@ -41,16 +41,18 @@ MonoBehaviour:
     _statValue: 0
     _statDescription: 
   _keywords:
-  - keywordName: 0 None
+  - keywordName: None
     keywordValue: 0
     definition: 
     abilityType: 0
-  - keywordName: 0 None
+  - keywordName: None
     keywordValue: 0
     definition: 
     abilityType: 0
-  - keywordName: 0 None
+  - keywordName: None
     keywordValue: 0
     definition: 
     abilityType: 0
   _cardText: 
+  _cost: 1
+  _rarity: 0
