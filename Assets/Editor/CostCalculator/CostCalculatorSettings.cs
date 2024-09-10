@@ -7,9 +7,16 @@ namespace Editor.CostCalculator
     public class CostCalculatorSettings : ScriptableObject
     {
         public AttributeSettings attributeSettings;
-        
-       
-       
-        
+
+        public float baseNormalizationRate;
+        public float secondTierNormalizationRate;
+        public float thirdTierNormalizationRate;
+
+        public int normalizationMaximum;
+        public int normalizationMinimum;
+
+
+
+
     }
 }

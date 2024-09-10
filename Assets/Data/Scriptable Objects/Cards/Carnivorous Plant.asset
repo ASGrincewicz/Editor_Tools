@@ -10,53 +10,52 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 85c2db69d287cba46a63d7dc92203786, type: 3}
-  m_Name: Missile Launcher
+  m_Name: Carnivorous Plant
   m_EditorClassIdentifier: 
-  _weightData: {fileID: 11400000, guid: 8450eb473c9c74119a579d9c683c4c64, type: 2}
-  _cardType: 8
-  _cardName: Missile Launcher
+  _weightData: {fileID: 11400000, guid: c1b82eff57c6a4250aa4121cefbfdb82, type: 2}
+  _cardType: 5
+  _cardName: Carnivorous Plant
   _artWork: {fileID: 0}
   _attack:
     _statName: 0
-    _statValue: 10
+    _statValue: 5
     _statDescription: Amount of damage dealt.
   _explore:
-    _statName: 0
+    _statName: 1
     _statValue: 0
     _statDescription: 
   _focus:
     _statName: 2
-    _statValue: 3
+    _statValue: 2
     _statDescription: Resources generated
   _hitPoints:
     _statName: 3
-    _statValue: 0
+    _statValue: 25
     _statDescription: Amount of health
   _speed:
     _statName: 4
-    _statValue: 2
+    _statValue: 3
     _statDescription: Determines Attack Sequence and Move Rate.
   _upgradeSlots:
-    _statName: 0
-    _statValue: 0
-    _statDescription: 
+    _statName: 5
+    _statValue: 3
+    _statDescription: Amount of Upgrades that can be equipped.
   _keywords:
   - keywordName: Barrage
     keywordValue: 1
     definition: "Attack X Targets this turn.\nYou must roll X or higher for \neach
       attack to succeed."
     abilityType: 3
-  - keywordName: Overcharge
-    keywordValue: 10
-    definition: 'Shuffle X cards from your hand into
-
-      your deck. This card
-      has +5X Attack.'
-    abilityType: 1
-  - keywordName: None
-    keywordValue: 0
-    definition: 
-    abilityType: 0
+  - keywordName: Barrage
+    keywordValue: 1
+    definition: "Attack X Targets this turn.\nYou must roll X or higher for \neach
+      attack to succeed."
+    abilityType: 3
+  - keywordName: Barrage
+    keywordValue: 1
+    definition: "Attack X Targets this turn.\nYou must roll X or higher for \neach
+      attack to succeed."
+    abilityType: 3
   _cardText: 
-  _cost: 1
-  _rarity: 2
+  _cost: 0
+  _rarity: 1

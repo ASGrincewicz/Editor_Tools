@@ -57,3 +57,4 @@ MonoBehaviour:
   _cardText: "Main Character of the game.  \nThis Hunter card should be well-rounded\n
     and adapt to most strategies."
   _cost: 10
+  _rarity: 3

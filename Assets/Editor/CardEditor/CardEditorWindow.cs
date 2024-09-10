@@ -8,6 +8,7 @@ using Editor.CostCalculator;
 using Editor.KeywordSystem;
 using Editor.Utilities;
 using JetBrains.Annotations;
+using Unity.VisualScripting.YamlDotNet.Core.Tokens;
 using UnityEditor;
 using UnityEngine;
 using static Editor.CardData.StatDataReference;
@@ -38,42 +39,63 @@ namespace Editor.CardEditor
         private const float FIELD_WIDTH = 400;
         
         // Class variables
-        private List<CardSO> _allCards = new ();
-        private Dictionary<CardSO, bool> _selectedCards = new ();
-        private CardSO _cardToEdit;
+        private List<CardSO> AllCards { get; } = new();
+        private Dictionary<CardSO, bool> SelectedCards { get; } = new();
+        private CardSO CardToEdit { get; set; }
         
         // Method specific variables
-        private StringBuilder _stringBuilder;
-        private CardTypes _cardTypes;
-        private CardRarity _cardRarity;
-        private string _cardName;
-        private CardStat? _attack;
+        private StringBuilder CardTextStringBuilder { get; set; }
+        private CardTypes CardTypes { get; set; }
+        private CardRarity CardRarity { get; set; }
+        private string CardName { get; set; }
+        [CanBeNull] private Texture2D Artwork { get; set; }
+
+        private CardStat? AttackStat { get; set; }
         private int _attackValue;
-        private CardStat? _explore;
+        private CardStat? ExploreStat { get; set; }
         private int _exploreValue;
-        private CardStat? _focus;
+        private CardStat? FocusStat { get; set; }
         private int _focusValue;
-        private CardStat? _hitPoints;
+        private CardStat? HitPointsStat{get; set; }
         private int _hitPointsValue;
-        private CardStat? _speed;
+        private CardStat? SpeedStat{get; set; }
         private int _speedValue;
-        private CardStat? _upgradeSlots;
+        private CardStat? UpgradeSlotsStat { get; set; }
         private int _upgradeSlotsValue;
-        [CanBeNull] private Texture2D _artwork;
-        private List<Keyword> _keywordsList;
-        private List<string> _keywordNamesList;
-        private Keyword[] _selectedKeywords;
-        private int[] _selectedKeywordsIndex;
-        [Multiline] private string _cardText;
-        private int _cardCost;
-        private CardSO _selectedCard;
+
+        private List<Keyword> KeywordsList { get; set; }
+        private List<string> KeywordNamesList { get; set; }
+        private Keyword[] SelectedKeywords { get; set; }
+        private int[] SelectedKeywordsIndex { get; set; }
+        private string CardText { get; set; }
+        private int CardCost { get; set; }
+        [CanBeNull] private CardSO SelectedCard { get; set; }
         
         
         // GUI variables
-        private Vector2 _scrollPosition;
-        private Vector2 _scrollPosition2;
-        private Rect _mainAreaRect;
-        private Rect _secondAreaRect;
+        private Vector2 ScrollPosition { get; set; }
+        private Vector2 ScrollPosition2 { get; set; }
+        private Rect MainAreaRect { get; set; }
+        private Rect SecondAreaRect { get; set; }
+        private int _cardListAreaColumns = 3;
+        
+        // Main Area Buttons Setup
+        private bool IsCreateCardButtonPressed => GUILayout.Button("Create");
+
+        private bool IsLoadCardButtonPressed => GUILayout.Button("Load Card");
+
+        private bool IsSaveCardButtonPressed => GUILayout.Button("Save Card");
+
+        private bool IsUnloadCardButtonPressed => GUILayout.Button("Unload Card");
+
+        private bool IsCalculateCostButtonPressed => GUILayout.Button("Calculate Cost");
+
+        // Card list area buttons setup
+        private bool IsEditSelectedCardButtonPressed => GUILayout.Button("Edit Selected Card", GUILayout.ExpandWidth(true));
+
+        private bool IsRefreshKeywordsButtonPressed => GUILayout.Button("Refresh Keywords", GUILayout.ExpandWidth(true));
+
+        private bool IsRefreshCardListButtonPressed => GUILayout.Button("Refresh Card List", GUILayout.ExpandWidth(true));
 
         [MenuItem("Tools/Card Editor")]
         public static void Init()
@@ -92,16 +114,16 @@ namespace Editor.CardEditor
                 CardSO card = AssetDatabase.LoadAssetAtPath<CardSO>(assetPath);
                 if (card != null)
                 {
-                    if (!_allCards.Contains(card))
+                    if (!AllCards.Contains(card))
                     {
-                        _allCards.Add(card);
+                        AllCards.Add(card);
                     }
-                    _selectedCards[card] = false; // Initialize all cards as unselected
+                    SelectedCards[card] = false;
                 }
             }
             RefreshKeywordsList();
             
-            _stringBuilder = new StringBuilder();
+            CardTextStringBuilder = new StringBuilder();
         }
 
         private void OnGUI()
@@ -113,20 +135,20 @@ namespace Editor.CardEditor
 
         public void OpenCardInEditor(CardSO card)
         {
-            _cardToEdit = card;
+            CardToEdit = card;
             LoadCardFromFile();
         }
 
         private void SetupAreaRects()
         {
-            _mainAreaRect= new Rect(5,5,position.width - 10,position.height - 225);
-            _secondAreaRect = new Rect(5, _mainAreaRect.y + _mainAreaRect.height + 20, position.width - 10, position.height - _mainAreaRect.height - 50);
+            MainAreaRect= new Rect(5,5,position.width - 10,position.height - 225);
+            SecondAreaRect = new Rect(5, MainAreaRect.y + MainAreaRect.height + 20, position.width - 10, position.height - MainAreaRect.height - 50);
         }
 
         private void DrawMainArea()
         {
-            GUILayout.BeginArea(_mainAreaRect);
-            _scrollPosition = GUILayout.BeginScrollView(_scrollPosition,GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+            GUILayout.BeginArea(MainAreaRect);
+            ScrollPosition = GUILayout.BeginScrollView(ScrollPosition,GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
             DrawEditableFields();
             DrawControlButtons();
             GUILayout.EndScrollView();
@@ -136,17 +158,17 @@ namespace Editor.CardEditor
         private void DrawEditableFields()
         {
             EditorGUIUtility.labelWidth = 100;
-            _cardToEdit = EditorGUILayout.ObjectField("Card To Edit",_cardToEdit, typeof(CardSO),false) as CardSO;
-            GUILayout.Label(!ReferenceEquals(_selectedCard, null) ? "Select Card Type" : "Create New Card",
+            CardToEdit = EditorGUILayout.ObjectField("Card To Edit",CardToEdit, typeof(CardSO),false) as CardSO;
+            GUILayout.Label(!ReferenceEquals(SelectedCard, null) ? "Select Card Type" : "Create New Card",
                 EditorStyles.boldLabel);
-            _cardTypes = (CardTypes)EditorGUILayout.EnumPopup("Card Type",_cardTypes, GUILayout.Width(FIELD_WIDTH));
+            CardTypes = (CardTypes)EditorGUILayout.EnumPopup("Card Type",CardTypes, GUILayout.Width(FIELD_WIDTH));
            
-            _cardName = EditorGUILayout.TextField("Card Name", _cardName, GUILayout.Width(FIELD_WIDTH));
-            _cardRarity = (CardRarity)EditorGUILayout.EnumPopup("Card Rarity",_cardRarity,GUILayout.Width(FIELD_WIDTH));
-            _artwork = (Texture2D)EditorGUILayout.ObjectField("Artwork", _artwork, typeof(Texture2D), false,
+            CardName = EditorGUILayout.TextField("Card Name", CardName, GUILayout.Width(FIELD_WIDTH));
+            CardRarity = (CardRarity)EditorGUILayout.EnumPopup("Card Rarity",CardRarity,GUILayout.Width(FIELD_WIDTH));
+            Artwork = (Texture2D)EditorGUILayout.ObjectField("Artwork", Artwork, typeof(Texture2D), false,
                 GUILayout.Height(200), GUILayout.Width(FIELD_WIDTH));
 
-            switch (_cardTypes)
+            switch (CardTypes)
             {
                 case CardTypes.TBD:
                 case CardTypes.Starship:
@@ -166,16 +188,47 @@ namespace Editor.CardEditor
                     DrawStatLayout(StatNames.HP, ref _hitPointsValue, HIT_POINTS_DESCRIPTION);
                     DrawStatLayout(StatNames.Speed, ref _speedValue, SPEED_DESCRIPTION);
                     DrawStatLayout(StatNames.Focus, ref _focusValue, FOCUS_DESCRIPTION);
-                    if (_cardTypes == CardTypes.Character_Hunter) DrawStatLayout(StatNames.Upgrades, ref _upgradeSlotsValue, UPGRADE_SLOTS_DESCRIPTION);
+                    if (CardTypes == CardTypes.Character_Hunter) DrawStatLayout(StatNames.Upgrades, ref _upgradeSlotsValue, UPGRADE_SLOTS_DESCRIPTION);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
           
             DrawKeywordArea();
-            GUILayout.Label($"Card Cost: {_cardCost}"); ;
+            GUILayout.Label($"Card Cost: {CardCost}"); ;
             GUILayout.Label("Card Text");
-            _cardText = EditorGUILayout.TextArea(_cardText, GUILayout.Height(100), GUILayout.Width(FIELD_WIDTH));
+            CardText = EditorGUILayout.TextArea(CardText, GUILayout.Height(100), GUILayout.Width(FIELD_WIDTH));
+        }
+        
+        
+        private void DrawStatLayout(StatNames statName, ref int statValue, string statDescription)
+        {
+            GUILayout.BeginHorizontal(GUILayout.Width(FIELD_WIDTH),GUILayout.ExpandWidth(true));
+            DrawStatName(statName);
+            DrawStatValueField(ref statValue);
+            DrawStatDescription(statDescription);
+            GUILayout.EndHorizontal();
+        }  
+        
+        private void DrawStatName(StatNames statName)
+        {
+            GUILayout.BeginVertical(GUILayout.Width(100));
+            GUILayout.Label(statName.GetDescription());
+            GUILayout.EndVertical();
+        }
+
+        private void DrawStatDescription(string statDescription)
+        {
+            GUILayout.BeginVertical(GUILayout.Width(200));
+            GUILayout.Label(statDescription);
+            GUILayout.EndVertical();
+        }
+
+        private void DrawStatValueField(ref int statValue)
+        {
+            GUILayout.BeginVertical(GUILayout.Width(100));
+            statValue = EditorGUILayout.IntField(statValue,GUILayout.Width(50),GUILayout.ExpandWidth(false));
+            GUILayout.EndVertical();
         }
 
         private void DrawKeywordArea()
@@ -183,45 +236,42 @@ namespace Editor.CardEditor
             GUILayout.BeginHorizontal(GUILayout.Width(FIELD_WIDTH));
             EditorGUIUtility.labelWidth = 100;
             GUILayout.Label("Keywords");
-            if (_selectedKeywords is not { Length: 3 })
+            if (SelectedKeywords is not { Length: 3 })
             {
-                _selectedKeywords = new Keyword[3];
-                _selectedKeywordsIndex = new int[3]; // Initialize the index array only once.
+                SelectedKeywords = new Keyword[3];
+                SelectedKeywordsIndex = new int[3]; // Initialize the index array only once.
             }
 
-            for (int i = 0; i < _selectedKeywords.Length; i++)
+            for (int i = 0; i < SelectedKeywords.Length; i++)
             {
-                // Ensure _selectedKeywordsIndex has the same length as _selectedKeywords
-                if (_selectedKeywordsIndex.Length <= i)
+                if (SelectedKeywordsIndex.Length <= i)
                 {
                     Debug.LogError($"Index {i} is out of range for _selectedKeywordsIndex");
                     continue;
                 }
-
-                // If the value is -1, initialize it to 0
-                if (_selectedKeywordsIndex[i] == -1)
+                
+                if (SelectedKeywordsIndex[i] == -1)
                 {
-                    _selectedKeywordsIndex[i] = 0;
+                    SelectedKeywordsIndex[i] = 0;
                 }
 
-                _selectedKeywordsIndex[i] = EditorGUILayout.Popup(
-                    _selectedKeywordsIndex[i],
-                    _keywordNamesList.ToArray(),
+                SelectedKeywordsIndex[i] = EditorGUILayout.Popup(
+                    SelectedKeywordsIndex[i],
+                    KeywordNamesList.ToArray(),
                     GUILayout.Width(FIELD_WIDTH / 3)
                 );
-
-                // Check if the selected index is within the bounds of _keywordNamesList
-                if (_selectedKeywordsIndex[i] < 0 || _selectedKeywordsIndex[i] >= _keywordNamesList.Count)
+                
+                if (SelectedKeywordsIndex[i] < 0 || SelectedKeywordsIndex[i] >= KeywordNamesList.Count)
                 {
-                    Debug.LogError($"Index {_selectedKeywordsIndex[i]} is out of range for _keywordNamesList with count {_keywordNamesList.Count}");
+                    Debug.LogError($"Index {SelectedKeywordsIndex[i]} is out of range for _keywordNamesList with count {KeywordNamesList.Count}");
                     continue;
                 }
 
                 // Use Find method to assign Keyword to _selectedKeywords
-                if (_keywordNamesList.Count > 0)
+                if (KeywordNamesList.Count > 0)
                 {
-                    string selectedKeywordName = _keywordNamesList[_selectedKeywordsIndex[i]];
-                    _selectedKeywords[i] = _keywordManager.GetKeywordByName(selectedKeywordName);
+                    string selectedKeywordName = KeywordNamesList[SelectedKeywordsIndex[i]];
+                    SelectedKeywords[i] = _keywordManager.GetKeywordByName(selectedKeywordName);
                 }
             }
             GUILayout.EndHorizontal();
@@ -230,58 +280,55 @@ namespace Editor.CardEditor
         private void DrawControlButtons()
         {
             using GUILayout.HorizontalScope horizontalScope = new();
-            if (ReferenceEquals(_selectedCard, null) )
+            if (ReferenceEquals(SelectedCard, null) )
             {
-                if (GUILayout.Button("Create Card"))
+                if (IsCreateCardButtonPressed)
                 {
                     CreateNewCard();
                 }
-                if (GUILayout.Button("Load Card From File"))
+                if (IsLoadCardButtonPressed)
                 {
                     LoadCardFromFile();
                 }
             }
             else
             {
-                if (GUILayout.Button("Save Changes"))
+                if (IsSaveCardButtonPressed)
                 {
                     SaveExistingCard();
                 }
-                if(GUILayout.Button("Unload Card") && !ReferenceEquals(_selectedCard, null))
+                if(IsUnloadCardButtonPressed && !ReferenceEquals(SelectedCard, null))
                 {
                     UnloadCard();
                 }
 
-                if (GUILayout.Button("Calculate Cost") && !ReferenceEquals(_selectedCard, null))
+                if (IsCalculateCostButtonPressed && !ReferenceEquals(SelectedCard, null))
                 {
                     CostCalculatorWindow instance = EditorWindow.GetWindow<CostCalculatorWindow>();
-                    instance.OpenInCostCalculatorWindow(_selectedCard);
+                    instance.OpenInCostCalculatorWindow(SelectedCard);
                 }
             }
         }
 
         private void DrawCardListArea()
         {
-            GUILayout.BeginArea(_secondAreaRect);
-            _scrollPosition2 = GUILayout.BeginScrollView(_scrollPosition2, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+            GUILayout.BeginArea(SecondAreaRect);
+            ScrollPosition2 = GUILayout.BeginScrollView(ScrollPosition2, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
     
             GUILayout.Label("Card List", EditorStyles.boldLabel);
-    
-            const int ColumnsDesired = 3;
+            
             int columnCounter = 0;
     
-            foreach (CardSO card in _allCards)
+            foreach (CardSO card in AllCards)
             {
-                if (columnCounter % ColumnsDesired == 0)
+                if (columnCounter % _cardListAreaColumns == 0)
                 {
                     GUILayout.BeginHorizontal();
                 }
         
-                GUILayout.BeginVertical(GUILayout.Width(_secondAreaRect.width / ColumnsDesired));
-                _selectedCards[card] = EditorGUILayout.ToggleLeft($"{card.CardName}/{card.CardType}/{card.Rarity}", _selectedCards[card], GUILayout.ExpandWidth(true));
-                GUILayout.EndVertical();
+                DrawCardListingWithCheckbox(card);
 
-                if (columnCounter % ColumnsDesired == ColumnsDesired - 1)
+                if (columnCounter % _cardListAreaColumns == _cardListAreaColumns - 1)
                 {
                     GUILayout.EndHorizontal();
                 }
@@ -289,29 +336,291 @@ namespace Editor.CardEditor
                 columnCounter++;
             }
 
-            if (columnCounter % ColumnsDesired != 0) // Close the last row if it doesn't have ColumnsDesired items
+            if (columnCounter % _cardListAreaColumns != 0)
             {
                 GUILayout.EndHorizontal();
             }
 
             GUILayout.EndScrollView();
     
+            DrawCardListAreaButtons();
+    
+            GUILayout.EndArea();
+        }
+
+        private void DrawCardListingWithCheckbox(CardSO card)
+        {
+            GUILayout.BeginVertical(GUILayout.Width(SecondAreaRect.width / _cardListAreaColumns));
+            SelectedCards[card] = EditorGUILayout.ToggleLeft($"{card.CardName}/{card.CardType}/{card.Rarity}", SelectedCards[card], GUILayout.ExpandWidth(true));
+            GUILayout.EndVertical();
+        }
+
+        private void DrawCardListAreaButtons()
+        {
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Edit Selected Card", GUILayout.ExpandWidth(true)))
+            DrawEditSelectedCardButton();
+            DrawRefreshKeywordsButton();
+            DrawRefreshCardListButton();
+           
+            GUILayout.EndHorizontal();
+        }
+
+        private void DrawEditSelectedCardButton()
+        {
+            if (IsEditSelectedCardButtonPressed)
             {
                 EditSelectedCard();
             }
-            if (GUILayout.Button("Refresh Keywords", GUILayout.ExpandWidth(true)))
+        }
+
+        private void DrawRefreshKeywordsButton()
+        {
+            if (IsRefreshKeywordsButtonPressed)
             {
-               RefreshKeywordsList();
+                RefreshKeywordsList();
             }
-            if (GUILayout.Button("Refresh Card List", GUILayout.ExpandWidth(true)))
+        }
+
+        private void DrawRefreshCardListButton()
+        {
+            if (IsRefreshCardListButtonPressed)
             {
-               RefreshCardList(true);
+                RefreshCardList(true);
             }
-            GUILayout.EndHorizontal();
-    
-            GUILayout.EndArea();
+        }
+        private void CreateNewCard()
+        {
+            CardSO newCard = CreateInstance<CardSO>();
+            if (InitializeCard(newCard))
+            {
+                AssetDatabase.CreateAsset(newCard, $"{ASSET_PATH}{CardName}.asset");
+                AssetDatabase.SaveAssets();
+                EditorUtility.FocusProjectWindow();
+                Selection.activeObject = newCard;
+                RefreshCardList(true);
+                CardToEdit = newCard;
+            }
+            else
+            {
+                Debug.Log("Initialization Failed: Card is null.");
+            }
+        }
+        
+        private void EditSelectedCard()
+        {
+            KeyValuePair<CardSO, bool> cardToModify = new();
+            foreach (KeyValuePair<CardSO, bool> entry in SelectedCards)
+            {
+                if (entry.Value)
+                {
+                    cardToModify = entry;
+                }
+            }
+            
+            SetSelectedCard(cardToModify.Key, cardToModify.Value);
+            CardToEdit = cardToModify.Key;
+            LoadCardFromFile();
+            CardTextStringBuilder.Clear();
+        }
+        
+        private void RefreshKeywordsList()
+        {
+            KeywordsList = new List<Keyword>();
+            foreach (Keyword keyword in _keywordManager.keywordList)
+            {
+                if (!keyword.IsDefault())
+                {
+                    KeywordsList.Add(keyword);
+                }
+            }
+            KeywordNamesList = new List<string>();
+            foreach (Keyword keyword in KeywordsList.ToList())
+            {
+                if (!keyword.IsDefault())
+                {
+                    KeywordNamesList.Add(keyword.keywordName);
+                }
+            }
+        }
+        
+        private void LoadCardFromFile()
+        {
+            UnloadCard();
+            if (!ReferenceEquals(CardToEdit, null))
+            {
+                SetSelectedCard(CardToEdit, true);
+            }
+            else
+            {
+                string path = EditorUtility.OpenFilePanel("Select Card", ASSET_PATH, "asset");
+                if (path.StartsWith(Application.dataPath))
+                {
+                    path = "Assets" + path[Application.dataPath.Length..];
+                    SetSelectedCard(AssetDatabase.LoadAssetAtPath<CardSO>(path), true);
+                    CardToEdit = SelectedCard;
+                }
+            }
+            
+            if (!ReferenceEquals(SelectedCard, null))
+            {
+                LoadCommonCardData();
+                UpdateSelectedKeywordsIndices();
+                CardText += CardTextStringBuilder.Append(SelectedCard.CardText);
+                GetStatsFromLoadedCard();
+               
+                CardTextStringBuilder.Clear();;
+            }
+        }
+
+        private void LoadCommonCardData()
+        {
+            CardTypes = SelectedCard.CardType;
+            CardName = SelectedCard.CardName;
+            CardRarity = SelectedCard.Rarity;
+            Artwork = SelectedCard.ArtWork;
+            CardCost = SelectedCard.CardCost;
+        }
+        
+        private void UpdateSelectedKeywordsIndices()
+        {
+            if (SelectedCard?.Keywords == null)
+            {
+                Debug.LogError("Selected card or its keywords are null");
+                return;
+            }
+
+            SelectedKeywords = SelectedCard.Keywords;
+
+            // Ensure _selectedKeywordsIndex has the correct size
+            if (SelectedKeywordsIndex == null || SelectedKeywordsIndex.Length != SelectedKeywords.Length)
+            {
+                SelectedKeywordsIndex = new int[SelectedKeywords.Length];
+            }
+
+            // Populate the indices for the selected keywords
+            for (int i = 0; i < SelectedKeywords.Length; i++)
+            {
+                if (KeywordNamesList != null)
+                {
+                    SelectedKeywordsIndex[i] = KeywordNamesList.IndexOf(SelectedKeywords[i].keywordName);
+                }
+                else
+                {
+                    Debug.LogError("Keyword names list is null");
+                    SelectedKeywordsIndex[i] = -1; // or another default/failure value
+                }
+            }
+        }
+        
+        private void GetStatsFromLoadedCard()
+        {
+            switch (CardTypes)
+            {
+                case CardTypes.TBD:
+                case CardTypes.Starship:
+                case CardTypes.Action:
+                    break;
+                case CardTypes.Environment:
+                    ExploreStat = SelectedCard.Explore;
+                    _exploreValue = SelectedCard.Explore.StatValue;
+                    break;
+                case CardTypes.Gear_Equipment:
+                case CardTypes.Gear_Upgrade:
+                case CardTypes.Character_Ally:
+                case CardTypes.Character_Hunter:
+                case CardTypes.Boss:
+                case CardTypes.Creature:
+                    AttackStat = SelectedCard.Attack;
+                    _attackValue = SelectedCard.Attack.StatValue;
+                    HitPointsStat = SelectedCard.HitPoints;
+                    _hitPointsValue = SelectedCard.HitPoints.StatValue;
+                    SpeedStat = SelectedCard.Speed;
+                    _speedValue = SelectedCard.Speed.StatValue;
+                    FocusStat = SelectedCard.Focus;
+                    _focusValue = SelectedCard.Focus.StatValue;
+                    if (CardTypes == CardTypes.Character_Hunter)
+                    {
+                        UpgradeSlotsStat = SelectedCard.UpgradeSlots;
+                        _upgradeSlotsValue = SelectedCard.UpgradeSlots.StatValue;
+                    }
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            } 
+        }
+        
+        private void RefreshCardList(bool clearList)
+        {
+            UnloadCard();
+            if (clearList)
+            {
+                AllCards.Clear();
+                SelectedCards.Clear();
+            }
+            string[] guids = AssetDatabase.FindAssets(ASSET_FILTER, new[] { ASSET_PATH });
+            foreach (string guid in guids)
+            {
+                string assetPath = AssetDatabase.GUIDToAssetPath(guid);
+                CardSO card = AssetDatabase.LoadAssetAtPath<CardSO>(assetPath);
+                if (!ReferenceEquals(card, null))
+                {
+                    AllCards.Add(card);
+                    SelectedCards[card] = false;
+                }
+            }
+            AllCards.Sort((card1, card2) =>
+            {
+                int compare = card1.CardType.CompareTo(card2.CardType);
+
+                return compare == 0 ? string.Compare(card1.CardName, card2.CardName, StringComparison.Ordinal) : compare;
+            });
+        }
+        
+        private void UnloadCard()
+        {
+            if (!ReferenceEquals(SelectedCard, null))
+            {
+                SetSelectedCard(null,false);
+                CardTypes = CardTypes.TBD;
+                CardName = string.Empty;
+                CardRarity = CardRarity.None;
+                CardText = string.Empty;
+                AttackStat = null;
+                HitPointsStat = null;
+                SpeedStat = null;
+                FocusStat = null;
+                ExploreStat = null;
+                UpgradeSlotsStat = null;
+                SelectedKeywords = null;
+                Artwork = null;
+            }
+        }
+        
+        private void SetSelectedCard(CardSO card, bool isSelected)
+        {
+            if (!ReferenceEquals(card, null))
+            {
+                // Uncheck all other cards
+                foreach (CardSO key in SelectedCards.Keys.ToList())
+                {
+                    SelectedCards[key] = false;
+                }
+                SelectedCard = card;
+                SelectedCards[card] = isSelected;
+            }
+        }
+
+        
+        private void SaveExistingCard()
+        {
+            Undo.RecordObject(SelectedCard, "Edited Card");
+            if (InitializeCard(SelectedCard))
+            {
+                SetWeightData(SelectedCard);
+                EditorUtility.SetDirty(SelectedCard);
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
+            }
         }
         
         private bool InitializeCard(CardSO card)
@@ -320,17 +629,29 @@ namespace Editor.CardEditor
             {
                 return false;
             }
-            card.CardType = _cardTypes;
-            card.Rarity = _cardRarity;
-            card.CardName = _cardName;
-            card.ArtWork = _artwork;
-            card.Keywords = _selectedKeywords;
-            card.CardText = _cardText;
-            card.CardCost = _cardCost;
-            switch (_cardTypes)
+            InitializeCommonCardData(card);
+            AssignStatsToCard(card);
+            SetWeightData(card);
+            
+            return true;
+        }
+
+        private void InitializeCommonCardData(CardSO card)
+        {
+            card.CardType = CardTypes;
+            card.Rarity = CardRarity;
+            card.CardName = CardName;
+            card.ArtWork = Artwork;
+            card.Keywords = SelectedKeywords;
+            card.CardText = CardText;
+            card.CardCost = CardCost;
+        }
+        private void AssignStatsToCard(CardSO card)
+        {
+            switch (CardTypes)
             {
                 case CardTypes.TBD:
-                    break;
+                case CardTypes.Starship:
                 case CardTypes.Action:
                     break;
                 case CardTypes.Environment:
@@ -346,7 +667,7 @@ namespace Editor.CardEditor
                     card.HitPoints = new CardStat(StatNames.HP, _hitPointsValue, HIT_POINTS_DESCRIPTION);
                     card.Speed = new CardStat(StatNames.Speed, _speedValue, SPEED_DESCRIPTION);
                     card.Focus = new CardStat(StatNames.Focus, _focusValue, FOCUS_DESCRIPTION);
-                    if (_cardTypes == CardTypes.Character_Hunter)
+                    if (CardTypes == CardTypes.Character_Hunter)
                     {
                         card.UpgradeSlots = new CardStat(StatNames.Upgrades, _upgradeSlotsValue, UPGRADE_SLOTS_DESCRIPTION);
                     }
@@ -354,29 +675,17 @@ namespace Editor.CardEditor
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
-            SetWeightData(card);
-            return true;
         }
-
-        private void CreateNewCard()
+        private void SetWeightData(CardSO card)
         {
-            CardSO newCard = CreateInstance<CardSO>();
-            if (InitializeCard(newCard))
+            WeightContainer weights = GetWeightContainer(CardTypes);
+            if (ReferenceEquals(card.WeightData, null))
             {
-                AssetDatabase.CreateAsset(newCard, $"{ASSET_PATH}{_cardName}.asset");
-                AssetDatabase.SaveAssets();
-                EditorUtility.FocusProjectWindow();
-                Selection.activeObject = newCard;
-                RefreshCardList(true);
-                _cardToEdit = newCard;
+                Debug.LogError($"{nameof(card.WeightData)} is null.");
             }
-            else
-            {
-                Debug.Log("Initialization Failed: Card is null.");
-            }
+            card.WeightData = weights;
         }
-        // Method to Get Weight Container based on Card Type
+        
         private WeightContainer GetWeightContainer(CardTypes cardType)
         {
             return cardType switch
@@ -391,218 +700,5 @@ namespace Editor.CardEditor
                 _ => AssetDatabase.LoadAssetAtPath<WeightContainer>(KEYWORD_ONLY_WEIGHT_ASSET_PATH)
             };
         }
-
-        private void SetWeightData(CardSO card)
-        {
-            WeightContainer weights = GetWeightContainer(_cardTypes);
-            if (ReferenceEquals(card.WeightData, null))
-            {
-                Debug.LogError($"{nameof(card.WeightData)} is null.");
-            }
-            card.WeightData = weights;
-        }
-        private void UpdateSelectedKeywordsIndices()
-        {
-            // Check if _selectedCard and its Keywords are not null
-            if (_selectedCard?.Keywords == null)
-            {
-                Debug.LogError("Selected card or its keywords are null");
-                return;
-            }
-
-            _selectedKeywords = _selectedCard.Keywords;
-
-            // Ensure _selectedKeywordsIndex has the correct size
-            if (_selectedKeywordsIndex == null || _selectedKeywordsIndex.Length != _selectedKeywords.Length)
-            {
-                _selectedKeywordsIndex = new int[_selectedKeywords.Length];
-            }
-
-            // Populate the indices for the selected keywords
-            for (int i = 0; i < _selectedKeywords.Length; i++)
-            {
-                if (_keywordNamesList != null)
-                {
-                    _selectedKeywordsIndex[i] = _keywordNamesList.IndexOf(_selectedKeywords[i].keywordName);
-                }
-                else
-                {
-                    Debug.LogError("Keyword names list is null");
-                    _selectedKeywordsIndex[i] = -1; // or another default/failure value
-                }
-            }
-        }
-
-        private void LoadCardFromFile()
-        {
-            UnloadCard();
-            if (!ReferenceEquals(_cardToEdit, null))
-            {
-                _selectedCard = _cardToEdit;
-                _selectedCards[_cardToEdit] = true;
-            }
-            else
-            {
-                string path = EditorUtility.OpenFilePanel("Select Card", ASSET_PATH, "asset");
-                if (path.StartsWith(Application.dataPath))
-                {
-                    path = "Assets" + path[Application.dataPath.Length..];
-                    _selectedCard = AssetDatabase.LoadAssetAtPath<CardSO>(path);
-                    _cardToEdit = _selectedCard;
-                }
-            }
-            
-            if (!ReferenceEquals(_selectedCard, null))
-            {
-                _cardTypes = _selectedCard.CardType;
-                _cardName = _selectedCard.CardName;
-                _cardRarity = _selectedCard.Rarity;
-                _artwork = _selectedCard.ArtWork;
-                _cardCost = _selectedCard.CardCost;
-                
-               UpdateSelectedKeywordsIndices();
-                _cardText += _stringBuilder.Append(_selectedCard.CardText);
-                switch (_cardTypes)
-                {
-                    case CardTypes.TBD:
-                    case CardTypes.Starship:
-                    case CardTypes.Action:
-                    break;
-                    case CardTypes.Environment:
-                    _explore = _selectedCard.Explore;
-                    _exploreValue = _selectedCard.Explore.StatValue;
-                    break;
-                    case CardTypes.Gear_Equipment:
-                    case CardTypes.Gear_Upgrade:
-                    case CardTypes.Character_Ally:
-                    case CardTypes.Character_Hunter:
-                    case CardTypes.Boss:
-                    case CardTypes.Creature:
-                        _attack = _selectedCard.Attack;
-                        _attackValue = _selectedCard.Attack.StatValue;
-                        _hitPoints = _selectedCard.HitPoints;
-                        _hitPointsValue = _selectedCard.HitPoints.StatValue;
-                        _speed = _selectedCard.Speed;
-                        _speedValue = _selectedCard.Speed.StatValue;
-                        _focus = _selectedCard.Focus;
-                        _focusValue = _selectedCard.Focus.StatValue;
-                    if (_cardTypes == CardTypes.Character_Hunter)
-                        {
-                            _upgradeSlots = _selectedCard.UpgradeSlots;
-                            _upgradeSlotsValue = _selectedCard.UpgradeSlots.StatValue;
-                        }
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-               
-                _stringBuilder.Clear();;
-            }
-        }
-
-        private void UnloadCard()
-        {
-            _selectedCards[_selectedCard] = false;
-            _selectedCard = null;
-            _cardTypes = CardTypes.TBD;
-            _cardName = string.Empty;
-            _cardRarity = CardRarity.None;
-            _cardText = string.Empty;
-            _attack = null;
-            _hitPoints = null;
-            _speed = null;
-            _focus = null;
-            _explore = null;
-            _upgradeSlots = null;
-            _selectedKeywords = null;
-            _artwork = null;
-        }
-
-        private void SaveExistingCard()
-        {
-            Undo.RecordObject(_selectedCard, "Edited Card");
-            if (InitializeCard(_selectedCard))
-            {
-                SetWeightData(_selectedCard);
-                EditorUtility.SetDirty(_selectedCard);
-                AssetDatabase.SaveAssets();
-                AssetDatabase.Refresh();
-            }
-        }
-        private void EditSelectedCard()
-        {
-            // Perform editing on selected cards
-            foreach (KeyValuePair<CardSO, bool> entry in _selectedCards)
-            {
-                if (entry.Value) // If the card is selected
-                {
-                    _cardToEdit = entry.Key;
-                    LoadCardFromFile();
-                }
-            }
-            _stringBuilder.Clear();
-        }
-
-        private void RefreshCardList(bool clearList)
-        {
-            UnloadCard();
-            if (clearList)
-            {
-                _allCards.Clear();
-                _selectedCards.Clear();
-            }
-            string[] guids = AssetDatabase.FindAssets(ASSET_FILTER, new[] { ASSET_PATH });
-            foreach (string guid in guids)
-            {
-                string assetPath = AssetDatabase.GUIDToAssetPath(guid);
-                CardSO card = AssetDatabase.LoadAssetAtPath<CardSO>(assetPath);
-                if (!ReferenceEquals(card, null))
-                {
-                    _allCards.Add(card);
-                    _selectedCards[card] = false; // Initialize all cards as unselected
-                }
-            }
-            _allCards.Sort((card1, card2) =>
-            {
-                int compare = card1.CardType.CompareTo(card2.CardType);
-
-                return compare == 0 ? string.Compare(card1.CardName, card2.CardName, StringComparison.Ordinal) : compare;
-            });
-        }
-
-        private void RefreshKeywordsList()
-        {
-            _keywordsList = new List<Keyword>();
-            foreach (Keyword keyword in _keywordManager.keywordList)
-            {
-                if (!keyword.IsDefault())
-                {
-                    _keywordsList.Add(keyword);
-                }
-            }
-            _keywordNamesList = new List<string>();
-            foreach (Keyword keyword in _keywordsList.ToList())
-            {
-                if (!keyword.IsDefault())
-                {
-                    _keywordNamesList.Add(keyword.keywordName);
-                }
-            }
-        }
-        private void DrawStatLayout(StatNames statName, ref int statValue, string statDescription)
-        {
-            GUILayout.BeginHorizontal(GUILayout.Width(FIELD_WIDTH),GUILayout.ExpandWidth(true));
-            GUILayout.BeginVertical(GUILayout.Width(100));
-            GUILayout.Label(statName.GetDescription());
-            GUILayout.EndVertical();
-            GUILayout.BeginVertical(GUILayout.Width(100));
-            statValue = EditorGUILayout.IntField(" Value", statValue,GUILayout.Width(130),GUILayout.ExpandWidth(true));
-            GUILayout.EndVertical();
-            GUILayout.BeginVertical(GUILayout.Width(200));
-            GUILayout.Label(statDescription);
-            GUILayout.EndVertical();
-            GUILayout.EndHorizontal();
-        }  
-        
     }
 }

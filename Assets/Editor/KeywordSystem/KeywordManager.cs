@@ -71,7 +71,7 @@ namespace Editor.KeywordSystem
         public List<string> GetKeywordNames()
         {
             List<string> keywordNames = new List<string>();
-            foreach (var keyword in keywordList)
+            foreach (Keyword keyword in keywordList)
             {
                 keywordNames.Add(keyword.keywordName);
             }
