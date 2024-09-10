@@ -9,16 +9,18 @@ namespace Editor.KeywordSystem
         private bool _isGUIEnabled = false;
         public override void OnInspectorGUI()
         {
-            if (GUILayout.Button("Open Keyword Editor"))
+            GUILayout.BeginHorizontal(EditorStyles.toolbar, GUILayout.ExpandWidth(true));
+            if (GUILayout.Button("Open Keyword Editor", EditorStyles.toolbarButton))
             {
                 KeywordEditorWindow instance = EditorWindow.GetWindow<KeywordEditorWindow>();
                 instance.Show();
             }
 
-            if (GUILayout.Button("Enable/Disable GUI"))
+            if (GUILayout.Button("Enable/Disable GUI",EditorStyles.toolbarButton))
             {
                 _isGUIEnabled = !_isGUIEnabled;
             }
+            GUILayout.EndHorizontal();
             GUI.enabled = _isGUIEnabled;
             base.OnInspectorGUI();
         }
