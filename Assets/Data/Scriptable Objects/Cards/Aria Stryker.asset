@@ -55,3 +55,5 @@ MonoBehaviour:
     definition: "Deal 5 Damage to every card at this \ncard's location."
     abilityType: 3
   _cardText: 
+  _cost: 0
+  _rarity: 2

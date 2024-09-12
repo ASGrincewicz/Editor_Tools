@@ -57,3 +57,5 @@ MonoBehaviour:
     definition: 
     abilityType: 0
   _cardText: Discard any Upgrades in your hand to deal 10 damage to target unit.
+  _cost: 0
+  _rarity: 3

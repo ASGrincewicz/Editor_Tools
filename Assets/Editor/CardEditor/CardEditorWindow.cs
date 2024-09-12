@@ -101,7 +101,7 @@ namespace Editor.CardEditor
         public static void Init()
         {
             EditorWindow window = GetWindow<CardEditorWindow>("Card Editor");
-            window.position = new Rect(50f, 50f, 700f, 800f);
+            window.position = new Rect(50f, 50f, 500f, 800f);
             window.Show();
         }
         
@@ -157,20 +157,64 @@ namespace Editor.CardEditor
             GUILayout.EndScrollView();
             GUILayout.EndArea();
         }
+        
+        private void DrawControlButtons()
+        {
+            if (ReferenceEquals(SelectedCard, null) )
+            {
+                if (IsCreateCardButtonPressed)
+                {
+                    CreateNewCard();
+                }
+                if (IsLoadCardButtonPressed)
+                {
+                    LoadCardFromFile();
+                }
+            }
+            else
+            {
+                if (IsSaveCardButtonPressed)
+                {
+                    SaveExistingCard();
+                }
+                if(IsUnloadCardButtonPressed && !ReferenceEquals(SelectedCard, null))
+                {
+                    UnloadCard();
+                }
+
+                if (IsCalculateCostButtonPressed && !ReferenceEquals(SelectedCard, null))
+                {
+                    CostCalculatorWindow instance = EditorWindow.GetWindow<CostCalculatorWindow>();
+                    instance.OpenInCostCalculatorWindow(SelectedCard);
+                }
+            }
+        }
 
         private void DrawEditableFields()
         {
             EditorGUIUtility.labelWidth = 100;
             CardToEdit = EditorGUILayout.ObjectField("Card To Edit",CardToEdit, typeof(CardSO),false) as CardSO;
-            GUILayout.Label(!ReferenceEquals(SelectedCard, null) ? "Select Card Type" : "Create New Card",
-                EditorStyles.boldLabel);
+            GUILayout.Label(!ReferenceEquals(SelectedCard, null) ? "Select Card Type" : "Create New Card", EditorStyles.boldLabel);
+            DrawCommonFields();
+            DrawKeywordArea();
+        }
+
+        private void DrawCommonFields()
+        {
             CardTypes = (CardTypes)EditorGUILayout.EnumPopup("Card Type",CardTypes, GUILayout.Width(FIELD_WIDTH));
            
             CardName = EditorGUILayout.TextField("Card Name", CardName, GUILayout.Width(FIELD_WIDTH));
             CardRarity = (CardRarity)EditorGUILayout.EnumPopup("Card Rarity",CardRarity,GUILayout.Width(FIELD_WIDTH));
             Artwork = (Texture2D)EditorGUILayout.ObjectField("Artwork", Artwork, typeof(Texture2D), false,
                 GUILayout.Height(200), GUILayout.Width(FIELD_WIDTH));
+            DetermineStatLayout();
+            GUILayout.Label($"Card Cost: {CardCost}"); ;
+            GUILayout.Label("Card Text");
+            CardText = EditorGUILayout.TextArea(CardText, GUILayout.Height(100), GUILayout.Width(FIELD_WIDTH));
+        }
 
+        private void DetermineStatLayout()
+        {
             switch (CardTypes)
             {
                 case CardTypes.TBD:
@@ -196,13 +240,8 @@ namespace Editor.CardEditor
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-          
-            DrawKeywordArea();
-            GUILayout.Label($"Card Cost: {CardCost}"); ;
-            GUILayout.Label("Card Text");
-            CardText = EditorGUILayout.TextArea(CardText, GUILayout.Height(100), GUILayout.Width(FIELD_WIDTH));
+
         }
-        
         
         private void DrawStatLayout(StatNames statName, ref int statValue, string statDescription)
         {
@@ -279,38 +318,7 @@ namespace Editor.CardEditor
             }
             GUILayout.EndHorizontal();
         }
-
-        private void DrawControlButtons()
-        {
-            if (ReferenceEquals(SelectedCard, null) )
-            {
-                if (IsCreateCardButtonPressed)
-                {
-                    CreateNewCard();
-                }
-                if (IsLoadCardButtonPressed)
-                {
-                    LoadCardFromFile();
-                }
-            }
-            else
-            {
-                if (IsSaveCardButtonPressed)
-                {
-                    SaveExistingCard();
-                }
-                if(IsUnloadCardButtonPressed && !ReferenceEquals(SelectedCard, null))
-                {
-                    UnloadCard();
-                }
-
-                if (IsCalculateCostButtonPressed && !ReferenceEquals(SelectedCard, null))
-                {
-                    CostCalculatorWindow instance = EditorWindow.GetWindow<CostCalculatorWindow>();
-                    instance.OpenInCostCalculatorWindow(SelectedCard);
-                }
-            }
-        }
+        
 
         private void DrawCardListArea()
         {
@@ -385,7 +393,7 @@ namespace Editor.CardEditor
         {
             if (IsRefreshCardListButtonPressed)
             {
-                RefreshCardList(true);
+                RefreshCardList();
             }
         }
         private void CreateNewCard()
@@ -397,7 +405,7 @@ namespace Editor.CardEditor
                 AssetDatabase.SaveAssets();
                 EditorUtility.FocusProjectWindow();
                 Selection.activeObject = newCard;
-                RefreshCardList(true);
+                RefreshCardList();
                 CardToEdit = newCard;
             }
             else
@@ -549,14 +557,11 @@ namespace Editor.CardEditor
             } 
         }
         
-        private void RefreshCardList(bool clearList)
+        private void RefreshCardList()
         {
             UnloadCard();
-            if (clearList)
-            {
-                AllCards.Clear();
-                SelectedCards.Clear();
-            }
+            AllCards.Clear();
+            SelectedCards.Clear();
             string[] guids = AssetDatabase.FindAssets(ASSET_FILTER, new[] { ASSET_PATH });
             foreach (string guid in guids)
             {
@@ -614,13 +619,28 @@ namespace Editor.CardEditor
         private void SaveExistingCard()
         {
             Undo.RecordObject(SelectedCard, "Edited Card");
-            if (InitializeCard(SelectedCard))
+            if (!InitializeCard(SelectedCard))
             {
-                SetWeightData(SelectedCard);
-                EditorUtility.SetDirty(SelectedCard);
-                AssetDatabase.SaveAssets();
-                AssetDatabase.Refresh();
+                return;
             }
+
+            SetWeightData(SelectedCard);
+            
+            EditorUtility.SetDirty(SelectedCard);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        }
+
+        private void ChangeCardAssetFileName()
+        {
+            if (CardName == SelectedCard.CardName)
+            {
+                return;
+            }
+
+            string assetPath = AssetDatabase.GetAssetPath(SelectedCard);
+            AssetDatabase.RenameAsset(assetPath, CardName);
+            RefreshCardList();
         }
         
         private bool InitializeCard(CardSO card)
@@ -629,6 +649,7 @@ namespace Editor.CardEditor
             {
                 return false;
             }
+            ChangeCardAssetFileName();
             InitializeCommonCardData(card);
             AssignStatsToCard(card);
             SetWeightData(card);
