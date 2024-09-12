@@ -13,6 +13,7 @@ using UnityEditor;
 using UnityEngine;
 using static Editor.CardData.StatDataReference;
 
+
 namespace Editor.CardEditor
 {
     public class CardEditorWindow : EditorWindow
@@ -399,19 +400,15 @@ namespace Editor.CardEditor
         private void CreateNewCard()
         {
             CardSO newCard = CreateInstance<CardSO>();
-            if (InitializeCard(newCard))
-            {
-                AssetDatabase.CreateAsset(newCard, $"{ASSET_PATH}{CardName}.asset");
-                AssetDatabase.SaveAssets();
-                EditorUtility.FocusProjectWindow();
-                Selection.activeObject = newCard;
-                RefreshCardList();
-                CardToEdit = newCard;
-            }
-            else
-            {
-                Debug.Log("Initialization Failed: Card is null.");
-            }
+
+            InitializeCard(newCard);
+            AssetDatabase.CreateAsset(newCard, $"{ASSET_PATH}{CardName}.asset");
+            AssetDatabase.SaveAssets();
+            EditorUtility.FocusProjectWindow();
+            Selection.activeObject = newCard;
+            RefreshCardList();
+            CardToEdit = newCard;
+           
         }
         
         private void EditSelectedCard()
@@ -468,16 +465,12 @@ namespace Editor.CardEditor
                     CardToEdit = SelectedCard;
                 }
             }
-            
-            if (!ReferenceEquals(SelectedCard, null))
-            {
-                LoadCommonCardData();
-                UpdateSelectedKeywordsIndices();
-                CardText += CardTextStringBuilder.Append(SelectedCard.CardText);
-                GetStatsFromLoadedCard();
-               
-                CardTextStringBuilder.Clear();;
-            }
+            ErrorHandler.TryToGetCard(SelectedCard);
+            LoadCommonCardData();
+            UpdateSelectedKeywordsIndices();
+            CardText += CardTextStringBuilder.Append(SelectedCard.CardText);
+            GetStatsFromLoadedCard();
+            CardTextStringBuilder.Clear();;
         }
 
         private void LoadCommonCardData()
@@ -583,52 +576,48 @@ namespace Editor.CardEditor
         
         private void UnloadCard()
         {
-            if (!ReferenceEquals(SelectedCard, null))
+            if (ReferenceEquals(SelectedCard, null))
             {
-                SetSelectedCard(null,false);
-                CardTypes = CardTypes.TBD;
-                CardName = string.Empty;
-                CardRarity = CardRarity.None;
-                CardText = string.Empty;
-                AttackStat = null;
-                HitPointsStat = null;
-                SpeedStat = null;
-                FocusStat = null;
-                ExploreStat = null;
-                UpgradeSlotsStat = null;
-                SelectedKeywords = null;
-                Artwork = null;
+                return;
             }
+            SetSelectedCard(SelectedCard,false);
+            CardTypes = CardTypes.TBD;
+            CardName = string.Empty;
+            CardRarity = CardRarity.None;
+            CardText = string.Empty;
+            AttackStat = null;
+            HitPointsStat = null;
+            SpeedStat = null;
+            FocusStat = null;
+            ExploreStat = null;
+            UpgradeSlotsStat = null;
+            SelectedKeywords = null;
+            Artwork = null;
         }
         
         private void SetSelectedCard(CardSO card, bool isSelected)
         {
-            if (!ReferenceEquals(card, null))
+           ErrorHandler.TryToGetCard(card);
+            foreach (CardSO key in SelectedCards.Keys.ToList())
             {
-                // Uncheck all other cards
-                foreach (CardSO key in SelectedCards.Keys.ToList())
-                {
-                    SelectedCards[key] = false;
-                }
-                SelectedCard = card;
-                SelectedCards[card] = isSelected;
+                SelectedCards[key] = false;
             }
+            SelectedCard = card;
+            SelectedCards[card] = isSelected;
         }
 
         
         private void SaveExistingCard()
         {
             Undo.RecordObject(SelectedCard, "Edited Card");
-            if (!InitializeCard(SelectedCard))
+            if (!string.IsNullOrEmpty(CardName))
             {
-                return;
+                InitializeCard(SelectedCard);
+                SetWeightData(SelectedCard);
+                EditorUtility.SetDirty(SelectedCard);
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
             }
-
-            SetWeightData(SelectedCard);
-            
-            EditorUtility.SetDirty(SelectedCard);
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
         }
 
         private void ChangeCardAssetFileName()
@@ -643,18 +632,13 @@ namespace Editor.CardEditor
             RefreshCardList();
         }
         
-        private bool InitializeCard(CardSO card)
+        private void InitializeCard(CardSO card)
         {
-            if (ReferenceEquals(card, null))
-            {
-                return false;
-            }
+            ErrorHandler.TryToGetCard(card);
             ChangeCardAssetFileName();
             InitializeCommonCardData(card);
             AssignStatsToCard(card);
             SetWeightData(card);
-            
-            return true;
         }
 
         private void InitializeCommonCardData(CardSO card)
@@ -694,16 +678,13 @@ namespace Editor.CardEditor
                     }
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException("Card Type does not exixt or is not implemented.");
             }
         }
         private void SetWeightData(CardSO card)
         {
             WeightContainer weights = GetWeightContainer(CardTypes);
-            if (ReferenceEquals(card.WeightData, null))
-            {
-                Debug.LogError($"{nameof(card.WeightData)} is null.");
-            }
+            ErrorHandler.TryToGetWeightData(card.WeightData);
             card.WeightData = weights;
         }
         

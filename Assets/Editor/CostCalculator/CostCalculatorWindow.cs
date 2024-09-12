@@ -1,4 +1,5 @@
 using Editor.CardData;
+using Editor.Utilities;
 using UnityEditor;
 using UnityEngine;
 
@@ -80,12 +81,6 @@ namespace Editor.CostCalculator
             GUILayout.EndArea();
         }
 
-        public void OpenInCostCalculatorWindow(CardSO card)
-        {
-            LoadedCardData = card;
-            RunCalculation();
-        }
-
         private void DrawMessageBox()
         {
             GUILayout.BeginArea(MessageRect);
@@ -127,15 +122,11 @@ namespace Editor.CostCalculator
 
         private void RunCalculation()
         {
-           
+           ErrorHandler.TryToGetCard(LoadedCardData);
             float cost = 0.0f;
             Message = $"Calculating cost for {LoadedCardData?.CardName}";
-            if (!ReferenceEquals(LoadedCardData, null))
-            {
-               CostCalculator calculator = new(calculationSettings,LoadedCardData.WeightData,LoadedCardData.GetCardStats(), LoadedCardData.Keywords);
-                ;
-               cost = calculator.NormalizeCost();
-            }
+            CostCalculator calculator = new(calculationSettings,LoadedCardData.WeightData,LoadedCardData.GetCardStats(), LoadedCardData.Keywords);
+            cost = calculator.NormalizeCost();
             KeywordSumString = LoadedCardData?.GetKeywordsSumString();
             Message = $"Cost is {cost}";
             AssignCostToCard((int)cost);
@@ -144,6 +135,11 @@ namespace Editor.CostCalculator
         private void AssignCostToCard(int cost)
         {
             LoadedCardData.CardCost = cost;
+        }
+        public void OpenInCostCalculatorWindow(CardSO card)
+        {
+            LoadedCardData = card;
+            RunCalculation();
         }
     }
 }

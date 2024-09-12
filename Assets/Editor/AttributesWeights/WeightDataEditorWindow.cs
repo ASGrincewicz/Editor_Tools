@@ -1,5 +1,4 @@
 ﻿using System;
-using Editor.CardData;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Serialization;
