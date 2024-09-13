@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Editor.AttributesWeights;
 using Editor.CardData;
 using UnityEngine;
@@ -33,6 +35,22 @@ namespace Editor.Utilities
             catch (WeightDataIsNullException exception)
             {
                 Debug.LogException(exception, weightData);
+            }
+        }
+
+        public static void CheckListForCard(List<CardSO> listToCheck, CardSO cardToCheck)
+        {
+            try
+            {
+                TryToGetCard(cardToCheck);
+                if (!listToCheck.Contains(cardToCheck))
+                {
+                    throw new CardNotInCollectionException($"{cardToCheck} is not in {listToCheck}.");
+                }
+            }
+            catch (CardSOIsNullException exception)
+            {
+                Debug.LogException(exception, cardToCheck);
             }
         }
     }
