@@ -2,21 +2,22 @@ using System.Collections.Generic;
 using Editor.CardData;
 using Editor.Utilities;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Editor.SetDesigner
 {
     [CreateAssetMenu(fileName = "Card Set Data", menuName = "Card Set", order = 0)]
     public class CardSetData : ScriptableObject
     {
-        [SerializeField] private CardSetType cardSetType;
+        [SerializeField] private CardSetType _cardSetType;
         [SerializeField] private string _cardSetName;
         [SerializeField] private int _numberOfCards;
         [SerializeField] private List<CardSO> _cardsInSet;
 
         public CardSetType CardSetType
         {
-            get { return cardSetType; }
-            set { cardSetType = value; }
+            get { return _cardSetType; }
+            set { _cardSetType = value; }
         }
 
 
@@ -76,7 +77,7 @@ namespace Editor.SetDesigner
         }
         public void RemoveCardFromSet(CardSO card)
         {
-            ErrorHandler.CheckListForCard(CardsInSet, card);
+            ErrorHandler.TryToGetCardFromList(CardsInSet, card);
             _cardsInSet.Remove(card);
         }
     }

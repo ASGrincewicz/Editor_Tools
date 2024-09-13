@@ -8,6 +8,7 @@ using Editor.CostCalculator;
 using Editor.KeywordSystem;
 using Editor.Utilities;
 using JetBrains.Annotations;
+using TMPro;
 using Unity.VisualScripting.YamlDotNet.Core.Tokens;
 using UnityEditor;
 using UnityEngine;
@@ -19,6 +20,8 @@ namespace Editor.CardEditor
     public class CardEditorWindow : EditorWindow
     {
         [SerializeField] private KeywordManager _keywordManager;
+
+        [SerializeField] private Texture2D _placeholderArtwork;
         // Constants
         private const string ASSET_PATH = "Assets/Data/Scriptable Objects/Cards/";
 
@@ -105,6 +108,11 @@ namespace Editor.CardEditor
             window.position = new Rect(50f, 50f, 500f, 800f);
             window.Show();
         }
+        public void OpenCardInEditor(CardSO card)
+        {
+            CardToEdit = card;
+            LoadCardFromFile();
+        }
         
         private void OnEnable()
         {
@@ -112,15 +120,13 @@ namespace Editor.CardEditor
             foreach (string guid in guids)
             {
                 string assetPath = AssetDatabase.GUIDToAssetPath(guid);
-                CardSO card = AssetDatabase.LoadAssetAtPath<CardSO>(assetPath);
-                if (card != null)
+                CardSO card =  ErrorHandler.TryToGetCard(AssetDatabase.LoadAssetAtPath<CardSO>(assetPath));
+
+                if (ErrorHandler.VerifyCardNotInList(AllCards, card))
                 {
-                    if (!AllCards.Contains(card))
-                    {
-                        AllCards.Add(card);
-                    }
-                    SelectedCards[card] = false;
+                    AllCards.Add(card);
                 }
+                SelectedCards[card] = false;
             }
             RefreshKeywordsList();
             
@@ -132,12 +138,6 @@ namespace Editor.CardEditor
             SetupAreaRects();
             DrawMainArea();
             DrawCardListArea();
-        }
-
-        public void OpenCardInEditor(CardSO card)
-        {
-            CardToEdit = card;
-            LoadCardFromFile();
         }
 
         private void SetupAreaRects()
@@ -154,7 +154,6 @@ namespace Editor.CardEditor
             GUILayout.EndHorizontal();
             ScrollPosition = GUILayout.BeginScrollView(ScrollPosition,GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
             DrawEditableFields();
-            //DrawControlButtons();
             GUILayout.EndScrollView();
             GUILayout.EndArea();
         }
@@ -241,7 +240,6 @@ namespace Editor.CardEditor
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
         }
         
         private void DrawStatLayout(StatNames statName, ref int statValue, string statDescription)
@@ -552,15 +550,18 @@ namespace Editor.CardEditor
         
         private void RefreshCardList()
         {
-            UnloadCard();
+            if (!ReferenceEquals(SelectedCard, null))
+            {
+                UnloadCard();
+            }
             AllCards.Clear();
             SelectedCards.Clear();
             string[] guids = AssetDatabase.FindAssets(ASSET_FILTER, new[] { ASSET_PATH });
             foreach (string guid in guids)
             {
                 string assetPath = AssetDatabase.GUIDToAssetPath(guid);
-                CardSO card = AssetDatabase.LoadAssetAtPath<CardSO>(assetPath);
-                if (!ReferenceEquals(card, null))
+                CardSO card = ErrorHandler.TryToGetCard(AssetDatabase.LoadAssetAtPath<CardSO>(assetPath));
+                if (ErrorHandler.VerifyCardNotInList(AllCards, card))
                 {
                     AllCards.Add(card);
                     SelectedCards[card] = false;
@@ -576,48 +577,53 @@ namespace Editor.CardEditor
         
         private void UnloadCard()
         {
-            if (ReferenceEquals(SelectedCard, null))
-            {
-                return;
-            }
-            SetSelectedCard(SelectedCard,false);
+            CardSO card = ErrorHandler.TryToGetCard(SelectedCard);
+            CardStat blankStat = new(StatNames.None);
+            SetSelectedCard(card,false);
             CardTypes = CardTypes.TBD;
             CardName = string.Empty;
             CardRarity = CardRarity.None;
+            CardCost = 0;
             CardText = string.Empty;
-            AttackStat = null;
-            HitPointsStat = null;
-            SpeedStat = null;
-            FocusStat = null;
-            ExploreStat = null;
-            UpgradeSlotsStat = null;
-            SelectedKeywords = null;
-            Artwork = null;
+            AttackStat = blankStat;
+            HitPointsStat = blankStat;
+            SpeedStat = blankStat;
+            FocusStat = blankStat;
+            ExploreStat = blankStat;
+            UpgradeSlotsStat = blankStat;
+            SelectedKeywords = Array.Empty<Keyword>();
+            Artwork = _placeholderArtwork;
         }
         
         private void SetSelectedCard(CardSO card, bool isSelected)
         {
            ErrorHandler.TryToGetCard(card);
-            foreach (CardSO key in SelectedCards.Keys.ToList())
-            {
-                SelectedCards[key] = false;
-            }
-            SelectedCard = card;
-            SelectedCards[card] = isSelected;
+           if (!ReferenceEquals(SelectedCard, null))
+           {
+               SelectedCards[SelectedCard] = false;
+           }
+           foreach (CardSO key in SelectedCards.Keys.ToList())
+           {
+               SelectedCards[key] = false;
+           }
+           SelectedCard = card;
+           SelectedCards[card] = isSelected;
         }
 
         
         private void SaveExistingCard()
         {
-            Undo.RecordObject(SelectedCard, "Edited Card");
-            if (!string.IsNullOrEmpty(CardName))
+            Undo.RecordObject(SelectedCard, "Edit Card");
+            if (string.IsNullOrEmpty(CardName))
             {
-                InitializeCard(SelectedCard);
-                SetWeightData(SelectedCard);
-                EditorUtility.SetDirty(SelectedCard);
-                AssetDatabase.SaveAssets();
-                AssetDatabase.Refresh();
+                return;
             }
+
+            InitializeCard(SelectedCard);
+            SetWeightData(SelectedCard);
+            EditorUtility.SetDirty(SelectedCard);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
         }
 
         private void ChangeCardAssetFileName()

@@ -8,7 +8,7 @@ namespace Editor.Utilities
 {
     public static class ErrorHandler
     {
-        public static void TryToGetCard(CardSO card)
+        public static CardSO TryToGetCard(CardSO card)
         {
             try
             {
@@ -16,10 +16,12 @@ namespace Editor.Utilities
                 {
                     throw new CardSOIsNullException("CardSO is null.");
                 }
+                return card;
             }
             catch (CardSOIsNullException exception)
             {
                 Debug.LogException(exception, card);
+                return ScriptableObject.CreateInstance<CardSO>();
             }
         }
 
@@ -38,7 +40,7 @@ namespace Editor.Utilities
             }
         }
 
-        public static void CheckListForCard(List<CardSO> listToCheck, CardSO cardToCheck)
+        public static void TryToGetCardFromList(List<CardSO> listToCheck, CardSO cardToCheck)
         {
             try
             {
@@ -51,6 +53,24 @@ namespace Editor.Utilities
             catch (CardSOIsNullException exception)
             {
                 Debug.LogException(exception, cardToCheck);
+            }
+        }
+
+        public static bool VerifyCardNotInList(List<CardSO> listToCheck, CardSO cardToCheck)
+        {
+            try
+            {
+                if (listToCheck.Contains(cardToCheck))
+                {
+                    throw new CardAlreadyInListException($"{cardToCheck} is in {listToCheck}.");
+                }
+
+                return true;
+            }
+            catch (CardAlreadyInListException exception)
+            {
+                Debug.LogException(exception, cardToCheck);
+                return false;
             }
         }
     }

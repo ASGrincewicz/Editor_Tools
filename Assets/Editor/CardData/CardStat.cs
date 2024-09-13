@@ -38,7 +38,7 @@ namespace Editor.CardData
             }
         } 
 
-        public CardStat(StatNames statName, int statValue = 0, string statDescription = null)
+        public CardStat(StatNames statName, int statValue = 0, string statDescription = "empty")
         {
             _statName = statName;
             _statValue = statValue;
