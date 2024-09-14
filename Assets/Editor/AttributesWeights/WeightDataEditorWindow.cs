@@ -88,27 +88,35 @@ namespace Editor.AttributesWeights
 
         private void DrawStatFields()
         {
-            switch (WeightType)
+            try
             {
-                case WeightType.None:
-                case WeightType.Starship:
-                    break;
-                case WeightType.Environment:
-                    DrawEnvironmentFields();
-                    break;
-                case WeightType.Keyword:
-                    DrawKeywordOnlyFields();
-                    break;
-                case WeightType.Gear:
-                case WeightType.Ally:
-                case WeightType.Boss:
-                case WeightType.Creature:
-                case WeightType.Hunter:
-                    DrawCharacterFields();
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                switch (WeightType)
+                {
+                    case WeightType.None:
+                    case WeightType.Starship:
+                        break;
+                    case WeightType.Environment:
+                        DrawEnvironmentFields();
+                        break;
+                    case WeightType.Keyword:
+                        DrawKeywordOnlyFields();
+                        break;
+                    case WeightType.Gear:
+                    case WeightType.Ally:
+                    case WeightType.Boss:
+                    case WeightType.Creature:
+                    case WeightType.Hunter:
+                        DrawCharacterFields();
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
+            catch (ArgumentOutOfRangeException exception)
+            {
+                Debug.LogException(exception);
+            }
+            
         }
 
         private void DrawEnvironmentFields()
@@ -204,7 +212,7 @@ namespace Editor.AttributesWeights
                 WeightType.Gear => _attributeSettings.gearCardStatWeights.cardStatWeights,
                 WeightType.Hunter => _attributeSettings.hunterCardStatWeights.cardStatWeights,
                 WeightType.Keyword => _attributeSettings.keywordOnlyCardStatWeights.cardStatWeights,
-                _ => null,
+                _ => Array.Empty<CardStatWeight>()
             };
         }
 

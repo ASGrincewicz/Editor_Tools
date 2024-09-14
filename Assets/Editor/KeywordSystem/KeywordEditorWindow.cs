@@ -73,18 +73,22 @@ namespace Editor.KeywordSystem
         private void DrawButtonArea()
         {
             GUILayout.BeginArea(_buttonAreaRect);
-            if (GUILayout.Button("Save", GUILayout.Width(BUTTON_WIDTH)))
+            GUILayout.BeginHorizontal(EditorStyles.toolbar);
+            if (GUILayout.Button("Save", EditorStyles.toolbarButton,GUILayout.Width(BUTTON_WIDTH)))
             {
                 SaveKeywords();
             }
-            if (GUILayout.Button("New Keyword", GUILayout.Width(BUTTON_WIDTH)))
+            if (GUILayout.Button("New Keyword",EditorStyles.toolbarButton,GUILayout.Width(BUTTON_WIDTH)))
             {
                 InitializeNewKeyword();
             }
-            if (GUILayout.Button("Reload Keyword List"))
+            GUILayout.EndHorizontal();
+            GUILayout.BeginHorizontal(EditorStyles.toolbar);
+            if (GUILayout.Button("Reload Keyword List",EditorStyles.toolbarButton,GUILayout.Width(BUTTON_WIDTH * 2)))
             {
                 LoadKeywords();
             }
+            GUILayout.EndHorizontal();
             GUILayout.EndArea();
         }
 
@@ -123,6 +127,7 @@ namespace Editor.KeywordSystem
             GUILayout.EndScrollView();
             GUILayout.EndArea();
         }
+        
 
         private void LoadKeywords()
         {
@@ -132,7 +137,7 @@ namespace Editor.KeywordSystem
         private void SaveKeywords()
         {
             Undo.RecordObject(_keywordManager, "Save Keywords");
-            Keyword editedKeyword = new Keyword
+            Keyword editedKeyword = new()
             {
                 keywordName = _keywordName,
                 keywordValue = _keywordValue,

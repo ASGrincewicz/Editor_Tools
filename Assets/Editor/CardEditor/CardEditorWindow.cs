@@ -52,19 +52,19 @@ namespace Editor.CardEditor
         private CardTypes CardTypes { get; set; }
         private CardRarity CardRarity { get; set; }
         private string CardName { get; set; }
-        [CanBeNull] private Texture2D Artwork { get; set; }
+        private Texture2D Artwork { get; set; }
 
-        private CardStat? AttackStat { get; set; }
+        private CardStat AttackStat { get; set; }
         private int _attackValue;
-        private CardStat? ExploreStat { get; set; }
+        private CardStat ExploreStat { get; set; }
         private int _exploreValue;
-        private CardStat? FocusStat { get; set; }
+        private CardStat FocusStat { get; set; }
         private int _focusValue;
-        private CardStat? HitPointsStat{get; set; }
+        private CardStat HitPointsStat{get; set; }
         private int _hitPointsValue;
-        private CardStat? SpeedStat{get; set; }
+        private CardStat SpeedStat{get; set; }
         private int _speedValue;
-        private CardStat? UpgradeSlotsStat { get; set; }
+        private CardStat UpgradeSlotsStat { get; set; }
         private int _upgradeSlotsValue;
 
         private List<Keyword> KeywordsList { get; set; }
@@ -73,7 +73,7 @@ namespace Editor.CardEditor
         private int[] SelectedKeywordsIndex { get; set; }
         private string CardText { get; set; }
         private int CardCost { get; set; }
-        [CanBeNull] private CardSO SelectedCard { get; set; }
+        private CardSO SelectedCard { get; set; }
         
         
         // GUI variables
@@ -208,7 +208,7 @@ namespace Editor.CardEditor
             Artwork = (Texture2D)EditorGUILayout.ObjectField("Artwork", Artwork, typeof(Texture2D), false,
                 GUILayout.Height(200), GUILayout.Width(FIELD_WIDTH));
             DetermineStatLayout();
-            GUILayout.Label($"Card Cost: {CardCost}"); ;
+            GUILayout.Label($"Card Cost: {CardCost}"); 
             GUILayout.Label("Card Text");
             CardText = EditorGUILayout.TextArea(CardText, GUILayout.Height(100), GUILayout.Width(FIELD_WIDTH));
         }
@@ -468,7 +468,7 @@ namespace Editor.CardEditor
             UpdateSelectedKeywordsIndices();
             CardText += CardTextStringBuilder.Append(SelectedCard.CardText);
             GetStatsFromLoadedCard();
-            CardTextStringBuilder.Clear();;
+            CardTextStringBuilder.Clear();
         }
 
         private void LoadCommonCardData()
@@ -684,7 +684,7 @@ namespace Editor.CardEditor
                     }
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException("Card Type does not exixt or is not implemented.");
+                    throw new ArgumentOutOfRangeException(nameof(card));
             }
         }
         private void SetWeightData(CardSO card)

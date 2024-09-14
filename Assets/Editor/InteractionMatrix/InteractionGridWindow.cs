@@ -99,11 +99,13 @@ namespace Editor.InteractionMatrix
             for (int i = 0; i < size; i++)
             {
                 (int countZero, int countTwo) = CountOptionsInRow(i);
-                if (countZero != settings.optionZeroAmount || countTwo != settings.optionTwoAmount)
+                if (countZero == settings.optionZeroAmount && countTwo == settings.optionTwoAmount)
                 {
-                    _message.Append($"{settings.labels[i]} does not have exactly {settings.optionZeroAmount} {settings.options[0]} and {settings.optionTwoAmount} {settings.options[2]}!");
-                    return;
+                    continue;
                 }
+
+                _message.Append($"{settings.labels[i]} does not have exactly {settings.optionZeroAmount} {settings.options[0]} and {settings.optionTwoAmount} {settings.options[2]}!");
+                return;
             }
             _message.Append("Everything looks good!");
         }
