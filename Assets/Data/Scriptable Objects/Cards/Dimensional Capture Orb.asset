@@ -13,9 +13,28 @@ MonoBehaviour:
   m_Name: Dimensional Capture Orb
   m_EditorClassIdentifier: 
   _weightData: {fileID: 11400000, guid: 8450eb473c9c74119a579d9c683c4c64, type: 2}
+  _cardSetName: 
+  _cardNumber: 0
+  _rarity: 2
+  _cost: 1
   _cardType: 7
   _cardName: Dimensional Capture Orb
-  _artWork: {fileID: 2800000, guid: e0811221d7acf9947bbe3918b556b7bb, type: 3}
+  _artWork: {fileID: 2800000, guid: 158524b7b1f0c4f66b827c79eb27ff3d, type: 3}
+  _keywords:
+  - keywordName: Unveil
+    keywordValue: 6
+    definition: Deactivate an opponent's 'Cloak'.
+    abilityType: 2
+  - keywordName: Blink
+    keywordValue: 2
+    definition: "Move this card from the melee zone \nto the ranged zone or vice
+      versa."
+    abilityType: 10
+  - keywordName: None
+    keywordValue: 0
+    definition: 
+    abilityType: 0
+  _cardText: 
   _attack:
     _statName: 0
     _statValue: 0
@@ -40,20 +59,3 @@ MonoBehaviour:
     _statName: 0
     _statValue: 0
     _statDescription: 
-  _keywords:
-  - keywordName: Unveil
-    keywordValue: 6
-    definition: Deactivate an opponent's 'Cloak'.
-    abilityType: 2
-  - keywordName: Blink
-    keywordValue: 2
-    definition: "Move this card from the melee zone \nto the ranged zone or vice
-      versa."
-    abilityType: 10
-  - keywordName: None
-    keywordValue: 0
-    definition: 
-    abilityType: 0
-  _cardText: 
-  _cost: 1
-  _rarity: 3

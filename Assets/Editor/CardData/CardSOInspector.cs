@@ -7,10 +7,14 @@ using UnityEngine;
 
 namespace Editor.CardData
 {
-    [CustomEditor(typeof(CardSO))]
+    [CustomEditor(typeof(CardDataSO))]
     public class CardSoInspector: UnityEditor.Editor
     {
         private const string WeightDataPropertyName = "_weightData";
+        private const string CardSetNamePropertyName = "_cardSetName";
+        private const string CardNumberPropertyName = "_cardNumber";
+        private const string RarityPropertyName = "_rarity";
+        private const string CostPropertyName = "_cost";
         private const string CardTypePropertyName = "_cardType";
         private const string CardNamePropertyName = "_cardName";
         private const string ArtWorkPropertyName = "_artWork";
@@ -22,10 +26,14 @@ namespace Editor.CardData
         private const string UpgradeSlotsPropertyName = "_upgradeSlots";
         private const string KeywordsPropertyName = "_keywords";
         private const string CardTextPropertyName = "_cardText";
-        private const string CostPropertyName = "_cost";
-        private const string RarityPropertyName = "_rarity";
+        
+        
         
         private SerializedProperty WeightDataProperty { get; set; }
+        private SerializedProperty CardSetNameProperty { get; set; }
+        private SerializedProperty CardNumberProperty { get; set; }
+        private SerializedProperty RarityProperty { get; set; }
+        private SerializedProperty CostProperty { get; set; }
         private SerializedProperty CardTypeProperty { get; set; }
         private SerializedProperty CardNameProperty { get; set; }
         private SerializedProperty ArtWorkProperty { get; set; }
@@ -37,8 +45,8 @@ namespace Editor.CardData
         private SerializedProperty UpgradeSlotsProperty { get; set; }
         private SerializedProperty KeywordsProperty { get; set; }
         private SerializedProperty CardTextProperty { get; set; }
-        private SerializedProperty CostProperty { get; set; }
-        private SerializedProperty RarityProperty { get; set; }
+        
+        
         
         // GUI Properties
         private bool IsOpenInCardEditorButtonPressed => GUILayout.Button("Open in Card Editor", EditorStyles.toolbarButton);
@@ -47,6 +55,10 @@ namespace Editor.CardData
         private void OnEnable()
         {
             WeightDataProperty = serializedObject.FindProperty(WeightDataPropertyName);
+            CardSetNameProperty = serializedObject.FindProperty(CardSetNamePropertyName);
+            CardNumberProperty = serializedObject.FindProperty(CardNumberPropertyName);
+            RarityProperty = serializedObject.FindProperty(RarityPropertyName);
+            CostProperty = serializedObject.FindProperty(CostPropertyName);
             CardTypeProperty = serializedObject.FindProperty(CardTypePropertyName);
             CardNameProperty = serializedObject.FindProperty(CardNamePropertyName);
             ArtWorkProperty = serializedObject.FindProperty(ArtWorkPropertyName);
@@ -58,8 +70,8 @@ namespace Editor.CardData
             UpgradeSlotsProperty = serializedObject.FindProperty(UpgradeSlotsPropertyName);
             KeywordsProperty = serializedObject.FindProperty(KeywordsPropertyName);
             CardTextProperty = serializedObject.FindProperty(CardTextPropertyName);
-            CostProperty = serializedObject.FindProperty(CostPropertyName);
-            RarityProperty = serializedObject.FindProperty(RarityPropertyName);
+           
+            
         }
         
         public override void OnInspectorGUI()
@@ -71,12 +83,12 @@ namespace Editor.CardData
 
         private void DrawCardInspectorGUI() 
         {           
-            CardSO card = target as CardSO;
+            CardDataSO cardData = target as CardDataSO;
             GUILayout.BeginVertical(GUILayout.Width(300));
             EditorGUIUtility.labelWidth = 80;
             GUILayout.BeginHorizontal(EditorStyles.toolbar);
-            DrawOpenCardEditorButton(card);
-            DrawOpenCostCalculatorButton(card);
+            DrawOpenCardEditorButton(cardData);
+            DrawOpenCostCalculatorButton(cardData);
             GUILayout.EndHorizontal();
             
             DrawProperties();
@@ -84,21 +96,21 @@ namespace Editor.CardData
             GUILayout.EndVertical();
         }
 
-        private void DrawOpenCardEditorButton(CardSO card) 
+        private void DrawOpenCardEditorButton(CardDataSO cardData) 
         {
             if (IsOpenInCardEditorButtonPressed) 
             {
                 CardEditorWindow instance = EditorWindow.GetWindow<CardEditorWindow>();
-                instance.OpenCardInEditor(card);
+                instance.OpenCardInEditor(cardData);
             }
         }
 
-        private void DrawOpenCostCalculatorButton(CardSO card)
+        private void DrawOpenCostCalculatorButton(CardDataSO cardData)
         {
             if (IsOpenInCostCalculatorButtonPressed)
             {
                 CostCalculatorWindow instance = EditorWindow.GetWindow<CostCalculatorWindow>();
-                instance.OpenInCostCalculatorWindow(card);
+                instance.OpenInCostCalculatorWindow(cardData);
             }
         }
         
@@ -108,6 +120,7 @@ namespace Editor.CardData
             GUI.enabled = false;
             DrawProperty(WeightDataProperty);
             GUI.enabled = true;
+            DrawLabel($"#{CardNumberProperty.intValue} in {CardSetNameProperty.stringValue}");
             CardRarity cardRarity = (CardRarity) RarityProperty.enumValueIndex;
             DrawLabel($"Rarity: ",$"{cardRarity.GetDescription()}");
             DrawLabel($"Card Cost: ",$"{CostProperty.intValue}");

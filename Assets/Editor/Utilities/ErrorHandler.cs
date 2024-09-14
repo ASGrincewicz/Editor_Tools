@@ -8,20 +8,20 @@ namespace Editor.Utilities
 {
     public static class ErrorHandler
     {
-        public static CardSO TryToGetCard(CardSO card)
+        public static CardDataSO TryToGetCard(CardDataSO cardData)
         {
             try
             {
-                if (ReferenceEquals(card, null))
+                if (ReferenceEquals(cardData, null))
                 {
-                    throw new CardSOIsNullException("CardSO is null.");
+                    throw new CardSOIsNullException("CardDataSO is null.");
                 }
-                return card;
+                return cardData;
             }
             catch (CardSOIsNullException exception)
             {
-                Debug.LogException(exception, card);
-                return ScriptableObject.CreateInstance<CardSO>();
+                Debug.LogException(exception, cardData);
+                return ScriptableObject.CreateInstance<CardDataSO>();
             }
         }
 
@@ -40,36 +40,36 @@ namespace Editor.Utilities
             }
         }
 
-        public static void TryToGetCardFromList(List<CardSO> listToCheck, CardSO cardToCheck)
+        public static void TryToGetCardFromList(List<CardDataSO> listToCheck, CardDataSO cardDataToCheck)
         {
             try
             {
-                TryToGetCard(cardToCheck);
-                if (!listToCheck.Contains(cardToCheck))
+                TryToGetCard(cardDataToCheck);
+                if (!listToCheck.Contains(cardDataToCheck))
                 {
-                    throw new CardNotInCollectionException($"{cardToCheck} is not in {listToCheck}.");
+                    throw new CardNotInCollectionException($"{cardDataToCheck} is not in {listToCheck}.");
                 }
             }
             catch (CardSOIsNullException exception)
             {
-                Debug.LogException(exception, cardToCheck);
+                Debug.LogException(exception, cardDataToCheck);
             }
         }
 
-        public static bool VerifyCardNotInList(List<CardSO> listToCheck, CardSO cardToCheck)
+        public static bool VerifyCardNotInList(List<CardDataSO> listToCheck, CardDataSO cardDataToCheck)
         {
             try
             {
-                if (listToCheck.Contains(cardToCheck))
+                if (listToCheck.Contains(cardDataToCheck))
                 {
-                    throw new CardAlreadyInListException($"{cardToCheck} is in {listToCheck}.");
+                    throw new CardAlreadyInListException($"{cardDataToCheck} is in {listToCheck}.");
                 }
 
                 return true;
             }
             catch (CardAlreadyInListException exception)
             {
-                Debug.LogException(exception, cardToCheck);
+                Debug.LogException(exception, cardDataToCheck);
                 return false;
             }
         }

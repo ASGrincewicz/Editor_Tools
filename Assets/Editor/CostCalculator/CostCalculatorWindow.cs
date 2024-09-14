@@ -18,7 +18,7 @@ namespace Editor.CostCalculator
         private const float Rect_Width = 300;
 
         // Class Variables
-        private CardSO LoadedCardData { get; set; } = null;
+        private CardDataSO LoadedCardDataData { get; set; } = null;
 
         private string Message { get; set; } = "";
         private string KeywordSumString { get; set; }
@@ -61,22 +61,22 @@ namespace Editor.CostCalculator
         {
             EditorGUILayout.BeginHorizontal();
             GUI.Label(new Rect(CardInfoRect.x, CardInfoRect.y - 40, position.width * 0.333f, 20), "Loaded Card:");
-            LoadedCardData = EditorGUI.ObjectField(new Rect(CardInfoRect.x + 110, CardInfoRect.y - 40, position.width * 0.333f, 20), LoadedCardData,
-                typeof(CardSO), false) as CardSO;
+            LoadedCardDataData = EditorGUI.ObjectField(new Rect(CardInfoRect.x + 110, CardInfoRect.y - 40, position.width * 0.333f, 20), LoadedCardDataData,
+                typeof(CardDataSO), false) as CardDataSO;
             EditorGUILayout.EndHorizontal();
         }
         private void DrawCardInfoArea()
         {
             GUILayout.BeginArea(CardInfoRect);
-            // Show values from the loaded card
-            DrawLabel($"Card Name: {LoadedCardData?.CardName}");
-            DrawLabel($"Card Type: {LoadedCardData?.CardType}");
-            DrawLabel($"Attack: {LoadedCardData?.Attack.StatValue}");
-            DrawLabel($"Explore: {LoadedCardData?.Explore.StatValue}");
-            DrawLabel($"Focus: {LoadedCardData?.Focus.StatValue}");
-            DrawLabel($"Hit Points: {LoadedCardData?.HitPoints.StatValue}");
-            DrawLabel($"Speed: {LoadedCardData?.Speed.StatValue}");
-            DrawLabel($"Upgrade Slots: {LoadedCardData?.UpgradeSlots.StatValue}");
+            // Show values from the loaded cardData
+            DrawLabel($"Card Name: {LoadedCardDataData?.CardName}");
+            DrawLabel($"Card Type: {LoadedCardDataData?.CardType}");
+            DrawLabel($"Attack: {LoadedCardDataData?.Attack.StatValue}");
+            DrawLabel($"Explore: {LoadedCardDataData?.Explore.StatValue}");
+            DrawLabel($"Focus: {LoadedCardDataData?.Focus.StatValue}");
+            DrawLabel($"Hit Points: {LoadedCardDataData?.HitPoints.StatValue}");
+            DrawLabel($"Speed: {LoadedCardDataData?.Speed.StatValue}");
+            DrawLabel($"Upgrade Slots: {LoadedCardDataData?.UpgradeSlots.StatValue}");
             DrawLabel($"Keywords: {KeywordSumString}");
             GUILayout.EndArea();
         }
@@ -112,7 +112,7 @@ namespace Editor.CostCalculator
             if (GUILayout.Button(EditButtonText, GUILayout.Width(position.width * 0.25f), GUILayout.Height(ButtonRect.height * 0.25f)))
             {
                 CardEditor.CardEditorWindow instance = EditorWindow.GetWindow<CardEditor.CardEditorWindow>();
-                instance.OpenCardInEditor(LoadedCardData);
+                instance.OpenCardInEditor(LoadedCardDataData);
             }
         }
         private void DrawLabel(string text) 
@@ -122,23 +122,23 @@ namespace Editor.CostCalculator
 
         private void RunCalculation()
         {
-           ErrorHandler.TryToGetCard(LoadedCardData);
+           ErrorHandler.TryToGetCard(LoadedCardDataData);
             float cost = 0.0f;
-            Message = $"Calculating cost for {LoadedCardData?.CardName}";
-            CostCalculator calculator = new(calculationSettings,LoadedCardData.WeightData,LoadedCardData.GetCardStats(), LoadedCardData.Keywords);
+            Message = $"Calculating cost for {LoadedCardDataData?.CardName}";
+            CostCalculator calculator = new(calculationSettings,LoadedCardDataData.WeightData,LoadedCardDataData.GetCardStats(), LoadedCardDataData.Keywords);
             cost = calculator.NormalizeCost();
-            KeywordSumString = LoadedCardData?.GetKeywordsSumString();
+            KeywordSumString = LoadedCardDataData?.GetKeywordsSumString();
             Message = $"Cost is {cost}";
             AssignCostToCard((int)cost);
         }
 
         private void AssignCostToCard(int cost)
         {
-            LoadedCardData.CardCost = cost;
+            LoadedCardDataData.CardCost = cost;
         }
-        public void OpenInCostCalculatorWindow(CardSO card)
+        public void OpenInCostCalculatorWindow(CardDataSO cardData)
         {
-            LoadedCardData = card;
+            LoadedCardDataData = cardData;
             RunCalculation();
         }
     }

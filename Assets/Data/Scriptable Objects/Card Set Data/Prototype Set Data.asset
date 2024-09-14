@@ -14,5 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cardSetType: 1
   _cardSetName: Prototype
-  _numberOfCards: 0
+  _numberOfCards: 96
+  _commonPercentage: 37.5
+  _uncommonPercentage: 29
+  _rarePercentage: 21
+  _hyperRarePercentage: 12.5
   _cardsInSet: []

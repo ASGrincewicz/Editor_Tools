@@ -13,9 +13,28 @@ MonoBehaviour:
   m_Name: Lyra Stryker
   m_EditorClassIdentifier: 
   _weightData: {fileID: 11400000, guid: 2765bd0e5cf8642e1b657d07d186cd61, type: 2}
+  _cardSetName: 
+  _cardNumber: 0
+  _rarity: 3
+  _cost: 4
   _cardType: 3
   _cardName: Lyra Stryker
-  _artWork: {fileID: 0}
+  _artWork: {fileID: 2800000, guid: dadc5ebd16ed24c6fbdfea887d2d2b59, type: 3}
+  _keywords:
+  - keywordName: Blink
+    keywordValue: 2
+    definition: "Move this card from the melee zone \nto the ranged zone or vice
+      versa."
+    abilityType: 10
+  - keywordName: Mend
+    keywordValue: 1
+    definition: Heal any ally by 5.
+    abilityType: 9
+  - keywordName: None
+    keywordValue: 0
+    definition: 
+    abilityType: 0
+  _cardText: 
   _attack:
     _statName: 0
     _statValue: 15
@@ -40,20 +59,3 @@ MonoBehaviour:
     _statName: 0
     _statValue: 0
     _statDescription: 
-  _keywords:
-  - keywordName: Blink
-    keywordValue: 2
-    definition: "Move this card from the melee zone \nto the ranged zone or vice
-      versa."
-    abilityType: 10
-  - keywordName: Mend
-    keywordValue: 1
-    definition: Heal any ally by 5.
-    abilityType: 9
-  - keywordName: None
-    keywordValue: 0
-    definition: 
-    abilityType: 0
-  _cardText: 
-  _cost: 4
-  _rarity: 3

@@ -13,9 +13,27 @@ MonoBehaviour:
   m_Name: Space Colony
   m_EditorClassIdentifier: 
   _weightData: {fileID: 11400000, guid: 56caa87437fef4999967d87c20e6890e, type: 2}
+  _cardSetName: None
+  _cardNumber: 0
+  _rarity: 2
+  _cost: 1
   _cardType: 6
   _cardName: Space Colony
   _artWork: {fileID: 2800000, guid: b7826d9d49aa3b74499c647b389cc31a, type: 3}
+  _keywords:
+  - keywordName: Fortify
+    keywordValue: 3
+    definition: Take -5 Damage from the next successful attack.
+    abilityType: 5
+  - keywordName: None
+    keywordValue: 0
+    definition: 
+    abilityType: 0
+  - keywordName: None
+    keywordValue: 0
+    definition: 
+    abilityType: 0
+  _cardText: Space Environment
   _attack:
     _statName: 0
     _statValue: 0
@@ -40,19 +58,3 @@ MonoBehaviour:
     _statName: 0
     _statValue: 0
     _statDescription: 
-  _keywords:
-  - keywordName: None
-    keywordValue: 0
-    definition: 
-    abilityType: 0
-  - keywordName: None
-    keywordValue: 0
-    definition: 
-    abilityType: 0
-  - keywordName: None
-    keywordValue: 0
-    definition: 
-    abilityType: 0
-  _cardText: Space Environment
-  _cost: 1
-  _rarity: 2
