@@ -150,7 +150,7 @@ namespace Editor.KeywordSystem
                 Debug.LogError("_keywords list is not initialized");
                 return;
             }
-            foreach (var keyword in _keywords)
+            foreach (Keyword keyword in _keywords)
             {
                 if (string.Equals(keyword.keywordName, _keywordName, StringComparison.OrdinalIgnoreCase) 
                     || string.IsNullOrEmpty(keyword.keywordName))

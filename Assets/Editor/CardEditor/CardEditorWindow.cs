@@ -123,6 +123,7 @@ namespace Editor.CardEditor
 
         public void OpenCardInEditor(CardDataSO card)
         {
+            Init();
             CardToEdit = card;
             LoadCardFromFile();
         }
@@ -476,7 +477,7 @@ namespace Editor.CardEditor
             if (!ReferenceEquals(card, null))
             {
                 SelectedCard = card;
-                SelectedCards[card] = isSelected;
+                //SelectedCards[card] = isSelected;
             }
         }
 
