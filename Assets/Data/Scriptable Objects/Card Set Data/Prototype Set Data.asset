@@ -20,6 +20,8 @@ MonoBehaviour:
   _rarePercentage: 21
   _hyperRarePercentage: 12.5
   _cardsInSet:
-  - {fileID: 11400000, guid: f1ae923bb2a41e14ba4dadbf2717d733, type: 2}
-  - {fileID: 11400000, guid: 7b7a674130f6f5f43bb75282ea451662, type: 2}
-  - {fileID: 11400000, guid: 69503412c386d4cda876710485088d76, type: 2}
+  - {fileID: 11400000, guid: 89b793e87af244e44aa046f7f02ebc74, type: 2}
+  - {fileID: 11400000, guid: a86fede06169b7941b41dcd26efd4626, type: 2}
+  - {fileID: 11400000, guid: db4c892d6a998de4aab1d155c33b9360, type: 2}
+  - {fileID: 11400000, guid: e75b89c1975b28742ba3596213e3b8cd, type: 2}
+  - {fileID: 11400000, guid: 8df12c1b8a2b6ad4f9c3f9989b28f961, type: 2}

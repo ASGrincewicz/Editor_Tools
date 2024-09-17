@@ -121,15 +121,15 @@ namespace Editor.SetDesigner
         public void RemoveCardFromSet(CardDataSO cardData)
         {
             ErrorHandler.TryToGetCardFromList(CardsInSet, cardData);
-            _cardsInSet.Remove(cardData);
             UnassignNumberFromCard(cardData);
             UnassignSetFromCard(cardData);
+            _cardsInSet.Remove(cardData);
         }
 
         public void AssignNumberToCard(CardDataSO cardData)
         {
             ErrorHandler.TryToGetCard(cardData);
-            cardData.CardNumber = CardsInSet.IndexOf(cardData);
+            cardData.CardNumber = CardsInSet.IndexOf(cardData) + 1;
             
         }
 

@@ -157,9 +157,7 @@ namespace Editor.SetDesigner
                     {
                         if (_selectedCardSet != null)
                         {
-                            Debug.Log("Remove card: " + cardData.name);
-                            _currentSet.Remove(cardData);
-                            // Handle remove card logic
+                            RemoveCardFromSet(cardData);
                         }
                     }
                     EditorGUI.EndDisabledGroup();
@@ -175,6 +173,12 @@ namespace Editor.SetDesigner
         {
             Debug.Log("Add card: " + cardData.name);
             _selectedCardSet.AddCardToSet(cardData);
+        }
+
+        private void RemoveCardFromSet(CardDataSO cardData)
+        {
+            Debug.Log("Remove card: " + cardData.name);
+            _selectedCardSet.RemoveCardFromSet(cardData);
         }
     }
 }
