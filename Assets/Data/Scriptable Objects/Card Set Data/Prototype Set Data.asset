@@ -19,4 +19,7 @@ MonoBehaviour:
   _uncommonPercentage: 29
   _rarePercentage: 21
   _hyperRarePercentage: 12.5
-  _cardsInSet: []
+  _cardsInSet:
+  - {fileID: 11400000, guid: f1ae923bb2a41e14ba4dadbf2717d733, type: 2}
+  - {fileID: 11400000, guid: 7b7a674130f6f5f43bb75282ea451662, type: 2}
+  - {fileID: 11400000, guid: 69503412c386d4cda876710485088d76, type: 2}

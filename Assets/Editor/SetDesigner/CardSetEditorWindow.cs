@@ -124,8 +124,7 @@ namespace Editor.SetDesigner
 
                 if (cardData != null)
                 {
-                    // Check if the card is in the current set
-                    bool isInCurrentSet = _selectedCardSet.CardsInSet.Contains(cardData);
+                    bool isInCurrentSet = _selectedCardSet != null && _selectedCardSet.CardsInSet != null && _selectedCardSet.CardsInSet.Contains(cardData);
 
                     // Display the card data name with bold font if it is in the current set
                     GUIStyle labelStyle = isInCurrentSet
@@ -142,23 +141,27 @@ namespace Editor.SetDesigner
                     }
 
                     // Button to add card to current set
-                    EditorGUI.BeginDisabledGroup(isInCurrentSet);
+                    EditorGUI.BeginDisabledGroup(isInCurrentSet || _selectedCardSet == null);
                     if (GUILayout.Button("+", GUILayout.Width(50)))
                     {
-                        AddCardToSet(cardData);
+                        if (_selectedCardSet != null)
+                        {
+                            AddCardToSet(cardData);
+                        }
                     }
-
                     EditorGUI.EndDisabledGroup();
 
                     // Button to remove card from current set
-                    EditorGUI.BeginDisabledGroup(!isInCurrentSet);
+                    EditorGUI.BeginDisabledGroup(!isInCurrentSet || _selectedCardSet == null);
                     if (GUILayout.Button("-", GUILayout.Width(50)))
                     {
-                        Debug.Log("Remove card: " + cardData.name);
-                        _currentSet.Remove(cardData);
-                        // Handle remove card logic
+                        if (_selectedCardSet != null)
+                        {
+                            Debug.Log("Remove card: " + cardData.name);
+                            _currentSet.Remove(cardData);
+                            // Handle remove card logic
+                        }
                     }
-
                     EditorGUI.EndDisabledGroup();
                 }
 
