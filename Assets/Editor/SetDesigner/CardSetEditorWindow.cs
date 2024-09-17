@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Editor.CardData;
 using Editor.CardEditor;
 using Editor.Utilities;
@@ -9,6 +10,11 @@ namespace Editor.SetDesigner
     public class CardSetEditorWindow : EditorWindow, ICustomEditorWindow
     {
         public Rect MainAreaRect { get; set; }
+        private bool IsInEditMode { get; set; } = true;
+        private string[] _cardSetNames;
+        private int _selectedCardSetIndex = 0;
+        private CardSetData _selectedCardSet;
+        private HashSet<CardDataSO> _currentSet = new();
 
         [MenuItem("Tools/Set Editor")]
         public static void Init()
@@ -26,18 +32,79 @@ namespace Editor.SetDesigner
 
         private void SetUpAreaRects()
         {
-            MainAreaRect= new Rect(5,5,position.width - 10,position.height - 25);
+            MainAreaRect = new Rect(5, 100, position.width - 10, position.height - 25);
         }
 
         private void DrawMainArea()
         {
             DrawToolbar();
-            DrawCardListArea();
+            DrawSetSelectionArea();
+            if (IsInEditMode)
+            {
+                DrawCardListArea();
+            }
         }
 
         private void DrawToolbar()
         {
-            // Draw any toolbar UI elements here
+            GUILayout.BeginHorizontal(EditorStyles.toolbar);
+            if (GUILayout.Button("New Set", EditorStyles.toolbarButton))
+            {
+                Debug.Log("New Set");
+            }
+
+            if (GUILayout.Button("Save", EditorStyles.toolbarButton))
+            {
+                Debug.Log("Save");
+                SaveCurrentSet();
+            }
+
+            if (GUILayout.Button("Edit", EditorStyles.toolbarButton))
+            {
+                IsInEditMode = !IsInEditMode;
+                Debug.Log("Edit");
+            }
+
+            GUILayout.EndHorizontal();
+        }
+
+        private void SaveCurrentSet()
+        {
+            EditorUtility.SetDirty(_selectedCardSet);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        }
+
+        private void DrawSetSelectionArea()
+        {
+            // Find existing CardSetData assets
+            string[] cardSetAssets = AssetDatabase.FindAssets("t:CardSetData");
+
+            // Initialize or update the array of asset names
+            _cardSetNames = new string[cardSetAssets.Length];
+
+            for (int i = 0; i < cardSetAssets.Length; i++)
+            {
+                string path = AssetDatabase.GUIDToAssetPath(cardSetAssets[i]);
+                CardSetData cardSet = AssetDatabase.LoadAssetAtPath<CardSetData>(path);
+                _cardSetNames[i] = cardSet != null ? cardSet.name : "Unknown Asset";
+            }
+
+            // Display the dropdown list
+            _selectedCardSetIndex = EditorGUILayout.Popup("Select Card Set", _selectedCardSetIndex, _cardSetNames);
+
+            // Handle card set selection logic
+            if (GUILayout.Button("Select"))
+            {
+                string selectedPath = AssetDatabase.GUIDToAssetPath(cardSetAssets[_selectedCardSetIndex]);
+                _selectedCardSet = AssetDatabase.LoadAssetAtPath<CardSetData>(selectedPath);
+
+                if (_selectedCardSet != null)
+                {
+                    Debug.Log("Selected Card Set: " + _selectedCardSet.name);
+                    // Implement additional logic for when a card set is selected
+                }
+            }
         }
 
         private void DrawCardListArea()
@@ -57,8 +124,14 @@ namespace Editor.SetDesigner
 
                 if (cardData != null)
                 {
-                    // Display the card data name
-                    GUILayout.Label(cardData.name, GUILayout.Width(200));
+                    // Check if the card is in the current set
+                    bool isInCurrentSet = _selectedCardSet.CardsInSet.Contains(cardData);
+
+                    // Display the card data name with bold font if it is in the current set
+                    GUIStyle labelStyle = isInCurrentSet
+                        ? new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold }
+                        : GUI.skin.label;
+                    GUILayout.Label(cardData.name, labelStyle, GUILayout.Width(200));
 
                     // Button to edit the card
                     if (GUILayout.Button("Edit", GUILayout.Width(50)))
@@ -69,24 +142,36 @@ namespace Editor.SetDesigner
                     }
 
                     // Button to add card to current set
+                    EditorGUI.BeginDisabledGroup(isInCurrentSet);
                     if (GUILayout.Button("+", GUILayout.Width(50)))
                     {
-                        Debug.Log("Add card: " + cardData.name);
-                        // Handle add card logic
+                        AddCardToSet(cardData);
                     }
 
+                    EditorGUI.EndDisabledGroup();
+
                     // Button to remove card from current set
-                    if (GUILayout.Button("-", GUILayout.Width(70)))
+                    EditorGUI.BeginDisabledGroup(!isInCurrentSet);
+                    if (GUILayout.Button("-", GUILayout.Width(50)))
                     {
                         Debug.Log("Remove card: " + cardData.name);
+                        _currentSet.Remove(cardData);
                         // Handle remove card logic
                     }
+
+                    EditorGUI.EndDisabledGroup();
                 }
 
                 GUILayout.EndHorizontal();
             }
 
             GUILayout.EndArea();
+        }
+
+        private void AddCardToSet(CardDataSO cardData)
+        {
+            Debug.Log("Add card: " + cardData.name);
+            _selectedCardSet.AddCardToSet(cardData);
         }
     }
 }

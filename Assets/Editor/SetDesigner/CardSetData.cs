@@ -129,6 +129,7 @@ namespace Editor.SetDesigner
         public void AssignNumberToCard(CardDataSO cardData)
         {
             ErrorHandler.TryToGetCard(cardData);
+            cardData.CardNumber = CardsInSet.IndexOf(cardData);
             
         }
 
@@ -140,6 +141,7 @@ namespace Editor.SetDesigner
         public void AssignSetToCard(CardDataSO cardData)
         {
             ErrorHandler.TryToGetCard(cardData);
+            cardData.CardSetName = _cardSetName;
         }
 
         public void UnassignSetFromCard(CardDataSO cardData)
