@@ -4,6 +4,7 @@ using Editor.CardEditor;
 using Editor.Utilities;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Editor.SetDesigner
 {
@@ -128,9 +129,16 @@ namespace Editor.SetDesigner
 
                     // Display the card data name with bold font if it is in the current set
                     GUIStyle labelStyle = isInCurrentSet
-                        ? new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold }
+                        ? new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold, normal = new GUIStyleState { textColor = _selectedCardSet.isSetLabelColor } }
                         : GUI.skin.label;
                     GUILayout.Label(cardData.name, labelStyle, GUILayout.Width(200));
+                    
+                    if (GUILayout.Button("View", GUILayout.Width(50)))
+                    {
+                        Debug.Log("View card: " + cardData.name);
+                        EditorGUIUtility.PingObject(cardData);
+                        Selection.activeObject = cardData;
+                    }
 
                     // Button to edit the card
                     if (GUILayout.Button("Edit", GUILayout.Width(50)))
@@ -168,6 +176,7 @@ namespace Editor.SetDesigner
 
             GUILayout.EndArea();
         }
+
 
         private void AddCardToSet(CardDataSO cardData)
         {

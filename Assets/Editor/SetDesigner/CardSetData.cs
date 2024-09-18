@@ -8,6 +8,7 @@ namespace Editor.SetDesigner
     [CreateAssetMenu(fileName = "Card Set Data", menuName = "Card Set", order = 0)]
     public class CardSetData : ScriptableObject
     {
+        public Color isSetLabelColor;
         [SerializeField] private CardSetType _cardSetType;
         [SerializeField] private string _cardSetName;
         [SerializeField] private int _numberOfCards;
@@ -22,9 +23,8 @@ namespace Editor.SetDesigner
         private List<CardDataSO> _hyperRareCardsInSet;
         private List<CardDataSO> _promoCardsInSet;
         private List<CardDataSO> _kickStarterCardsInSet;
-        
 
-        public CardSetType CardSetType
+       public CardSetType CardSetType
         {
             get { return _cardSetType; }
             set { _cardSetType = value; }
