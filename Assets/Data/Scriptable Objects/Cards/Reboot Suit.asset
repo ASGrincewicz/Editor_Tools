@@ -38,8 +38,8 @@ MonoBehaviour:
     abilityType: 0
   _cardText: 'Equip to Nova Solaris.
 
-    Search your Deck for any upgrade with ''Phase''
-    in the title and place on top of your deck.'
+    Once per game: Search your Deck for any
+    upgrade with ''Phase'' in the title and place on top of your deck.'
   _attack:
     _statName: 0
     _statValue: 0

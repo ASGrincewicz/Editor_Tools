@@ -246,11 +246,24 @@ namespace Editor.CardEditor
                     SelectedKeywordsIndex[i] = 0;
                 }
 
-                SelectedKeywordsIndex[i] = EditorGUILayout.Popup(
-                    SelectedKeywordsIndex[i],
-                    KeywordNamesList.ToArray(),
-                    GUILayout.Width(FIELD_WIDTH / 3)
-                );
+                if (SelectedKeywordsIndex != null && KeywordNamesList != null && KeywordNamesList.Count > 0)
+                {
+                    SelectedKeywordsIndex[i] = EditorGUILayout.Popup(
+                        SelectedKeywordsIndex[i],
+                        KeywordNamesList.ToArray(),
+                        GUILayout.Width(FIELD_WIDTH / 3)
+                    );
+                }
+                else
+                {
+                    // Handle the case where there are no keywords or the lists are null
+                    SelectedKeywordsIndex[i] = 0;
+                    EditorGUILayout.Popup(
+                        0,
+                        new string[] { "No Keywords Available" },
+                        GUILayout.Width(FIELD_WIDTH / 3)
+                    );
+                }
                 
                 if (SelectedKeywordsIndex[i] < 0 || SelectedKeywordsIndex[i] >= KeywordNamesList.Count)
                 {

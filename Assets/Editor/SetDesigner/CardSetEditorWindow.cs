@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Editor.CardData;
 using Editor.CardEditor;
 using Editor.Utilities;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -16,12 +17,13 @@ namespace Editor.SetDesigner
         private int _selectedCardSetIndex = 0;
         private CardSetData _selectedCardSet;
         private HashSet<CardDataSO> _currentSet = new();
+        private Vector2 _cardSetScrollPosition;
 
         [MenuItem("Tools/Set Editor")]
         public static void Init()
         {
             EditorWindow window = GetWindow<CardSetEditorWindow>("Card Set Editor");
-            window.position = new Rect(50f, 50f, 600f, 650f);
+            window.position = new Rect(50f, 50f, 600f, 500f);
             window.Show();
         }
 
@@ -33,7 +35,7 @@ namespace Editor.SetDesigner
 
         private void SetUpAreaRects()
         {
-            MainAreaRect = new Rect(5, 100, position.width - 10, position.height - 25);
+            MainAreaRect = new Rect(5, 100, position.width - 10, position.height);
         }
 
         private void DrawMainArea()
@@ -111,7 +113,10 @@ namespace Editor.SetDesigner
         private void DrawCardListArea()
         {
             GUILayout.BeginArea(MainAreaRect);
-
+           
+            _cardSetScrollPosition = GUILayout.BeginScrollView(_cardSetScrollPosition, GUILayout.Height(MainAreaRect.height * 0.8f));
+            GUILayout.BeginVertical(GUILayout.Height(MainAreaRect.height), GUILayout.ExpandHeight(true));
+            GUILayout.Label($"Total Cards: {_selectedCardSet.CardsInSet.Count } of {_selectedCardSet.NumberOfCards}\n", EditorStyles.boldLabel);
             // Get all CardDataSO assets
             string[] cardDataAssets = AssetDatabase.FindAssets("t:CardDataSO");
 
@@ -173,7 +178,8 @@ namespace Editor.SetDesigner
 
                 GUILayout.EndHorizontal();
             }
-
+            GUILayout.EndVertical();
+            GUILayout.EndScrollView();
             GUILayout.EndArea();
         }
 
