@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Editor.CardData;
 using Editor.Utilities;
+using UnityEditor;
 using UnityEngine;
 
 namespace Editor.SetDesigner
@@ -44,7 +45,14 @@ namespace Editor.SetDesigner
 
         public int NumberOfCards
         {
-            get{return _numberOfCards;}
+            get
+            {
+                if (CardSetType == CardSetType.None)
+                {
+                    _numberOfCards = AssetDatabase.FindAssets("t:CardDataSO").Length;
+                }
+                return _numberOfCards;
+            }
             set
             {
                 if (value > 0)
