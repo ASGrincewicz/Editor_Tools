@@ -126,13 +126,11 @@ namespace Editor.SetDesigner
             _cardSetScrollPosition = GUILayout.BeginScrollView(_cardSetScrollPosition, GUILayout.Height(MainAreaRect.height * 0.8f));
             GUILayout.BeginVertical(GUILayout.Height(MainAreaRect.height), GUILayout.ExpandHeight(true));
             DrawTotalCardsLabel();
-            GetAllCardAssetsFromGUID();
+           _cardAssetGUIDs = CardDataAssetUtility.CardAssetGUIDs;
 
             foreach (string guid in _cardAssetGUIDs)
             {
-                // Load the asset
-                string path = AssetDatabase.GUIDToAssetPath(guid);
-                CardDataSO cardData = AssetDatabase.LoadAssetAtPath<CardDataSO>(path);
+                CardDataSO cardData = CardDataAssetUtility.LoadCardDataByGuid(guid);
 
                 GUILayout.BeginHorizontal();
 
@@ -189,11 +187,6 @@ namespace Editor.SetDesigner
             GUILayout.EndVertical();
             GUILayout.EndScrollView();
             GUILayout.EndArea();
-        }
-
-        private void GetAllCardAssetsFromGUID()
-        {
-            _cardAssetGUIDs = AssetDatabase.FindAssets("t:CardDataSO");
         }
 
         private void DrawTotalCardsLabel()
