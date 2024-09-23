@@ -19,27 +19,11 @@ namespace Editor.CardEditor
         [SerializeField] private KeywordManager _keywordManager;
         // Constants
         private const string ASSET_PATH = "Assets/Data/Scriptable Objects/Cards/";
-
-        private const string ALLY_WEIGHT_ASSET_PATH =
-            "Assets/Data/Scriptable Objects/Card Stats/Weight Data/Ally_Weights.asset";
-
-        private const string BOSS_WEIGHT_ASSET_PATH =
-            "Assets/Data/Scriptable Objects/Card Stats/Weight Data/Boss_Weights.asset";
-
-        private const string CREATURE_WEIGHT_ASSET_PATH =
-            "Assets/Data/Scriptable Objects/Card Stats/Weight Data/Creature_Weights.asset";
-        private const string ENVIRONMENT_WEIGHT_ASSET_PATH = "Assets/Data/Scriptable Objects/Card Stats/Weight Data/Environment_Weights.asset";
-        private const string GEAR_WEIGHT_ASSET_PATH = "Assets/Data/Scriptable Objects/Card Stats/Weight Data/Gear_Weights.asset";
-        private const string HUNTER_WEIGHT_ASSET_PATH = "Assets/Data/Scriptable Objects/Card Stats/Weight Data/Hunter_Weights.asset";
-
-        private const string KEYWORD_ONLY_WEIGHT_ASSET_PATH =
-            "Assets/Data/Scriptable Objects/Card Stats/Weight Data/Keyword-Only_Weights.asset";
-        private const string ASSET_FILTER = "t:CardSO";
+        
         private const float FIELD_WIDTH = 400;
         
         // Class variables
-        private List<CardDataSO> AllCards { get; } = new();
-        private Dictionary<CardDataSO, bool> SelectedCards { get; } = new();
+        private List<CardDataSO> AllCards { get; set;}
         private CardDataSO CardToEdit { get; set; }
         
         // Method specific variables
@@ -96,20 +80,7 @@ namespace Editor.CardEditor
         
         private void OnEnable()
         {
-            string[] guids = AssetDatabase.FindAssets(ASSET_FILTER, new[] { ASSET_PATH });
-            foreach (string guid in guids)
-            {
-                string assetPath = AssetDatabase.GUIDToAssetPath(guid);
-                CardDataSO card = AssetDatabase.LoadAssetAtPath<CardDataSO>(assetPath);
-                if (card != null)
-                {
-                    if (!AllCards.Contains(card))
-                    {
-                        AllCards.Add(card);
-                    }
-                    SelectedCards[card] = false;
-                }
-            }
+            AllCards = CardDataAssetUtility.AllCardData;
             RefreshKeywordsList();
             
             CardTextStringBuilder = new StringBuilder();
@@ -324,23 +295,6 @@ namespace Editor.CardEditor
             }
         }
         
-        private void EditSelectedCard()
-        {
-            KeyValuePair<CardDataSO, bool> cardToModify = new();
-            foreach (KeyValuePair<CardDataSO, bool> entry in SelectedCards)
-            {
-                if (entry.Value)
-                {
-                    cardToModify = entry;
-                }
-            }
-            
-            SetSelectedCard(cardToModify.Key, cardToModify.Value);
-            CardToEdit = cardToModify.Key;
-            LoadCardFromFile();
-            CardTextStringBuilder.Clear();
-        }
-        
         private void RefreshKeywordsList()
         {
             KeywordsList = new List<Keyword>();
@@ -366,7 +320,7 @@ namespace Editor.CardEditor
             UnloadCard();
             if (!ReferenceEquals(CardToEdit, null))
             {
-                SetSelectedCard(CardToEdit, true);
+              SelectedCard = CardToEdit;
             }
             else
             {
@@ -374,8 +328,7 @@ namespace Editor.CardEditor
                 if (path.StartsWith(Application.dataPath))
                 {
                     path = "Assets" + path[Application.dataPath.Length..];
-                    SetSelectedCard(AssetDatabase.LoadAssetAtPath<CardDataSO>(path), true);
-                    CardToEdit = SelectedCard;
+                    CardToEdit = AssetDatabase.LoadAssetAtPath<CardDataSO>(path);
                 }
             }
             
@@ -485,22 +438,12 @@ namespace Editor.CardEditor
             }
         }
         
-        private void SetSelectedCard(CardDataSO card, bool isSelected)
-        {
-            if (!ReferenceEquals(card, null))
-            {
-                SelectedCard = card;
-                //SelectedCards[card] = isSelected;
-            }
-        }
-
-        
         private void SaveExistingCard()
         {
             Undo.RecordObject(SelectedCard, "Edited Card");
             if (InitializeCard(SelectedCard))
             {
-                SetWeightData(SelectedCard);
+                WeightDataAssetUtility.SetWeightData(SelectedCard);
                 EditorUtility.SetDirty(SelectedCard);
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
@@ -515,7 +458,7 @@ namespace Editor.CardEditor
             }
             InitializeCommonCardData(card);
             AssignStatsToCard(card);
-            SetWeightData(card);
+            WeightDataAssetUtility.SetWeightData(card);
             
             return true;
         }
@@ -559,30 +502,6 @@ namespace Editor.CardEditor
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-        }
-        private void SetWeightData(CardDataSO card)
-        {
-            WeightContainer weights = GetWeightContainer(CardTypes);
-            if (ReferenceEquals(card.WeightData, null))
-            {
-                Debug.LogError($"{nameof(card.WeightData)} is null.");
-            }
-            card.WeightData = weights;
-        }
-        
-        private WeightContainer GetWeightContainer(CardTypes cardType)
-        {
-            return cardType switch
-            {
-                CardTypes.Character_Ally => AssetDatabase.LoadAssetAtPath<WeightContainer>(ALLY_WEIGHT_ASSET_PATH),
-                CardTypes.Environment => AssetDatabase.LoadAssetAtPath<WeightContainer>(ENVIRONMENT_WEIGHT_ASSET_PATH),
-                CardTypes.Creature => AssetDatabase.LoadAssetAtPath<WeightContainer>(CREATURE_WEIGHT_ASSET_PATH),
-                CardTypes.Boss => AssetDatabase.LoadAssetAtPath<WeightContainer>(BOSS_WEIGHT_ASSET_PATH),
-                CardTypes.Character_Hunter => AssetDatabase.LoadAssetAtPath<WeightContainer>(HUNTER_WEIGHT_ASSET_PATH),
-                CardTypes.Gear_Equipment=> AssetDatabase.LoadAssetAtPath<WeightContainer>(GEAR_WEIGHT_ASSET_PATH),
-                CardTypes.Gear_Upgrade => AssetDatabase.LoadAssetAtPath<WeightContainer>(GEAR_WEIGHT_ASSET_PATH),
-                _ => AssetDatabase.LoadAssetAtPath<WeightContainer>(KEYWORD_ONLY_WEIGHT_ASSET_PATH)
-            };
         }
     }
 }

@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a2e326c1dc347658f66447ba86ba60e, type: 3}
   m_Name: All Cards
   m_EditorClassIdentifier: 
-  isSetLabelColor: {r: 0, g: 0, b: 0, a: 0}
+  isSetLabelColor: {r: 0.9716981, g: 0.86627805, b: 0.86627805, a: 1}
   _cardSetType: 0
-  _cardSetName: 
-  _numberOfCards: 0
+  _cardSetName: All Cards
+  _numberOfCards: 21
   _commonPercentage: 0
   _uncommonPercentage: 0
   _rarePercentage: 0

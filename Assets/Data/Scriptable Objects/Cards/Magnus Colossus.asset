@@ -13,9 +13,32 @@ MonoBehaviour:
   m_Name: Magnus Colossus
   m_EditorClassIdentifier: 
   _weightData: {fileID: 11400000, guid: 32fd2d69de8ff43ce9976f51c89fdd94, type: 2}
+  _cardSetName: None
+  _cardNumber: 0
+  _rarity: 3
+  _cost: 12
   _cardType: 4
   _cardName: Magnus Colossus
   _artWork: {fileID: 2800000, guid: 143d0e4f2ca6b894d8845b3b42e4c57a, type: 3}
+  _keywords:
+  - keywordName: Barrage
+    keywordValue: 1
+    definition: "Attack X Targets this turn.\nYou must roll X or higher for \neach
+      attack to succeed."
+    abilityType: 3
+  - keywordName: Vanguard
+    keywordValue: 9
+    definition: Activate this ability to redirect a successful enemy attack on an
+      ally towards this card.
+    abilityType: 5
+  - keywordName: Kinetic
+    keywordValue: 8
+    definition: "Activate this ability to redirect all \nsuccessful ally attacks
+      towards this card. \nThis card has +5 Attack for each redirected attack.  If
+      this card's attack fails, each redirecting ally takes 5 damage.  "
+    abilityType: 1
+  _cardText: You may skip the draw phase to deal 5 damage to any target in the melee
+    row.
   _attack:
     _statName: 0
     _statValue: 15
@@ -40,24 +63,3 @@ MonoBehaviour:
     _statName: 5
     _statValue: 1
     _statDescription: Amount of Upgrades that can be equipped.
-  _keywords:
-  - keywordName: Barrage
-    keywordValue: 1
-    definition: "Attack X Targets this turn.\nYou must roll X or higher for \neach
-      attack to succeed."
-    abilityType: 3
-  - keywordName: Vanguard
-    keywordValue: 9
-    definition: Activate this ability to redirect a successful enemy attack on an
-      ally towards this card.
-    abilityType: 5
-  - keywordName: Kinetic
-    keywordValue: 8
-    definition: "Activate this ability to redirect all \nsuccessful ally attacks
-      towards this card. \nThis card has +5 Attack for each redirected attack.  If
-      this card's attack fails, each redirecting ally takes 5 damage.  "
-    abilityType: 1
-  _cardText: You may skip the draw phase to deal 5 damage to any target in the melee
-    row.
-  _cost: 12
-  _rarity: 3
