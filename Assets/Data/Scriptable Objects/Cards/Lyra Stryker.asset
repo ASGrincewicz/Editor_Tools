@@ -37,7 +37,7 @@ MonoBehaviour:
   _cardText: 
   _attack:
     _statName: 0
-    _statValue: 15
+    _statValue: 10
     _statDescription: Amount of damage dealt.
   _explore:
     _statName: 0

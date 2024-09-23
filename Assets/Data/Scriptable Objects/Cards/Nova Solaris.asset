@@ -33,7 +33,7 @@ MonoBehaviour:
     keywordValue: 0
     definition: 
     abilityType: 0
-  _cardText: 
+  _cardText: Main character.
   _attack:
     _statName: 0
     _statValue: 30

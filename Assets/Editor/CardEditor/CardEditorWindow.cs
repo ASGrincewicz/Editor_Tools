@@ -1,13 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using Editor.AttributesWeights;
 using Editor.CardData;
 using Editor.CostCalculator;
 using Editor.KeywordSystem;
 using Editor.Utilities;
-using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
 using static Editor.CardData.StatDataReference;
@@ -16,44 +12,8 @@ namespace Editor.CardEditor
 {
     public class CardEditorWindow : EditorWindow
     {
-        [SerializeField] private KeywordManager _keywordManager;
         // Constants
-        private const string ASSET_PATH = "Assets/Data/Scriptable Objects/Cards/";
-        
         private const float FIELD_WIDTH = 400;
-        
-        // Class variables
-        private List<CardDataSO> AllCards { get; set;}
-        private CardDataSO CardToEdit { get; set; }
-        
-        // Method specific variables
-        private StringBuilder CardTextStringBuilder { get; set; }
-        private CardTypes CardTypes { get; set; }
-        private CardRarity CardRarity { get; set; }
-        private string CardName { get; set; }
-        [CanBeNull] private Texture2D Artwork { get; set; }
-
-        private CardStat? AttackStat { get; set; }
-        private int _attackValue;
-        private CardStat? ExploreStat { get; set; }
-        private int _exploreValue;
-        private CardStat? FocusStat { get; set; }
-        private int _focusValue;
-        private CardStat? HitPointsStat{get; set; }
-        private int _hitPointsValue;
-        private CardStat? SpeedStat{get; set; }
-        private int _speedValue;
-        private CardStat? UpgradeSlotsStat { get; set; }
-        private int _upgradeSlotsValue;
-
-        private List<Keyword> KeywordsList { get; set; }
-        private List<string> KeywordNamesList { get; set; }
-        private Keyword[] SelectedKeywords { get; set; }
-        private int[] SelectedKeywordsIndex { get; set; }
-        private string CardText { get; set; }
-        private int CardCost { get; set; }
-        [CanBeNull] private CardDataSO SelectedCard { get; set; }
-        
         
         // GUI variables
         private Vector2 ScrollPosition { get; set; }
@@ -76,16 +36,11 @@ namespace Editor.CardEditor
             EditorWindow window = GetWindow<CardEditorWindow>("Card Editor");
             window.position = new Rect(50f, 50f, 600f, 650f);
             window.Show();
+            CardDataAssetUtility.CardTextStringBuilder = new StringBuilder();
+            CardDataAssetUtility.LoadKeywordManagerAsset();
+            CardDataAssetUtility.RefreshKeywordsList();
         }
-        
-        private void OnEnable()
-        {
-            AllCards = CardDataAssetUtility.AllCardData;
-            RefreshKeywordsList();
-            
-            CardTextStringBuilder = new StringBuilder();
-        }
-
+       
         private void OnGUI()
         {
             SetupAreaRects();
@@ -95,8 +50,8 @@ namespace Editor.CardEditor
         public void OpenCardInEditor(CardDataSO card)
         {
             Init();
-            CardToEdit = card;
-            LoadCardFromFile();
+            CardDataAssetUtility.CardToEdit = card;
+            CardDataAssetUtility.LoadCardFromFile();
         }
 
         private void SetupAreaRects()
@@ -120,17 +75,17 @@ namespace Editor.CardEditor
         private void DrawEditableFields()
         {
             EditorGUIUtility.labelWidth = 100;
-            CardToEdit = EditorGUILayout.ObjectField("Card To Edit",CardToEdit, typeof(CardDataSO),false) as CardDataSO;
-            GUILayout.Label(!ReferenceEquals(SelectedCard, null) ? "Select Card Type" : "Create New Card",
+            CardDataAssetUtility.CardToEdit = EditorGUILayout.ObjectField("Card To Edit",CardDataAssetUtility.CardToEdit, typeof(CardDataSO),false) as CardDataSO;
+            GUILayout.Label(!ReferenceEquals(CardDataAssetUtility.SelectedCard, null) ? "Select Card Type" : "Create New Card",
                 EditorStyles.boldLabel);
-            CardTypes = (CardTypes)EditorGUILayout.EnumPopup("Card Type",CardTypes, GUILayout.Width(FIELD_WIDTH));
+            CardDataAssetUtility.CardTypes = (CardTypes)EditorGUILayout.EnumPopup("Card Type",CardDataAssetUtility.CardTypes, GUILayout.Width(FIELD_WIDTH));
            
-            CardName = EditorGUILayout.TextField("Card Name", CardName, GUILayout.Width(FIELD_WIDTH));
-            CardRarity = (CardRarity)EditorGUILayout.EnumPopup("Card Rarity",CardRarity,GUILayout.Width(FIELD_WIDTH));
-            Artwork = (Texture2D)EditorGUILayout.ObjectField("Artwork", Artwork, typeof(Texture2D), false,
+            CardDataAssetUtility.CardName = EditorGUILayout.TextField("Card Name", CardDataAssetUtility.CardName, GUILayout.Width(FIELD_WIDTH));
+            CardDataAssetUtility.CardRarity = (CardRarity)EditorGUILayout.EnumPopup("Card Rarity",CardDataAssetUtility.CardRarity,GUILayout.Width(FIELD_WIDTH));
+            CardDataAssetUtility.Artwork = (Texture2D)EditorGUILayout.ObjectField("Artwork", CardDataAssetUtility.Artwork, typeof(Texture2D), false,
                 GUILayout.Height(200), GUILayout.Width(FIELD_WIDTH));
 
-            switch (CardTypes)
+            switch (CardDataAssetUtility.CardTypes)
             {
                 case CardTypes.TBD:
                 case CardTypes.Starship:
@@ -138,7 +93,7 @@ namespace Editor.CardEditor
                 case CardTypes.Action:
                     break;
                 case CardTypes.Environment:
-                    DrawStatLayout(StatNames.Explore, ref _exploreValue, EXPLORE_DESCRIPTION);
+                    DrawStatLayout(StatNames.Explore, ref CardDataAssetUtility.exploreValue, EXPLORE_DESCRIPTION);
                     break;
                 case CardTypes.Gear_Equipment:
                 case CardTypes.Gear_Upgrade:
@@ -146,20 +101,20 @@ namespace Editor.CardEditor
                 case CardTypes.Character_Hunter:
                 case CardTypes.Creature:
                 case CardTypes.Boss:
-                    DrawStatLayout(StatNames.Attack, ref _attackValue, ATTACK_DESCRIPTION);
-                    DrawStatLayout(StatNames.HP, ref _hitPointsValue, HIT_POINTS_DESCRIPTION);
-                    DrawStatLayout(StatNames.Speed, ref _speedValue, SPEED_DESCRIPTION);
-                    DrawStatLayout(StatNames.Focus, ref _focusValue, FOCUS_DESCRIPTION);
-                    if (CardTypes == CardTypes.Character_Hunter) DrawStatLayout(StatNames.Upgrades, ref _upgradeSlotsValue, UPGRADE_SLOTS_DESCRIPTION);
+                    DrawStatLayout(StatNames.Attack, ref CardDataAssetUtility.attackValue, ATTACK_DESCRIPTION);
+                    DrawStatLayout(StatNames.HP, ref CardDataAssetUtility.hitPointsValue, HIT_POINTS_DESCRIPTION);
+                    DrawStatLayout(StatNames.Speed, ref CardDataAssetUtility.speedValue, SPEED_DESCRIPTION);
+                    DrawStatLayout(StatNames.Focus, ref CardDataAssetUtility.focusValue, FOCUS_DESCRIPTION);
+                    if (CardDataAssetUtility.CardTypes == CardTypes.Character_Hunter) DrawStatLayout(StatNames.Upgrades, ref CardDataAssetUtility.upgradeSlotsValue, UPGRADE_SLOTS_DESCRIPTION);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
           
             DrawKeywordArea();
-            GUILayout.Label($"Card Cost: {CardCost}"); ;
+            GUILayout.Label($"Card Cost: {CardDataAssetUtility.CardCost}"); ;
             GUILayout.Label("Card Text");
-            CardText = EditorGUILayout.TextArea(CardText, GUILayout.Height(100), GUILayout.Width(FIELD_WIDTH));
+            CardDataAssetUtility.CardText = EditorGUILayout.TextArea(CardDataAssetUtility.CardText, GUILayout.Height(100), GUILayout.Width(FIELD_WIDTH));
         }
         
         
@@ -198,37 +153,37 @@ namespace Editor.CardEditor
             GUILayout.BeginHorizontal(GUILayout.Width(FIELD_WIDTH));
             EditorGUIUtility.labelWidth = 100;
             GUILayout.Label("Keywords");
-            if (SelectedKeywords is not { Length: 3 })
+            if (CardDataAssetUtility.SelectedKeywords is not { Length: 3 })
             {
-                SelectedKeywords = new Keyword[3];
-                SelectedKeywordsIndex = new int[3]; // Initialize the index array only once.
+                CardDataAssetUtility.SelectedKeywords = new Keyword[3];
+                CardDataAssetUtility.SelectedKeywordsIndex = new int[3]; // Initialize the index array only once.
             }
 
-            for (int i = 0; i < SelectedKeywords.Length; i++)
+            for (int i = 0; i < CardDataAssetUtility.SelectedKeywords.Length; i++)
             {
-                if (SelectedKeywordsIndex.Length <= i)
+                if (CardDataAssetUtility.SelectedKeywordsIndex.Length <= i)
                 {
                     Debug.LogError($"Index {i} is out of range for _selectedKeywordsIndex");
                     continue;
                 }
                 
-                if (SelectedKeywordsIndex[i] == -1)
+                if (CardDataAssetUtility.SelectedKeywordsIndex[i] == -1)
                 {
-                    SelectedKeywordsIndex[i] = 0;
+                    CardDataAssetUtility.SelectedKeywordsIndex[i] = 0;
                 }
 
-                if (SelectedKeywordsIndex != null && KeywordNamesList != null && KeywordNamesList.Count > 0)
+                if (CardDataAssetUtility.SelectedKeywordsIndex != null && CardDataAssetUtility.KeywordNamesList != null && CardDataAssetUtility.KeywordNamesList.Count > 0)
                 {
-                    SelectedKeywordsIndex[i] = EditorGUILayout.Popup(
-                        SelectedKeywordsIndex[i],
-                        KeywordNamesList.ToArray(),
+                    CardDataAssetUtility.SelectedKeywordsIndex[i] = EditorGUILayout.Popup(
+                        CardDataAssetUtility.SelectedKeywordsIndex[i],
+                        CardDataAssetUtility.KeywordNamesList.ToArray(),
                         GUILayout.Width(FIELD_WIDTH / 3)
                     );
                 }
                 else
                 {
                     // Handle the case where there are no keywords or the lists are null
-                    SelectedKeywordsIndex[i] = 0;
+                    CardDataAssetUtility.SelectedKeywordsIndex[i] = 0;
                     EditorGUILayout.Popup(
                         0,
                         new string[] { "No Keywords Available" },
@@ -236,17 +191,17 @@ namespace Editor.CardEditor
                     );
                 }
                 
-                if (SelectedKeywordsIndex[i] < 0 || SelectedKeywordsIndex[i] >= KeywordNamesList.Count)
+                if (CardDataAssetUtility.SelectedKeywordsIndex[i] < 0 || CardDataAssetUtility.SelectedKeywordsIndex[i] >= CardDataAssetUtility.KeywordNamesList.Count)
                 {
-                    Debug.LogError($"Index {SelectedKeywordsIndex[i]} is out of range for _keywordNamesList with count {KeywordNamesList.Count}");
+                    Debug.LogError($"Index {CardDataAssetUtility.SelectedKeywordsIndex[i]} is out of range for _keywordNamesList with count {CardDataAssetUtility.KeywordNamesList.Count}");
                     continue;
                 }
 
                 // Use Find method to assign Keyword to _selectedKeywords
-                if (KeywordNamesList.Count > 0)
+                if (CardDataAssetUtility.KeywordNamesList.Count > 0)
                 {
-                    string selectedKeywordName = KeywordNamesList[SelectedKeywordsIndex[i]];
-                    SelectedKeywords[i] = _keywordManager.GetKeywordByName(selectedKeywordName);
+                    string selectedKeywordName = CardDataAssetUtility.KeywordNamesList[CardDataAssetUtility.SelectedKeywordsIndex[i]];
+                    CardDataAssetUtility.SelectedKeywords[i] = CardDataAssetUtility.keywordManager.GetKeywordByName(selectedKeywordName);
                 }
             }
             GUILayout.EndHorizontal();
@@ -256,251 +211,25 @@ namespace Editor.CardEditor
         {
             if (IsCreateCardButtonPressed)
             {
-                CreateNewCard();
+                CardDataAssetUtility.CreateNewCard();
             }
             if (IsLoadCardButtonPressed)
             {
-                LoadCardFromFile();
+                CardDataAssetUtility.LoadCardFromFile();
             }
             if (IsSaveCardButtonPressed)
             {
-                SaveExistingCard();
+                CardDataAssetUtility.SaveExistingCard();
             }
-            if(IsUnloadCardButtonPressed && !ReferenceEquals(SelectedCard, null))
+            if(IsUnloadCardButtonPressed && !ReferenceEquals(CardDataAssetUtility.SelectedCard, null))
             {
-                UnloadCard();
+                CardDataAssetUtility.UnloadCard();
             }
 
-            if (IsCalculateCostButtonPressed && !ReferenceEquals(SelectedCard, null))
+            if (IsCalculateCostButtonPressed && !ReferenceEquals(CardDataAssetUtility.SelectedCard, null))
             {
                 CostCalculatorWindow instance = EditorWindow.GetWindow<CostCalculatorWindow>();
-                instance.OpenInCostCalculatorWindow(SelectedCard);
-            }
-        }
-
-        private void CreateNewCard()
-        {
-            CardDataSO newCard = CreateInstance<CardDataSO>();
-            if (InitializeCard(newCard))
-            {
-                AssetDatabase.CreateAsset(newCard, $"{ASSET_PATH}{CardName}.asset");
-                AssetDatabase.SaveAssets();
-                EditorUtility.FocusProjectWindow();
-                Selection.activeObject = newCard;
-                CardToEdit = newCard;
-            }
-            else
-            {
-                Debug.Log("Initialization Failed: Card is null.");
-            }
-        }
-        
-        private void RefreshKeywordsList()
-        {
-            KeywordsList = new List<Keyword>();
-            foreach (Keyword keyword in _keywordManager.keywordList)
-            {
-                if (!keyword.IsDefault())
-                {
-                    KeywordsList.Add(keyword);
-                }
-            }
-            KeywordNamesList = new List<string>();
-            foreach (Keyword keyword in KeywordsList.ToList())
-            {
-                if (!keyword.IsDefault())
-                {
-                    KeywordNamesList.Add(keyword.keywordName);
-                }
-            }
-        }
-        
-        private void LoadCardFromFile()
-        {
-            UnloadCard();
-            if (!ReferenceEquals(CardToEdit, null))
-            {
-              SelectedCard = CardToEdit;
-            }
-            else
-            {
-                string path = EditorUtility.OpenFilePanel("Select Card", ASSET_PATH, "asset");
-                if (path.StartsWith(Application.dataPath))
-                {
-                    path = "Assets" + path[Application.dataPath.Length..];
-                    CardToEdit = AssetDatabase.LoadAssetAtPath<CardDataSO>(path);
-                }
-            }
-            
-            if (!ReferenceEquals(SelectedCard, null))
-            {
-                LoadCommonCardData();
-                UpdateSelectedKeywordsIndices();
-                CardText += CardTextStringBuilder.Append(SelectedCard.CardText);
-                GetStatsFromLoadedCard();
-               
-                CardTextStringBuilder.Clear();;
-            }
-        }
-
-        private void LoadCommonCardData()
-        {
-            CardTypes = SelectedCard.CardType;
-            CardName = SelectedCard.CardName;
-            CardRarity = SelectedCard.Rarity;
-            Artwork = SelectedCard.ArtWork;
-            CardCost = SelectedCard.CardCost;
-        }
-        
-        private void UpdateSelectedKeywordsIndices()
-        {
-            if (SelectedCard?.Keywords == null)
-            {
-                Debug.LogError("Selected card or its keywords are null");
-                return;
-            }
-
-            SelectedKeywords = SelectedCard.Keywords;
-
-            // Ensure _selectedKeywordsIndex has the correct size
-            if (SelectedKeywordsIndex == null || SelectedKeywordsIndex.Length != SelectedKeywords.Length)
-            {
-                SelectedKeywordsIndex = new int[SelectedKeywords.Length];
-            }
-
-            // Populate the indices for the selected keywords
-            for (int i = 0; i < SelectedKeywords.Length; i++)
-            {
-                if (KeywordNamesList != null)
-                {
-                    SelectedKeywordsIndex[i] = KeywordNamesList.IndexOf(SelectedKeywords[i].keywordName);
-                }
-                else
-                {
-                    Debug.LogError("Keyword names list is null");
-                    SelectedKeywordsIndex[i] = -1; // or another default/failure value
-                }
-            }
-        }
-        
-        private void GetStatsFromLoadedCard()
-        {
-            switch (CardTypes)
-            {
-                case CardTypes.TBD:
-                case CardTypes.Starship:
-                case CardTypes.Action:
-                    break;
-                case CardTypes.Environment:
-                    ExploreStat = SelectedCard.Explore;
-                    _exploreValue = SelectedCard.Explore.StatValue;
-                    break;
-                case CardTypes.Gear_Equipment:
-                case CardTypes.Gear_Upgrade:
-                case CardTypes.Character_Ally:
-                case CardTypes.Character_Hunter:
-                case CardTypes.Boss:
-                case CardTypes.Creature:
-                    AttackStat = SelectedCard.Attack;
-                    _attackValue = SelectedCard.Attack.StatValue;
-                    HitPointsStat = SelectedCard.HitPoints;
-                    _hitPointsValue = SelectedCard.HitPoints.StatValue;
-                    SpeedStat = SelectedCard.Speed;
-                    _speedValue = SelectedCard.Speed.StatValue;
-                    FocusStat = SelectedCard.Focus;
-                    _focusValue = SelectedCard.Focus.StatValue;
-                    if (CardTypes == CardTypes.Character_Hunter)
-                    {
-                        UpgradeSlotsStat = SelectedCard.UpgradeSlots;
-                        _upgradeSlotsValue = SelectedCard.UpgradeSlots.StatValue;
-                    }
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            } 
-        }
-        private void UnloadCard()
-        {
-            if (!ReferenceEquals(SelectedCard, null))
-            {
-                CardTypes = CardTypes.TBD;
-                CardName = string.Empty;
-                CardRarity = CardRarity.None;
-                CardText = string.Empty;
-                AttackStat = null;
-                HitPointsStat = null;
-                SpeedStat = null;
-                FocusStat = null;
-                ExploreStat = null;
-                UpgradeSlotsStat = null;
-                SelectedKeywords = null;
-                Artwork = null;
-            }
-        }
-        
-        private void SaveExistingCard()
-        {
-            Undo.RecordObject(SelectedCard, "Edited Card");
-            if (InitializeCard(SelectedCard))
-            {
-                WeightDataAssetUtility.SetWeightData(SelectedCard);
-                EditorUtility.SetDirty(SelectedCard);
-                AssetDatabase.SaveAssets();
-                AssetDatabase.Refresh();
-            }
-        }
-        
-        private bool InitializeCard(CardDataSO card)
-        {
-            if (ReferenceEquals(card, null))
-            {
-                return false;
-            }
-            InitializeCommonCardData(card);
-            AssignStatsToCard(card);
-            WeightDataAssetUtility.SetWeightData(card);
-            
-            return true;
-        }
-
-        private void InitializeCommonCardData(CardDataSO card)
-        {
-            card.CardType = CardTypes;
-            card.Rarity = CardRarity;
-            card.CardName = CardName;
-            card.ArtWork = Artwork;
-            card.Keywords = SelectedKeywords;
-            card.CardText = CardText;
-            card.CardCost = CardCost;
-        }
-        private void AssignStatsToCard(CardDataSO card)
-        {
-            switch (CardTypes)
-            {
-                case CardTypes.TBD:
-                case CardTypes.Starship:
-                case CardTypes.Action:
-                    break;
-                case CardTypes.Environment:
-                    card.Explore = new CardStat(StatNames.Explore, _exploreValue, EXPLORE_DESCRIPTION);
-                    break;
-                case CardTypes.Gear_Equipment:
-                case CardTypes.Gear_Upgrade:
-                case CardTypes.Character_Ally:
-                case CardTypes.Character_Hunter:
-                case CardTypes.Creature:
-                case CardTypes.Boss:
-                    card.Attack = new CardStat(StatNames.Attack, _attackValue, ATTACK_DESCRIPTION);
-                    card.HitPoints = new CardStat(StatNames.HP, _hitPointsValue, HIT_POINTS_DESCRIPTION);
-                    card.Speed = new CardStat(StatNames.Speed, _speedValue, SPEED_DESCRIPTION);
-                    card.Focus = new CardStat(StatNames.Focus, _focusValue, FOCUS_DESCRIPTION);
-                    if (CardTypes == CardTypes.Character_Hunter)
-                    {
-                        card.UpgradeSlots = new CardStat(StatNames.Upgrades, _upgradeSlotsValue, UPGRADE_SLOTS_DESCRIPTION);
-                    }
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                instance.OpenInCostCalculatorWindow(CardDataAssetUtility.SelectedCard);
             }
         }
     }
