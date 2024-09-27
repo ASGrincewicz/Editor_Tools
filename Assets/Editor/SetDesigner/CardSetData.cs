@@ -111,11 +111,19 @@ namespace Editor.SetDesigner
         public void AddCardToSet(CardDataSO cardData)
         {
             ErrorHandler.TryToGetCard(cardData);
-            if (!_cardsInSet.Contains(cardData) && _cardsInSet.Count < _numberOfCards)
+            if (cardData.CardSetName == "None")
             {
+                if (_cardsInSet.Contains(cardData) || _cardsInSet.Count >= _numberOfCards)
+                {
+                    return;
+                }
                 _cardsInSet.Add(cardData);
                 AssignSetToCard(cardData);
                 AssignNumberToCard(cardData);
+            }
+            else
+            {
+                Debug.LogError($"{cardData.CardName} is already assigned to CardSet {cardData.CardSetName}");
             }
         }
         

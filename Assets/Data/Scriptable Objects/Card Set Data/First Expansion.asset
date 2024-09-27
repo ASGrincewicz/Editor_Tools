@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a2e326c1dc347658f66447ba86ba60e, type: 3}
   m_Name: First Expansion
   m_EditorClassIdentifier: 
-  setLabelColor: {r: 0, g: 0, b: 0, a: 0}
+  setLabelColor: {r: 0.2683339, g: 0.8490566, b: 0.8022224, a: 1}
   _cardSetType: 3
   _cardSetName: First Expansion
   _numberOfCards: 50
@@ -20,4 +20,6 @@ MonoBehaviour:
   _uncommonPercentage: 0
   _rarePercentage: 0
   _hyperRarePercentage: 0
-  _cardsInSet: []
+  _cardsInSet:
+  - {fileID: 11400000, guid: 16c2874fc1dad35449c8e48a287f416f, type: 2}
+  - {fileID: 11400000, guid: 89b793e87af244e44aa046f7f02ebc74, type: 2}
