@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using Editor.CardData;
 using Editor.KeywordSystem;
@@ -247,7 +246,7 @@ namespace Editor.Utilities
 
         private static bool InitializeCard(CardDataSO card)
         {
-            if (card == null)
+            if (ReferenceEquals(card, null))
             {
                 return false;
             }

@@ -108,15 +108,16 @@ namespace Editor.SetDesigner
             {
                 string path = AssetDatabase.GUIDToAssetPath(_cardSetAssetGUIDs[i]);
                 CardSetData cardSet = AssetDatabase.LoadAssetAtPath<CardSetData>(path);
-                _cardSetNames[i] = cardSet != null ? cardSet.name : "Unknown Asset";
+                _cardSetNames[i] = ReferenceEquals(cardSet, null) ? "Unknown Asset" : cardSet.name;
             }
-
         }
 
         private void LoadSelectedCardSet()
         {
             string selectedPath = AssetDatabase.GUIDToAssetPath(_cardSetAssetGUIDs[_selectedCardSetIndex]);
             _selectedCardSet = AssetDatabase.LoadAssetAtPath<CardSetData>(selectedPath);
+            EditorGUIUtility.PingObject(_selectedCardSet);
+            Selection.activeObject = _selectedCardSet;
         }
 
         private void DrawCardListArea()

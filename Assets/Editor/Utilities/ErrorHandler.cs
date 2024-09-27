@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Editor.AttributesWeights;
 using Editor.CardData;

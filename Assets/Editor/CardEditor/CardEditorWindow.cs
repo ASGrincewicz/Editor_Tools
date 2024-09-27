@@ -34,7 +34,7 @@ namespace Editor.CardEditor
         public static void Init()
         {
             EditorWindow window = GetWindow<CardEditorWindow>("Card Editor");
-            window.position = new Rect(50f, 50f, 600f, 650f);
+            window.position = new Rect(250f, 150f, 600f, 650f);
             window.Show();
             CardDataAssetUtility.CardTextStringBuilder = new StringBuilder();
             CardDataAssetUtility.LoadKeywordManagerAsset();

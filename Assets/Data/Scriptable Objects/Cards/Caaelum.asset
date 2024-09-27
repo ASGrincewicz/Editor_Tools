@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Caaelum
   m_EditorClassIdentifier: 
   _weightData: {fileID: 11400000, guid: 32fd2d69de8ff43ce9976f51c89fdd94, type: 2}
-  _cardSetName: None
-  _cardNumber: 0
+  _cardSetName: All Cards
+  _cardNumber: 3
   _rarity: 3
   _cost: 12
   _cardType: 4
@@ -35,7 +35,7 @@ MonoBehaviour:
     keywordValue: 0
     definition: 
     abilityType: 0
-  _cardText: 
+  _cardText: 'Once per game: Discard an upgrade to heal by 50 HP.'
   _attack:
     _statName: 0
     _statValue: 35

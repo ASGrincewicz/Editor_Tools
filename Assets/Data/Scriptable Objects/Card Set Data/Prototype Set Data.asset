@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a2e326c1dc347658f66447ba86ba60e, type: 3}
   m_Name: Prototype Set Data
   m_EditorClassIdentifier: 
-  isSetLabelColor: {r: 0.30720672, g: 0.735849, b: 0.26032394, a: 1}
+  isSetLabelColor: {r: 0.9528302, g: 0.10609356, b: 0.05842829, a: 1}
   _cardSetType: 1
   _cardSetName: Prototype
   _numberOfCards: 96
@@ -21,9 +21,8 @@ MonoBehaviour:
   _rarePercentage: 21
   _hyperRarePercentage: 12.5
   _cardsInSet:
+  - {fileID: 11400000, guid: f1ae923bb2a41e14ba4dadbf2717d733, type: 2}
+  - {fileID: 11400000, guid: 7b7a674130f6f5f43bb75282ea451662, type: 2}
   - {fileID: 11400000, guid: 89b793e87af244e44aa046f7f02ebc74, type: 2}
-  - {fileID: 11400000, guid: a86fede06169b7941b41dcd26efd4626, type: 2}
-  - {fileID: 11400000, guid: e75b89c1975b28742ba3596213e3b8cd, type: 2}
-  - {fileID: 11400000, guid: 8df12c1b8a2b6ad4f9c3f9989b28f961, type: 2}
-  - {fileID: 11400000, guid: 65813408c9a099e46a3cade52582fe51, type: 2}
-  - {fileID: 11400000, guid: db4c892d6a998de4aab1d155c33b9360, type: 2}
+  - {fileID: 11400000, guid: d66e8dae3cae9a24080c225fe8695f3e, type: 2}
+  - {fileID: 11400000, guid: 7c1195702f2fe439da367abcaf9f1f93, type: 2}
