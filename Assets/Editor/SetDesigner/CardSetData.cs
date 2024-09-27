@@ -9,7 +9,7 @@ namespace Editor.SetDesigner
     [CreateAssetMenu(fileName = "Card Set Data", menuName = "Card Set", order = 0)]
     public class CardSetData : ScriptableObject
     {
-        public Color isSetLabelColor;
+        public Color setLabelColor;
         [SerializeField] private CardSetType _cardSetType;
         [SerializeField] private string _cardSetName;
         [SerializeField] private int _numberOfCards;

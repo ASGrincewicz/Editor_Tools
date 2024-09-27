@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a2e326c1dc347658f66447ba86ba60e, type: 3}
+  m_Name: First Expansion
+  m_EditorClassIdentifier: 
+  setLabelColor: {r: 0, g: 0, b: 0, a: 0}
+  _cardSetType: 3
+  _cardSetName: First Expansion
+  _numberOfCards: 50
+  _commonPercentage: 0
+  _uncommonPercentage: 0
+  _rarePercentage: 0
+  _hyperRarePercentage: 0
+  _cardsInSet: []

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a2e326c1dc347658f66447ba86ba60e, type: 3}
   m_Name: All Cards
   m_EditorClassIdentifier: 
-  isSetLabelColor: {r: 0.8290042, g: 0.9622642, b: 0.56737274, a: 1}
+  setLabelColor: {r: 1, g: 0.995283, b: 0.995283, a: 1}
   _cardSetType: 0
   _cardSetName: All Cards
   _numberOfCards: 21
@@ -35,3 +35,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e75b89c1975b28742ba3596213e3b8cd, type: 2}
   - {fileID: 11400000, guid: 2694d72040e84c04ea48acbdb75b5107, type: 2}
   - {fileID: 11400000, guid: 89b793e87af244e44aa046f7f02ebc74, type: 2}
+  - {fileID: 11400000, guid: 767f8ad1b5e9ef144a566989d0a1f8f9, type: 2}
+  - {fileID: 11400000, guid: 2a39c2471d48be447ae41995063baa1e, type: 2}
+  - {fileID: 11400000, guid: 16c2874fc1dad35449c8e48a287f416f, type: 2}
+  - {fileID: 11400000, guid: d66e8dae3cae9a24080c225fe8695f3e, type: 2}
+  - {fileID: 11400000, guid: a86fede06169b7941b41dcd26efd4626, type: 2}
+  - {fileID: 11400000, guid: 65813408c9a099e46a3cade52582fe51, type: 2}
+  - {fileID: 11400000, guid: db4c892d6a998de4aab1d155c33b9360, type: 2}

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Editor.CardData;
 using Editor.CardEditor;
 using Editor.Utilities;
@@ -11,6 +12,7 @@ namespace Editor.SetDesigner
 {
     public class CardSetEditorWindow : EditorWindow, ICustomEditorWindow
     {
+        private const string AssetPath = "Assets/Data/Scriptable Objects/Card Set Data/";
         public Rect MainAreaRect { get; set; }
         private bool IsInEditMode { get; set; } = true;
         private string[] _cardSetAssetGUIDs;
@@ -20,6 +22,12 @@ namespace Editor.SetDesigner
         private string[] _cardAssetGUIDs;
         private HashSet<CardDataSO> _currentSet = new();
         private Vector2 _cardSetScrollPosition;
+        
+        // Editable Field Variables
+        private CardSetData _newCardSet;
+        private string _cardSetName;
+        private CardSetType _cardSetType;
+        private int _numberOfCards;
 
         [MenuItem("Tools/Set Editor")]
         public static void Init()
@@ -43,10 +51,15 @@ namespace Editor.SetDesigner
         private void DrawMainArea()
         {
             DrawToolbar();
-            DrawSetSelectionArea();
+           
             if (IsInEditMode)
             {
+                DrawSetSelectionArea();
                 DrawCardListArea();
+            }
+            else
+            {
+                DrawEditableFields();
             }
         }
 
@@ -55,24 +68,60 @@ namespace Editor.SetDesigner
             GUILayout.BeginHorizontal(EditorStyles.toolbar);
             if (GUILayout.Button("New Set", EditorStyles.toolbarButton))
             {
+                IsInEditMode = false;
+                _selectedCardSet = null;
                 Debug.Log("New Set");
+               
             }
 
-            if (GUILayout.Button("Save", EditorStyles.toolbarButton))
+            if (IsInEditMode)
             {
-                Debug.Log("Save");
-                SaveCurrentSet();
+                if (GUILayout.Button("Save", EditorStyles.toolbarButton))
+                {
+                    Debug.Log("Save");
+                    SaveCurrentSet();
+                }
             }
+            else
+            {
+                if (GUILayout.Button("Save New", EditorStyles.toolbarButton))
+                {
+                   CreateNewCardSetAsset();
+                }
+            }
+           
 
             if (GUILayout.Button("Edit", EditorStyles.toolbarButton))
             {
-                IsInEditMode = !IsInEditMode;
+                IsInEditMode = true;
                 Debug.Log("Edit");
             }
 
             GUILayout.EndHorizontal();
         }
 
+        private void DrawEditableFields()
+        {
+            GUILayout.BeginVertical();
+            _cardSetName = EditorGUILayout.TextField("CardSet Name", _cardSetName);
+            _cardSetType = (CardSetType)EditorGUILayout.EnumPopup("CardSet Type", _cardSetType);
+            _numberOfCards = EditorGUILayout.IntField("Number of Cards", _numberOfCards);
+            GUILayout.EndVertical();
+        }
+
+        private void CreateNewCardSetAsset()
+        {
+            Debug.Log("Create new card set asset");
+            _newCardSet = ScriptableObject.CreateInstance<CardSetData>();
+            _newCardSet.CardSetName = _cardSetName;
+            _newCardSet.CardSetType = _cardSetType;
+            _newCardSet.NumberOfCards = _numberOfCards;
+            AssetDatabase.CreateAsset(_newCardSet, $"{AssetPath}{_cardSetName}.asset");
+            EditorUtility.SetDirty(_newCardSet);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        }
+        
         private void SaveCurrentSet()
         {
             EditorUtility.SetDirty(_selectedCardSet);
@@ -141,7 +190,7 @@ namespace Editor.SetDesigner
 
                     // Display the card data name with bold font if it is in the current set
                     GUIStyle labelStyle = isInCurrentSet
-                        ? new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold, normal = new GUIStyleState { textColor = _selectedCardSet.isSetLabelColor } }
+                        ? new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold, normal = new GUIStyleState { textColor = _selectedCardSet.setLabelColor } }
                         : GUI.skin.label;
                     GUILayout.Label(cardData.name, labelStyle, GUILayout.Width(200));
                     
