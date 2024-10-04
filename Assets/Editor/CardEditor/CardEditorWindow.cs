@@ -67,7 +67,6 @@ namespace Editor.CardEditor
             GUILayout.EndHorizontal();
             ScrollPosition = GUILayout.BeginScrollView(ScrollPosition,GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
             DrawEditableFields();
-            //DrawControlButtons();
             GUILayout.EndScrollView();
             GUILayout.EndArea();
         }
@@ -182,7 +181,6 @@ namespace Editor.CardEditor
                 }
                 else
                 {
-                    // Handle the case where there are no keywords or the lists are null
                     CardDataAssetUtility.SelectedKeywordsIndex[i] = 0;
                     EditorGUILayout.Popup(
                         0,
@@ -196,8 +194,7 @@ namespace Editor.CardEditor
                     Debug.LogError($"Index {CardDataAssetUtility.SelectedKeywordsIndex[i]} is out of range for _keywordNamesList with count {CardDataAssetUtility.KeywordNamesList.Count}");
                     continue;
                 }
-
-                // Use Find method to assign Keyword to _selectedKeywords
+                
                 if (CardDataAssetUtility.KeywordNamesList.Count > 0)
                 {
                     string selectedKeywordName = CardDataAssetUtility.KeywordNamesList[CardDataAssetUtility.SelectedKeywordsIndex[i]];
