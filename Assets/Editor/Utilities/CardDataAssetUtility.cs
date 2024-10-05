@@ -150,7 +150,7 @@ namespace Editor.Utilities
 
         private static List<CardDataSO> LoadAllCardData()
         {
-            List<CardDataSO> cardDataList = new List<CardDataSO>();
+            List<CardDataSO> cardDataList = new();
             foreach (string guid in CardAssetGUIDs)
             {
                 CardDataSO cardData = LoadCardDataByGuid(guid);

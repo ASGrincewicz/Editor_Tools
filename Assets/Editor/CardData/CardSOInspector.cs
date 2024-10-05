@@ -1,15 +1,15 @@
-﻿using Editor.CardEditor;
-using Editor.CostCalculator;
+﻿using Editor.Channels;
 using Editor.Utilities;
-using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Editor.CardData
 {
     [CustomEditor(typeof(CardDataSO))]
     public class CardSoInspector: UnityEditor.Editor
     {
+        [FormerlySerializedAs("_cardEditorChannel")] [SerializeField] private EditorWindowChannel _editorWindowChannel;
         private const string WeightDataPropertyName = "_weightData";
         private const string CardSetNamePropertyName = "_cardSetName";
         private const string CardNumberPropertyName = "_cardNumber";
@@ -100,8 +100,7 @@ namespace Editor.CardData
         {
             if (IsOpenInCardEditorButtonPressed) 
             {
-                CardEditorWindow instance = EditorWindow.GetWindow<CardEditorWindow>();
-                instance.OpenCardInEditor(cardData);
+               _editorWindowChannel.RaiseCardEditorWindowRequestedEvent(cardData);
             }
         }
 
@@ -109,8 +108,7 @@ namespace Editor.CardData
         {
             if (IsOpenInCostCalculatorButtonPressed)
             {
-                CostCalculatorWindow instance = EditorWindow.GetWindow<CostCalculatorWindow>();
-                instance.OpenInCostCalculatorWindow(cardData);
+               _editorWindowChannel.RaiseCostCalculatorWindowRequestedEvent(cardData);
             }
         }
         

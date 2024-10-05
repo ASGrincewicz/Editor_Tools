@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Editor.CardData;
-using Editor.CardEditor;
+using Editor.Channels;
 using Editor.Utilities;
 using UnityEditor;
 using UnityEngine;
@@ -9,6 +9,7 @@ namespace Editor.SetDesigner
 {
     public class CardSetEditorWindow : EditorWindow, ICustomEditorWindow
     {
+        [SerializeField] private EditorWindowChannel _editorWindowChannel;
         private const string AssetPath = "Assets/Data/Scriptable Objects/Card Set Data/";
         private const string AssetFilter = "t:CardSetData";
         public Rect MainAreaRect { get; set; }
@@ -33,6 +34,21 @@ namespace Editor.SetDesigner
             EditorWindow window = GetWindow<CardSetEditorWindow>("Card Set Editor");
             window.position = new Rect(50f, 50f, 600f, 500f);
             window.Show();
+        }
+
+        private void OnEnable()
+        {
+            _editorWindowChannel.OnCardSetEditorWindowRequested += OpenCardSetEditorWindow;
+        }
+
+        private void OnDisable()
+        {
+            _editorWindowChannel.OnCardSetEditorWindowRequested -= OpenCardSetEditorWindow;
+        }
+
+        private void OpenCardSetEditorWindow()
+        {
+            Init();
         }
 
         private void OnGUI()
@@ -218,8 +234,9 @@ namespace Editor.SetDesigner
                     if (GUILayout.Button("Edit", GUILayout.Width(50)))
                     {
                         Debug.Log("Edit card: " + cardData.name);
-                        CardEditorWindow instance = GetWindow<CardEditorWindow>();
-                        instance.OpenCardInEditor(cardData);
+                        /*CardEditorWindow instance = GetWindow<CardEditorWindow>();
+                        instance.OpenCardInEditor(cardData);*/
+                        _editorWindowChannel.RaiseCardEditorWindowRequestedEvent(cardData);
                     }
                     
                     EditorGUI.BeginDisabledGroup(isInCurrentSet || _selectedCardSet == null);

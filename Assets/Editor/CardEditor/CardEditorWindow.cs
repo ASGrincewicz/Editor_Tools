@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 using Editor.CardData;
-using Editor.CostCalculator;
+using Editor.Channels;
 using Editor.KeywordSystem;
 using Editor.Utilities;
 using UnityEditor;
@@ -12,6 +12,7 @@ namespace Editor.CardEditor
 {
     public class CardEditorWindow : EditorWindow
     {
+        [SerializeField] private EditorWindowChannel _editorWindowChannel;
         // Constants
         private const float FIELD_WIDTH = 400;
         
@@ -40,18 +41,28 @@ namespace Editor.CardEditor
             CardDataAssetUtility.LoadKeywordManagerAsset();
             CardDataAssetUtility.RefreshKeywordsList();
         }
+
+        private void OnEnable()
+        {
+            _editorWindowChannel.OnCardEditorWindowRequested += OpenCardInEditor;
+        }
+
+        private void OnDisable()
+        {
+            _editorWindowChannel.OnCardEditorWindowRequested -= OpenCardInEditor;
+        }
+        
+        private void OpenCardInEditor(CardDataSO card)
+        {
+            Init();
+            CardDataAssetUtility.CardToEdit = card;
+            CardDataAssetUtility.LoadCardFromFile();
+        }
        
         private void OnGUI()
         {
             SetupAreaRects();
             DrawMainArea();
-        }
-
-        public void OpenCardInEditor(CardDataSO card)
-        {
-            Init();
-            CardDataAssetUtility.CardToEdit = card;
-            CardDataAssetUtility.LoadCardFromFile();
         }
 
         private void SetupAreaRects()
@@ -225,8 +236,7 @@ namespace Editor.CardEditor
 
             if (IsCalculateCostButtonPressed && !ReferenceEquals(CardDataAssetUtility.SelectedCard, null))
             {
-                CostCalculatorWindow instance = EditorWindow.GetWindow<CostCalculatorWindow>();
-                instance.OpenInCostCalculatorWindow(CardDataAssetUtility.SelectedCard);
+               _editorWindowChannel.RaiseCostCalculatorWindowRequestedEvent(CardDataAssetUtility.SelectedCard);
             }
         }
     }

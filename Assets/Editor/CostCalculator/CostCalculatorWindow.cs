@@ -1,4 +1,5 @@
 using Editor.CardData;
+using Editor.Channels;
 using Editor.Utilities;
 using UnityEditor;
 using UnityEngine;
@@ -7,7 +8,9 @@ namespace Editor.CostCalculator
 {
     public class CostCalculatorWindow : EditorWindow
     {
+        [SerializeField] private EditorWindowChannel _editorWindowChannel;
         public CostCalculatorSettings calculationSettings;
+        
         
         // Constants
         private const string Window_Title = "Card Cost Calculator";
@@ -29,13 +32,30 @@ namespace Editor.CostCalculator
         private Rect ButtonRect{get; set; }
     
         [MenuItem("Tools/Utilities/Cost Calculator")]
-        public static void ShowWindow()
+        public static void Init()
         {
             CostCalculatorWindow window =
                 (CostCalculatorWindow)GetWindow(typeof(CostCalculatorWindow), Is_Utility_Window, Window_Title);
             
             window.position = new Rect(50, 50, 300, 500);
             window.Show();
+        }
+
+        private void OnEnable()
+        {
+            _editorWindowChannel.OnCostCalculatorWindowRequested += OpenCostCalculatorWindow;
+        }
+
+        private void OnDisable()
+        {
+            _editorWindowChannel.OnCostCalculatorWindowRequested -= OpenCostCalculatorWindow;
+        }
+
+        private void OpenCostCalculatorWindow(CardDataSO cardData)
+        {
+            Init();
+            LoadedCardDataData = cardData;
+            RunCalculation();
         }
 
         private void OnGUI()
@@ -68,7 +88,6 @@ namespace Editor.CostCalculator
         private void DrawCardInfoArea()
         {
             GUILayout.BeginArea(CardInfoRect);
-            // Show values from the loaded cardData
             DrawLabel($"Card Name: {LoadedCardDataData?.CardName}");
             DrawLabel($"Card Type: {LoadedCardDataData?.CardType}");
             DrawLabel($"Attack: {LoadedCardDataData?.Attack.StatValue}");
@@ -111,8 +130,7 @@ namespace Editor.CostCalculator
         {
             if (GUILayout.Button(EditButtonText, GUILayout.Width(position.width * 0.25f), GUILayout.Height(ButtonRect.height * 0.25f)))
             {
-                CardEditor.CardEditorWindow instance = EditorWindow.GetWindow<CardEditor.CardEditorWindow>();
-                instance.OpenCardInEditor(LoadedCardDataData);
+               _editorWindowChannel.RaiseCardEditorWindowRequestedEvent(LoadedCardDataData);
             }
         }
         private void DrawLabel(string text) 
@@ -135,11 +153,6 @@ namespace Editor.CostCalculator
         private void AssignCostToCard(int cost)
         {
             LoadedCardDataData.CardCost = cost;
-        }
-        public void OpenInCostCalculatorWindow(CardDataSO cardData)
-        {
-            LoadedCardDataData = cardData;
-            RunCalculation();
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Editor.Channels;
 using UnityEditor;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ namespace Editor.KeywordSystem
 {
     public class KeywordEditorWindow : EditorWindow
     {
+        [SerializeField] private EditorWindowChannel _editorWindowChannel;
         // Constants
         private const float MAIN_AREA_HEIGHT_RATIO = 0.30f;
         private const float BUTTON_AREA_HEIGHT_RATIO = 0.15f;
@@ -30,7 +32,7 @@ namespace Editor.KeywordSystem
         private Vector2 _scrollPosition;
 
         [MenuItem("Tools/Keyword Editor")]
-        private static void ShowWindow()
+        private static void Init()
         {
             KeywordEditorWindow window = GetWindow<KeywordEditorWindow>();
             window.titleContent = new GUIContent("Keyword Editor");
@@ -40,7 +42,18 @@ namespace Editor.KeywordSystem
 
         private void OnEnable()
         {
+            _editorWindowChannel.OnKwywordEditorWindowRequested += OpenKeywordEditorWindow;
             LoadKeywords();
+        }
+
+        private void OnDisable()
+        {
+            _editorWindowChannel.OnKwywordEditorWindowRequested -= OpenKeywordEditorWindow;
+        }
+
+        private void OpenKeywordEditorWindow()
+        {
+            Init();
         }
 
         private void OnGUI()
