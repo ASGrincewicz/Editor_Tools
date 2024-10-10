@@ -62,6 +62,30 @@ namespace Editor.SetDesigner
             }
         }
 
+        public float CommonPercentage
+        {
+            get { return _commonPercentage; }
+            set { _commonPercentage = value; }
+        }
+
+        public float UncommonPercentage
+        {
+            get { return _uncommonPercentage; }
+            set { _uncommonPercentage = value; }
+        }
+
+        public float RarePercentage
+        {
+            get { return _rarePercentage; }
+            set { _rarePercentage = value; }
+        }
+
+        public float HyperRarePercentage
+        {
+            get { return _hyperRarePercentage; }
+            set { _hyperRarePercentage = value; }
+        }
+
         public int CommonLimit
         {
             get

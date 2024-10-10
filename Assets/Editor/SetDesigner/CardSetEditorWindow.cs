@@ -27,6 +27,10 @@ namespace Editor.SetDesigner
         private string _cardSetName;
         private CardSetType _cardSetType;
         private int _numberOfCards;
+        private float _commonPercentage;
+        private float _uncommonPercentage;
+        private float _rarePercentage;
+        private float _hyperRarePercentage;
 
         [MenuItem("Tools/Set Editor")]
         public static void Init()
@@ -102,7 +106,7 @@ namespace Editor.SetDesigner
             {
                 IsInEditMode = false;
                 _selectedCardSet = null;
-                Debug.Log("New Set");
+               //Debug.Log("New Set");
             }
         }
 
@@ -110,7 +114,7 @@ namespace Editor.SetDesigner
         {
             if (GUILayout.Button("Save", EditorStyles.toolbarButton))
             {
-                Debug.Log("Save");
+                //Debug.Log("Save");
                 SaveCurrentSet();
             }
         }
@@ -128,7 +132,7 @@ namespace Editor.SetDesigner
             if (GUILayout.Button("Edit", EditorStyles.toolbarButton))
             {
                 IsInEditMode = true;
-                Debug.Log("Edit");
+                //Debug.Log("Edit");
             }
         }
 
@@ -138,16 +142,24 @@ namespace Editor.SetDesigner
             _cardSetName = EditorGUILayout.TextField("CardSet Name", _cardSetName);
             _cardSetType = (CardSetType)EditorGUILayout.EnumPopup("CardSet Type", _cardSetType);
             _numberOfCards = EditorGUILayout.IntField("Number of Cards", _numberOfCards);
+            _commonPercentage = EditorGUILayout.Slider("Common Percentage", _commonPercentage, 0, 1);
+            _uncommonPercentage = EditorGUILayout.Slider("Uncommon Percentage", _uncommonPercentage, 0, 1);
+            _rarePercentage = EditorGUILayout.Slider("Rare Percentage", _rarePercentage, 0, 1);
+            _hyperRarePercentage = EditorGUILayout.Slider("Hyper Rare Percentage", _hyperRarePercentage, 0, 1);
             GUILayout.EndVertical();
         }
 
         private void CreateNewCardSetAsset()
         {
-            Debug.Log("Create new card set asset");
+            //Debug.Log("Create new card set asset");
             _newCardSet = ScriptableObject.CreateInstance<CardSetData>();
             _newCardSet.CardSetName = _cardSetName;
             _newCardSet.CardSetType = _cardSetType;
             _newCardSet.NumberOfCards = _numberOfCards;
+            _newCardSet.CommonPercentage = _commonPercentage;
+            _newCardSet.UncommonPercentage = _uncommonPercentage;
+            _newCardSet.RarePercentage = _rarePercentage;
+            _newCardSet.HyperRarePercentage = _hyperRarePercentage;
             AssetDatabase.CreateAsset(_newCardSet, $"{AssetPath}{_cardSetName}.asset");
             EditorUtility.SetDirty(_newCardSet);
             AssetDatabase.SaveAssets();
@@ -226,17 +238,15 @@ namespace Editor.SetDesigner
                     
                     if (GUILayout.Button("View", GUILayout.Width(50)))
                     {
-                        Debug.Log("View card: " + cardData.name);
+                       // Debug.Log("View card: " + cardData.name);
                         EditorGUIUtility.PingObject(cardData);
                         Selection.activeObject = cardData;
                     }
                     
                     if (GUILayout.Button("Edit", GUILayout.Width(50)))
                     {
-                        Debug.Log("Edit card: " + cardData.name);
-                        /*CardEditorWindow instance = GetWindow<CardEditorWindow>();
-                        instance.OpenCardInEditor(cardData);*/
-                        _editorWindowChannel.RaiseCardEditorWindowRequestedEvent(cardData);
+                       // Debug.Log("Edit card: " + cardData.name);
+                       _editorWindowChannel.RaiseCardEditorWindowRequestedEvent(cardData);
                     }
                     
                     EditorGUI.BeginDisabledGroup(isInCurrentSet || _selectedCardSet == null);
@@ -285,14 +295,14 @@ namespace Editor.SetDesigner
         // TODO: Turn into event
         private void AddCardToSet(CardDataSO cardData)
         {
-            Debug.Log("Add card: " + cardData.name);
+            //Debug.Log("Add card: " + cardData.name);
             _selectedCardSet.AddCardToSet(cardData);
         }
         
         // TODO: Turn into event
         private void RemoveCardFromSet(CardDataSO cardData)
         {
-            Debug.Log("Remove card: " + cardData.name);
+           // Debug.Log("Remove card: " + cardData.name);
             _selectedCardSet.RemoveCardFromSet(cardData);
         }
     }
