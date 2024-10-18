@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Net;
 using Editor.CardData;
 using Editor.Utilities;
 using UnityEditor;
@@ -135,20 +137,69 @@ namespace Editor.SetDesigner
         public void AddCardToSet(CardDataSO cardData)
         {
             ErrorHandler.TryToGetCard(cardData);
-            if (cardData.CardSetName == "None")
+            if (cardData.CardSetName != "None")
             {
-                if (_cardsInSet.Contains(cardData) || _cardsInSet.Count >= _numberOfCards)
-                {
-                    return;
-                }
+                Debug.LogError($"{cardData.CardName} is already in {cardData.CardSetName}.");
+                return;
+            }
+            if (_cardsInSet.Count >= _numberOfCards)
+            {
+                Debug.LogError($"{_cardSetName} already has {_numberOfCards} Cards.");
+                return;
+            }
+            if (_cardsInSet.Contains(cardData))
+            {
+                Debug.LogError($"{cardData.CardName} is already assigned to CardSet {cardData.CardSetName}");
+                return;
+            }
+            if(CheckSetForCardRarityCapacity(cardData))
+            {
+               
                 _cardsInSet.Add(cardData);
                 AssignSetToCard(cardData);
                 AssignNumberToCard(cardData);
             }
             else
             {
-                Debug.LogError($"{cardData.CardName} is already assigned to CardSet {cardData.CardSetName}");
+                Debug.LogError($"{_cardSetName} has reached the limit for {cardData.Rarity} cards.");
             }
+            
+        }
+
+        private bool CheckSetForCardRarityCapacity(CardDataSO cardData)
+        {
+            switch (cardData.Rarity)
+            {
+                case CardRarity.None:
+                    break;
+                case CardRarity.Common:
+                    if (_commonCardsInSet.Count < CommonLimit)
+                    {
+                        return true;
+                    }
+                    break;
+                case CardRarity.Uncommon:
+                    if (_uncommonCardsInSet.Count < UncommonLimit)
+                    {
+                        return true;
+                    }
+                    break;
+                case CardRarity.Rare:
+                    if (_rareCardsInSet.Count < RareLimit)
+                    {
+                        return true;
+                    }
+                    break;
+                case CardRarity.HyperRare:
+                    if (_hyperRareCardsInSet.Count < HyperRareLimit)
+                    {
+                        return true;
+                    }
+                    break;
+               default:
+                    return false;
+            }
+            return false;
         }
         
         public void RemoveMultipleCardsFromSet(List<CardDataSO> cardsToRemove)
@@ -167,7 +218,7 @@ namespace Editor.SetDesigner
             ReAssignNumbersToCards();
         }
 
-        public void AssignNumberToCard(CardDataSO cardData)
+        private void AssignNumberToCard(CardDataSO cardData)
         {
             ErrorHandler.TryToGetCard(cardData);
             cardData.CardNumber = CardsInSet.IndexOf(cardData) + 1;
@@ -181,18 +232,18 @@ namespace Editor.SetDesigner
             }
         }
 
-        public void UnassignNumberFromCard(CardDataSO cardData)
+        private void UnassignNumberFromCard(CardDataSO cardData)
         {
             cardData.CardNumber = 0;
         }
 
-        public void AssignSetToCard(CardDataSO cardData)
+        private void AssignSetToCard(CardDataSO cardData)
         {
             ErrorHandler.TryToGetCard(cardData);
             cardData.CardSetName = _cardSetName;
         }
 
-        public void UnassignSetFromCard(CardDataSO cardData)
+        private void UnassignSetFromCard(CardDataSO cardData)
         {
             cardData.CardSetName = "None";
         }

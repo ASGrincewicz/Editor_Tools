@@ -15,9 +15,10 @@ MonoBehaviour:
   setLabelColor: {r: 0.2683339, g: 0.8490566, b: 0.8022224, a: 1}
   _cardSetType: 3
   _cardSetName: First Expansion
-  _numberOfCards: 50
-  _commonPercentage: 0
-  _uncommonPercentage: 0
-  _rarePercentage: 0
-  _hyperRarePercentage: 0
-  _cardsInSet: []
+  _numberOfCards: 20
+  _commonPercentage: 0.5
+  _uncommonPercentage: 0.25
+  _rarePercentage: 0.15
+  _hyperRarePercentage: 0.1
+  _cardsInSet:
+  - {fileID: 11400000, guid: f1ae923bb2a41e14ba4dadbf2717d733, type: 2}

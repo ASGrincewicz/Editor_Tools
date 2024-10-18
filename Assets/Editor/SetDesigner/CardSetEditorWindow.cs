@@ -63,22 +63,25 @@ namespace Editor.SetDesigner
 
         private void SetUpAreaRects()
         {
-            MainAreaRect = new Rect(5, 100, position.width - 10, position.height);
+            MainAreaRect = new Rect(5, 40, position.width - 10, position.height);
         }
 
         private void DrawMainArea()
         {
             DrawToolbar();
-           
+            GUILayout.BeginArea(MainAreaRect);
+
             if (IsInEditMode)
             {
                 DrawSetSelectionArea();
+                DrawEditableFields();
                 DrawCardListArea();
             }
             else
             {
                 DrawEditableFields();
             }
+            GUILayout.EndArea();
         }
 
         private void DrawToolbar()
@@ -168,9 +171,21 @@ namespace Editor.SetDesigner
         
         private void SaveCurrentSet()
         {
+            SaveSetValues(_selectedCardSet);
             EditorUtility.SetDirty(_selectedCardSet);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+        }
+
+        private void SaveSetValues(CardSetData cardSet)
+        {
+            cardSet.CardSetName = _cardSetName;
+            cardSet.CardSetType = _cardSetType;
+            cardSet.NumberOfCards = _numberOfCards;
+            cardSet.CommonPercentage = _commonPercentage;
+            cardSet.UncommonPercentage = _uncommonPercentage;
+            cardSet.RarePercentage = _rarePercentage;
+            cardSet.HyperRarePercentage = _hyperRarePercentage;
         }
 
         private void DrawSetSelectionArea()
@@ -208,15 +223,20 @@ namespace Editor.SetDesigner
         {
             string selectedPath = AssetDatabase.GUIDToAssetPath(_cardSetAssetGUIDs[_selectedCardSetIndex]);
             _selectedCardSet = AssetDatabase.LoadAssetAtPath<CardSetData>(selectedPath);
+            _cardSetName = _selectedCardSet.CardSetName;
+            _cardSetType = _selectedCardSet.CardSetType;
+            _numberOfCards = _selectedCardSet.NumberOfCards;
+            _commonPercentage = _selectedCardSet.CommonPercentage;
+            _uncommonPercentage = _selectedCardSet.UncommonPercentage;
+            _rarePercentage = _selectedCardSet.RarePercentage;
+            _hyperRarePercentage = _selectedCardSet.HyperRarePercentage;
             EditorGUIUtility.PingObject(_selectedCardSet);
             Selection.activeObject = _selectedCardSet;
         }
 
         private void DrawCardListArea()
         {
-            GUILayout.BeginArea(MainAreaRect);
-           
-            _cardSetScrollPosition = GUILayout.BeginScrollView(_cardSetScrollPosition, GUILayout.Height(MainAreaRect.height * 0.8f));
+           _cardSetScrollPosition = GUILayout.BeginScrollView(_cardSetScrollPosition, GUILayout.Height(MainAreaRect.height * 0.8f));
             GUILayout.BeginVertical(GUILayout.Height(MainAreaRect.height), GUILayout.ExpandHeight(true));
             DrawTotalCardsLabel();
            _cardAssetGUIDs = CardDataAssetUtility.CardAssetGUIDs;
@@ -274,7 +294,6 @@ namespace Editor.SetDesigner
             }
             GUILayout.EndVertical();
             GUILayout.EndScrollView();
-            GUILayout.EndArea();
         }
 
         private void DrawTotalCardsLabel()
