@@ -13,9 +13,27 @@ MonoBehaviour:
   m_Name: Scan Visor
   m_EditorClassIdentifier: 
   _weightData: {fileID: 11400000, guid: 8450eb473c9c74119a579d9c683c4c64, type: 2}
+  _cardSetName: None
+  _cardNumber: 0
+  _rarity: 2
+  _cost: 0
   _cardType: 8
   _cardName: Scan Visor
   _artWork: {fileID: 0}
+  _keywords:
+  - keywordName: Unveil
+    keywordValue: 6
+    definition: Deactivate an opponent's 'Cloak'.
+    abilityType: 2
+  - keywordName: None
+    keywordValue: 0
+    definition: 
+    abilityType: 0
+  - keywordName: None
+    keywordValue: 0
+    definition: 
+    abilityType: 0
+  _cardText: Equip to a Hunter.
   _attack:
     _statName: 0
     _statValue: 0
@@ -40,17 +58,3 @@ MonoBehaviour:
     _statName: 0
     _statValue: 0
     _statDescription: 
-  _keywords:
-  - keywordName: Unveil
-    keywordValue: 6
-    definition: Deactivate an opponent's 'Cloak'.
-    abilityType: 2
-  - keywordName: None
-    keywordValue: 0
-    definition: 
-    abilityType: 0
-  - keywordName: None
-    keywordValue: 0
-    definition: 
-    abilityType: 0
-  _cardText: Equip to a Hunter.

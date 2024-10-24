@@ -20,12 +20,12 @@ namespace Editor.SetDesigner
         [SerializeField] private float _rarePercentage;
         [SerializeField] private float _hyperRarePercentage;
         [SerializeField] private List<CardDataSO> _cardsInSet;
-        private List<CardDataSO> _commonCardsInSet;
-        private List<CardDataSO> _uncommonCardsInSet;
-        private List<CardDataSO> _rareCardsInSet;
-        private List<CardDataSO> _hyperRareCardsInSet;
-        private List<CardDataSO> _promoCardsInSet;
-        private List<CardDataSO> _kickStarterCardsInSet;
+        [SerializeField] private List<CardDataSO> _commonCardsInSet;
+        [SerializeField] private List<CardDataSO> _uncommonCardsInSet;
+        [SerializeField] private List<CardDataSO> _rareCardsInSet;
+        [SerializeField] private List<CardDataSO> _hyperRareCardsInSet;
+        [SerializeField] private List<CardDataSO> _promoCardsInSet;
+        [SerializeField] private List<CardDataSO> _kickStarterCardsInSet;
 
        public CardSetType CardSetType
         {
@@ -92,7 +92,7 @@ namespace Editor.SetDesigner
         {
             get
             {
-                return (int)(_numberOfCards * _commonPercentage);
+               return SetLimitToZeroIfPercentageLessThanOne(_commonPercentage);
             }
         }
 
@@ -100,7 +100,7 @@ namespace Editor.SetDesigner
         {
             get
             {
-                return (int)(_numberOfCards * _uncommonPercentage);
+                return SetLimitToZeroIfPercentageLessThanOne(_uncommonPercentage);
             }
         }
 
@@ -108,7 +108,7 @@ namespace Editor.SetDesigner
         {
             get
             {
-                return (int)(_numberOfCards * _rarePercentage);
+                return SetLimitToZeroIfPercentageLessThanOne(_rarePercentage);
             }
         }
 
@@ -116,14 +116,44 @@ namespace Editor.SetDesigner
         {
             get
             {
-                return (int)(_numberOfCards * _hyperRarePercentage);
+                return SetLimitToZeroIfPercentageLessThanOne(_hyperRarePercentage);
             }
+        }
+
+        private int SetLimitToZeroIfPercentageLessThanOne(float percentage)
+        {
+            if ((int)(_numberOfCards * percentage) < 1)
+            {
+                return 0;
+            }
+
+            return (int)(_numberOfCards * percentage);
         }
 
         public List<CardDataSO> CardsInSet
         {
             get { return _cardsInSet ??= new List<CardDataSO>(); }
             set { _cardsInSet =  value; }
+        }
+
+        public List<CardDataSO> CommonCardsInSet
+        {
+            get { return _commonCardsInSet ??= new List<CardDataSO>(); }
+        }
+
+        public List<CardDataSO> UncommonCardsInSet
+        {
+            get { return _uncommonCardsInSet ??= new List<CardDataSO>(); }
+        }
+
+        public List<CardDataSO> RareCardsInSet
+        {
+            get { return _rareCardsInSet ??= new List<CardDataSO>(); }
+        }
+
+        public List<CardDataSO> HyperRareCardsInSet
+        {
+            get { return _hyperRareCardsInSet ??= new List<CardDataSO>(); }
         }
         
         public void AddMultipleCardsToSet(List<CardDataSO> cardsToAdd)
@@ -152,51 +182,57 @@ namespace Editor.SetDesigner
                 Debug.LogError($"{cardData.CardName} is already assigned to CardSet {cardData.CardSetName}");
                 return;
             }
-            if(CheckSetForCardRarityCapacity(cardData))
+
+            if (CardSetName != "All Cards")
             {
+                if(CheckSetForCardRarityCapacity(cardData))
+                {
                
-                _cardsInSet.Add(cardData);
-                AssignSetToCard(cardData);
-                AssignNumberToCard(cardData);
+                    _cardsInSet.Add(cardData);
+                    AssignSetToCard(cardData);
+                    AssignNumberToCard(cardData);
+                }
+                else
+                {
+                    Debug.LogError($"{_cardSetName} has reached the limit for {cardData.Rarity} cards.");
+                }
             }
-            else
-            {
-                Debug.LogError($"{_cardSetName} has reached the limit for {cardData.Rarity} cards.");
-            }
-            
         }
 
         private bool CheckSetForCardRarityCapacity(CardDataSO cardData)
         {
             switch (cardData.Rarity)
             {
-                case CardRarity.None:
-                    break;
                 case CardRarity.Common:
-                    if (_commonCardsInSet.Count < CommonLimit)
+                    if (CommonCardsInSet.Count < CommonLimit)
                     {
+                        CommonCardsInSet.Add(cardData);
                         return true;
                     }
                     break;
                 case CardRarity.Uncommon:
-                    if (_uncommonCardsInSet.Count < UncommonLimit)
+                    if (UncommonCardsInSet.Count < UncommonLimit)
                     {
+                        UncommonCardsInSet.Add(cardData);
                         return true;
                     }
                     break;
                 case CardRarity.Rare:
-                    if (_rareCardsInSet.Count < RareLimit)
+                    if (RareCardsInSet.Count < RareLimit)
                     {
+                        RareCardsInSet.Add(cardData);
                         return true;
                     }
                     break;
                 case CardRarity.HyperRare:
-                    if (_hyperRareCardsInSet.Count < HyperRareLimit)
+                    if (HyperRareCardsInSet.Count < HyperRareLimit)
                     {
+                        HyperRareCardsInSet.Add(cardData);
                         return true;
                     }
                     break;
-               default:
+                case CardRarity.None:
+                default:
                     return false;
             }
             return false;
