@@ -10,10 +10,28 @@ namespace Editor.KeywordSystem
     {
         [SerializeField] private EditorWindowChannel _editorWindowChannel;
         // Constants
+        private const string MenuText = "Tools/Keyword Editor";
+        private const string WindowTitle = "Keyword Editor";
         private const float MAIN_AREA_HEIGHT_RATIO = 0.30f;
         private const float BUTTON_AREA_HEIGHT_RATIO = 0.15f;
         private const float AREA_PADDING = 20f;
         private const float BUTTON_WIDTH = 100f;
+        // Button Text Strings
+        private const string SaveButtonText = "Save";
+        private const string NewButtonText = "New";
+        private const string ReloadButtonText = "Reload";
+        private const string DoneButtonText = "Done";
+        private const string EditButtonText = "Edit";
+        private const string DeleteButtonText = "Delete";
+        // Label Text Strings
+        private const string NameLabelText = "Name:";
+        private const string ValueLabelText = "Value:";
+        private const string TypeLabelText = "Ability Type:";
+        // Undo Record Strings
+        private const string SaveKeywordRecordText = "Save Keyword";
+        private const string DeleteKeywordRecordText = "Delete Keyword";
+        
+        private static KeywordEditorWindow _keywordEditorWindow;
 
         // Keyword Manager Asset
         [SerializeField] private KeywordManager _keywordManager;
@@ -31,13 +49,13 @@ namespace Editor.KeywordSystem
         private Rect _keywordListAreaRect;
         private Vector2 _scrollPosition;
 
-        [MenuItem("Tools/Keyword Editor")]
+        [MenuItem(MenuText)]
         private static void Init()
         {
-            KeywordEditorWindow window = GetWindow<KeywordEditorWindow>();
-            window.titleContent = new GUIContent("Keyword Editor");
-            window.position = new Rect(50, 50, 250, 600);
-            window.Show();
+            _keywordEditorWindow = GetWindow<KeywordEditorWindow>();
+            _keywordEditorWindow.titleContent = new GUIContent(WindowTitle);
+            _keywordEditorWindow.position = new Rect(50, 50, 250, 600);
+            _keywordEditorWindow.Show();
         }
 
         private void OnEnable()
@@ -76,33 +94,60 @@ namespace Editor.KeywordSystem
         {
             GUILayout.BeginArea(_mainAreaRect);
             EditorGUIUtility.labelWidth = 100;
-            _keywordName = EditorGUILayout.TextField("Name:", _keywordName);
-            _keywordValue = EditorGUILayout.IntField("Value:", _keywordValue);
+            _keywordName = EditorGUILayout.TextField(NameLabelText, _keywordName);
+            _keywordValue = EditorGUILayout.IntField(ValueLabelText, _keywordValue);
             _keywordDefinition = EditorGUILayout.TextArea(_keywordDefinition, GUILayout.Height(50));
-            _abilityType = (AbilityType)EditorGUILayout.EnumPopup("Ability Type:", _abilityType);
+            _abilityType = (AbilityType)EditorGUILayout.EnumPopup(TypeLabelText, _abilityType);
             GUILayout.EndArea();
         }
 
         private void DrawButtonArea()
         {
             GUILayout.BeginArea(_buttonAreaRect);
+            
             GUILayout.BeginHorizontal(EditorStyles.toolbar);
-            if (GUILayout.Button("Save", EditorStyles.toolbarButton,GUILayout.Width(BUTTON_WIDTH)))
+            DrawSaveButton();
+            DrawNewButton();
+            GUILayout.EndHorizontal();
+           
+            GUILayout.BeginHorizontal(EditorStyles.toolbar);
+            DrawReloadButton();
+            DrawDoneButton();
+            GUILayout.EndHorizontal();
+            
+            GUILayout.EndArea();
+        }
+
+        private void DrawSaveButton()
+        {
+            if (GUILayout.Button(SaveButtonText, EditorStyles.toolbarButton,GUILayout.Width(BUTTON_WIDTH)))
             {
                 SaveKeywords();
             }
-            if (GUILayout.Button("New Keyword",EditorStyles.toolbarButton,GUILayout.Width(BUTTON_WIDTH)))
+        }
+
+        private void DrawNewButton()
+        {
+            if (GUILayout.Button(NewButtonText, EditorStyles.toolbarButton,GUILayout.Width(BUTTON_WIDTH)))
             {
                 InitializeNewKeyword();
             }
-            GUILayout.EndHorizontal();
-            GUILayout.BeginHorizontal(EditorStyles.toolbar);
-            if (GUILayout.Button("Reload Keyword List",EditorStyles.toolbarButton,GUILayout.Width(BUTTON_WIDTH * 2)))
+        }
+
+        private void DrawReloadButton()
+        {
+            if (GUILayout.Button(ReloadButtonText, EditorStyles.toolbarButton,GUILayout.Width(BUTTON_WIDTH)))
             {
                 LoadKeywords();
             }
-            GUILayout.EndHorizontal();
-            GUILayout.EndArea();
+        }
+
+        private void DrawDoneButton()
+        {
+            if (GUILayout.Button(DoneButtonText, EditorStyles.toolbarButton, GUILayout.Width(BUTTON_WIDTH)))
+            {
+                _keywordEditorWindow.Close();
+            }
         }
 
         private void DrawKeywordListArea()
@@ -120,11 +165,11 @@ namespace Editor.KeywordSystem
                 
                 EditorGUILayout.BeginHorizontal();
                 GUILayout.Label(keyword.keywordName);
-                if (GUILayout.Button("Edit", GUILayout.Width(50)))
+                if (GUILayout.Button(EditButtonText, GUILayout.Width(50)))
                 {
                     EditKeyword(keyword);
                 }
-                if (GUILayout.Button("Delete", GUILayout.Width(50)))
+                if (GUILayout.Button(DeleteButtonText, GUILayout.Width(50)))
                 {
                     if (EditorUtility.DisplayDialog("Confirm Deletion", $"Are you sure you want to delete the keyword '{keyword.keywordName}'?", "Yes", "No"))
                     {
@@ -149,7 +194,7 @@ namespace Editor.KeywordSystem
 
         private void SaveKeywords()
         {
-            Undo.RecordObject(_keywordManager, "Save Keywords");
+            Undo.RecordObject(_keywordManager, SaveKeywordRecordText);
             Keyword editedKeyword = new()
             {
                 keywordName = _keywordName,
@@ -190,7 +235,7 @@ namespace Editor.KeywordSystem
 
         private void DeleteKeyword(Keyword keyword)
         {
-            Undo.RecordObject(_keywordManager, "Delete Keyword");
+            Undo.RecordObject(_keywordManager, DeleteKeywordRecordText);
             _keywords.Remove(keyword);
         }
 
