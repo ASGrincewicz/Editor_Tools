@@ -5,6 +5,7 @@ using Editor.Channels;
 using Editor.KeywordSystem;
 using Editor.Utilities;
 using UnityEditor;
+using UnityEditor.PackageManager.UI;
 using UnityEngine;
 using static Editor.CardData.StatDataReference;
 
@@ -13,6 +14,8 @@ namespace Editor.CardEditor
     public class CardEditorWindow : EditorWindow
     {
         [SerializeField] private EditorWindowChannel _editorWindowChannel;
+        
+        private static  EditorWindow _cardEditorWindow;
         // Constants
         private const float FIELD_WIDTH = 400;
         
@@ -31,12 +34,14 @@ namespace Editor.CardEditor
 
         private bool IsCalculateCostButtonPressed => GUILayout.Button("Calculate Cost", EditorStyles.toolbarButton);
         
+        private bool IsDoneButtonPressed => GUILayout.Button("Done", EditorStyles.toolbarButton);
+        
         [MenuItem("Tools/Card Editor")]
         public static void Init()
         {
-            EditorWindow window = GetWindow<CardEditorWindow>("Card Editor");
-            window.position = new Rect(250f, 150f, 600f, 650f);
-            window.Show();
+            _cardEditorWindow = GetWindow<CardEditorWindow>("Card Editor");
+            _cardEditorWindow.position = new Rect(250f, 150f, 600f, 650f);
+            _cardEditorWindow.Show();
             CardDataAssetUtility.CardTextStringBuilder = new StringBuilder();
             CardDataAssetUtility.LoadKeywordManagerAsset();
             CardDataAssetUtility.RefreshKeywordsList();
@@ -237,6 +242,11 @@ namespace Editor.CardEditor
             if (IsCalculateCostButtonPressed && !ReferenceEquals(CardDataAssetUtility.SelectedCard, null))
             {
                _editorWindowChannel.RaiseCostCalculatorWindowRequestedEvent(CardDataAssetUtility.SelectedCard);
+            }
+
+            if (IsDoneButtonPressed)
+            {
+               _cardEditorWindow.Close();
             }
         }
     }
