@@ -17,8 +17,11 @@ namespace Editor.CostCalculator
         private const bool Is_Utility_Window = false;
         private const string CalculateButtonText = "Calculate";
         private const string EditButtonText = "Edit Card";
+        private const string CloseButtonText = "Close";
         private const float Label_Height = 30;
         private const float Rect_Width = 300;
+        
+        private static CostCalculatorWindow _costCalculatorWindow;
 
         // Class Variables
         private CardDataSO LoadedCardDataData { get; set; } = null;
@@ -34,11 +37,11 @@ namespace Editor.CostCalculator
         [MenuItem("Tools/Utilities/Cost Calculator")]
         public static void Init()
         {
-            CostCalculatorWindow window =
+            _costCalculatorWindow =
                 (CostCalculatorWindow)GetWindow(typeof(CostCalculatorWindow), Is_Utility_Window, Window_Title);
             
-            window.position = new Rect(50, 50, 300, 500);
-            window.Show();
+            _costCalculatorWindow.position = new Rect(50, 50, 300, 500);
+            _costCalculatorWindow.Show();
         }
 
         private void OnEnable()
@@ -73,7 +76,7 @@ namespace Editor.CostCalculator
           
             MessageRect = new Rect(position.width * 0.10f, CardInfoRect.y + CardInfoRect.height + 10,position.width * 0.5f,position.height * 0.10f);
            
-            ButtonRect = new Rect(position.width * 0.10f, MessageRect.y + MessageRect.height + 5, position.width * 0.5f, position.height * 0.20f);
+            ButtonRect = new Rect(position.width * 0.10f, MessageRect.y + MessageRect.height + 5, position.width * 0.75f, position.height * 0.20f);
         }
 
         
@@ -114,6 +117,7 @@ namespace Editor.CostCalculator
             
             DrawRunCalculationButton();
             DrawOpenInCardEditorButton();
+            DrawCloseButton();
             GUILayout.EndHorizontal();
             GUILayout.EndArea();
         }
@@ -131,6 +135,15 @@ namespace Editor.CostCalculator
             if (GUILayout.Button(EditButtonText, GUILayout.Width(position.width * 0.25f), GUILayout.Height(ButtonRect.height * 0.25f)))
             {
                _editorWindowChannel.RaiseCardEditorWindowRequestedEvent(LoadedCardDataData);
+            }
+        }
+
+        private void DrawCloseButton()
+        {
+            if (GUILayout.Button(CloseButtonText, GUILayout.Width(position.width * 0.25f),
+                    GUILayout.Height(ButtonRect.height * 0.25f)))
+            {
+                _costCalculatorWindow.Close();
             }
         }
         private void DrawLabel(string text) 
