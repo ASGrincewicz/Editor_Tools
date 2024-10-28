@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
 using Editor.CardData;
 using Editor.CardData.CardTypeData;
@@ -36,6 +37,9 @@ namespace Editor.CardEditor
         private bool IsCalculateCostButtonPressed => GUILayout.Button("Calculate Cost", EditorStyles.toolbarButton);
         
         private bool IsDoneButtonPressed => GUILayout.Button("Done", EditorStyles.toolbarButton);
+        
+        private List<int> LocalStatValues = new List<int>();
+        
         
         [MenuItem("Tools/Card Editor")]
         public static void Init()
@@ -92,86 +96,79 @@ namespace Editor.CardEditor
         private void DrawEditableFields()
         {
             EditorGUIUtility.labelWidth = 100;
-            CardDataAssetUtility.CardToEdit = EditorGUILayout.ObjectField("Card To Edit",CardDataAssetUtility.CardToEdit, typeof(CardDataSO),false) as CardDataSO;
-            GUILayout.Label(!ReferenceEquals(CardDataAssetUtility.SelectedCard, null) ? "Select Card Type" : "Create New Card",
+            CardDataAssetUtility.CardToEdit =
+                EditorGUILayout.ObjectField("Card To Edit", CardDataAssetUtility.CardToEdit, typeof(CardDataSO), false)
+                    as CardDataSO;
+            GUILayout.Label(
+                !ReferenceEquals(CardDataAssetUtility.SelectedCard, null) ? "Select Card Type" : "Create New Card",
                 EditorStyles.boldLabel);
-            CardDataAssetUtility.CardTypeData =  (CardTypeDataSO)EditorGUILayout.ObjectField("Card Type",CardDataAssetUtility.CardTypeData,typeof(CardTypeDataSO),false);
-           
-            CardDataAssetUtility.CardName = EditorGUILayout.TextField("Card Name", CardDataAssetUtility.CardName, GUILayout.Width(FIELD_WIDTH));
-            CardDataAssetUtility.CardRarity = (CardRarity)EditorGUILayout.EnumPopup("Card Rarity",CardDataAssetUtility.CardRarity,GUILayout.Width(FIELD_WIDTH));
-            CardDataAssetUtility.Artwork = (Texture2D)EditorGUILayout.ObjectField("Artwork", CardDataAssetUtility.Artwork, typeof(Texture2D), false,
+            CardDataAssetUtility.CardTypeData = (CardTypeDataSO)EditorGUILayout.ObjectField("Card Type",
+                CardDataAssetUtility.CardTypeData, typeof(CardTypeDataSO), false);
+
+            CardDataAssetUtility.CardName = EditorGUILayout.TextField("Card Name", CardDataAssetUtility.CardName,
+                GUILayout.Width(FIELD_WIDTH));
+            CardDataAssetUtility.CardRarity = (CardRarity)EditorGUILayout.EnumPopup("Card Rarity",
+                CardDataAssetUtility.CardRarity, GUILayout.Width(FIELD_WIDTH));
+            CardDataAssetUtility.Artwork = (Texture2D)EditorGUILayout.ObjectField("Artwork",
+                CardDataAssetUtility.Artwork, typeof(Texture2D), false,
                 GUILayout.Height(200), GUILayout.Width(FIELD_WIDTH));
             if (CardDataAssetUtility.CardTypeData != null)
             {
                 if (CardDataAssetUtility.CardTypeData.HasStats)
                 {
-                    DrawStatLayout(StatNames.Explore, ref CardDataAssetUtility.exploreValue, EXPLORE_DESCRIPTION);
-                    DrawStatLayout(StatNames.Attack, ref CardDataAssetUtility.attackValue, ATTACK_DESCRIPTION);
-                    DrawStatLayout(StatNames.HP, ref CardDataAssetUtility.hitPointsValue, HIT_POINTS_DESCRIPTION);
-                    DrawStatLayout(StatNames.Speed, ref CardDataAssetUtility.speedValue, SPEED_DESCRIPTION);
-                    DrawStatLayout(StatNames.Focus, ref CardDataAssetUtility.focusValue, FOCUS_DESCRIPTION);
-                    DrawStatLayout(StatNames.Upgrades, ref CardDataAssetUtility.upgradeSlotsValue,
-                        UPGRADE_SLOTS_DESCRIPTION);
-                }
+                    for (int i = 0; i < CardDataAssetUtility.CardTypeData.CardStats.Count; i++)
+                    {
+                        CardStatData statData = CardDataAssetUtility.CardTypeData.CardStats[i];
+                        if (CardDataAssetUtility.SelectedCard != null)
+                        {
+                            LocalStatValues.Add(CardDataAssetUtility.SelectedCard.Stats[i].StatValue);
+                            CardDataAssetUtility.CardStatValues.Add(CardDataAssetUtility.SelectedCard.Stats[i].StatValue);
+                        }
+                        else
+                        {
+                            LocalStatValues.Add(0);
+                            CardDataAssetUtility.CardStatValues.Add(0);
+                        }
+                       
+                        DrawStatLayout(statData, i);
+                    }
 
-                /*switch (CardDataAssetUtility.CardTypes)
-                {
-                    case CardTypes.TBD:
-                    case CardTypes.Starship:
-                        break;
-                    case CardTypes.Action:
-                        break;
-                    case CardTypes.Environment:
-                        DrawStatLayout(StatNames.Explore, ref CardDataAssetUtility.exploreValue, EXPLORE_DESCRIPTION);
-                        break;
-                    case CardTypes.Gear_Equipment:
-                    case CardTypes.Gear_Upgrade:
-                    case CardTypes.Character_Ally:
-                    case CardTypes.Character_Hunter:
-                    case CardTypes.Creature:
-                    case CardTypes.Boss:
-                        DrawStatLayout(StatNames.Attack, ref CardDataAssetUtility.attackValue, ATTACK_DESCRIPTION);
-                        DrawStatLayout(StatNames.HP, ref CardDataAssetUtility.hitPointsValue, HIT_POINTS_DESCRIPTION);
-                        DrawStatLayout(StatNames.Speed, ref CardDataAssetUtility.speedValue, SPEED_DESCRIPTION);
-                        DrawStatLayout(StatNames.Focus, ref CardDataAssetUtility.focusValue, FOCUS_DESCRIPTION);
-                        if (CardDataAssetUtility.CardTypes == CardTypes.Character_Hunter) DrawStatLayout(StatNames.Upgrades, ref CardDataAssetUtility.upgradeSlotsValue, UPGRADE_SLOTS_DESCRIPTION);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }*/
-                if (CardDataAssetUtility.CardTypeData.HasKeywords)
-                {
-                    DrawKeywordArea();
-                }
 
-                if (CardDataAssetUtility.CardTypeData.HasCost)
-                {
-                    GUILayout.Label($"Card Cost: {CardDataAssetUtility.CardCost}");
-                    ;
-                }
+                    if (CardDataAssetUtility.CardTypeData.HasKeywords)
+                    {
+                        DrawKeywordArea();
+                    }
 
-                if (CardDataAssetUtility.CardTypeData.HasCardText)
-                {
-                    GUILayout.Label("Card Text");
-                    CardDataAssetUtility.CardText = EditorGUILayout.TextArea(CardDataAssetUtility.CardText,
-                        GUILayout.Height(100), GUILayout.Width(FIELD_WIDTH));
+                    if (CardDataAssetUtility.CardTypeData.HasCost)
+                    {
+                        GUILayout.Label($"Card Cost: {CardDataAssetUtility.CardCost}");
+                        
+                    }
+
+                    if (CardDataAssetUtility.CardTypeData.HasCardText)
+                    {
+                        GUILayout.Label("Card Text");
+                        CardDataAssetUtility.CardText = EditorGUILayout.TextArea(CardDataAssetUtility.CardText,
+                            GUILayout.Height(100), GUILayout.Width(FIELD_WIDTH));
+                    }
+
                 }
             }
         }
-        
-        private void DrawStatLayout(StatNames statName, ref int statValue, string statDescription)
+
+        private void DrawStatLayout(CardStatData statData, int statValueIndex)
         {
             GUILayout.BeginHorizontal(GUILayout.Width(FIELD_WIDTH),GUILayout.ExpandWidth(true));
-            DrawStatName(statName);
-            DrawStatValueField(ref statValue);
-            DrawStatDescription(statDescription);
+            DrawStatName(statData.statName);
+            DrawStatValueField(ref statValueIndex);
+            DrawStatDescription(statData.statDescription);
             GUILayout.EndHorizontal();
         }  
         
-        private void DrawStatName(StatNames statName)
+        private void DrawStatName(string statName)
         {
             GUILayout.BeginVertical(GUILayout.Width(100));
-            GUILayout.Label(statName.GetDescription());
+            GUILayout.Label(statName);
             GUILayout.EndVertical();
         }
 
@@ -182,10 +179,31 @@ namespace Editor.CardEditor
             GUILayout.EndVertical();
         }
 
-        private void DrawStatValueField(ref int statValue)
+        private void DrawStatValueField(ref int statValueIndex)
         {
+            // Ensure statValueIndex is within bounds
+            if (statValueIndex < 0 || statValueIndex >= LocalStatValues.Count|| statValueIndex >= CardDataAssetUtility.CardStatValues.Count)
+            {
+                Debug.LogError("statValueIndex is out of bounds.");
+                return;
+            }
+
             GUILayout.BeginVertical(GUILayout.Width(100));
-            statValue = EditorGUILayout.IntField(statValue,GUILayout.Width(50),GUILayout.ExpandWidth(false));
+
+            // Get the current value from LocalStatValues
+            int currentValue = LocalStatValues[statValueIndex];
+
+            // Display the IntField and get the new value
+            int newValue = EditorGUILayout.IntField(currentValue, GUILayout.Width(50), GUILayout.ExpandWidth(false));
+    
+            // Check if the value has changed
+            if (newValue != currentValue)
+            {
+                // Update both LocalStatValues and CardDataAssetUtility.CardStatValues
+                LocalStatValues[statValueIndex] = newValue;
+                CardDataAssetUtility.CardStatValues[statValueIndex] = newValue;
+            }
+
             GUILayout.EndVertical();
         }
 

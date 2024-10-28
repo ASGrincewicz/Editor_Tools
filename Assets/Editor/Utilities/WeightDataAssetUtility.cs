@@ -1,4 +1,4 @@
-using Editor.AttributesWeights;
+/*using Editor.AttributesWeights;
 using Editor.CardData;
 using UnityEditor;
 using UnityEngine;
@@ -46,10 +46,10 @@ namespace Editor.Utilities
                 CardTypes.Gear_Equipment=> AssetDatabase.LoadAssetAtPath<WeightContainer>(GEAR_WEIGHT_ASSET_PATH),
                 CardTypes.Gear_Upgrade => AssetDatabase.LoadAssetAtPath<WeightContainer>(GEAR_WEIGHT_ASSET_PATH),
                 _ => AssetDatabase.LoadAssetAtPath<WeightContainer>(KEYWORD_ONLY_WEIGHT_ASSET_PATH)
-            };*/
+            };#1#
             // TODO: Need to refactor Weight system.
             return null;
         }
         
     }
-}
+}*/

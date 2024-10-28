@@ -12,14 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3c1a53a361c4d8c9fe124796c21b743, type: 3}
   m_Name: CardTypeDataSO
   m_EditorClassIdentifier: 
-  _cardTypeName: 
+  _cardTypeName: Character
   _cardTypeIcon: {fileID: 0}
-  _cardTypeColor: {r: 0, g: 0, b: 0, a: 0}
+  _cardTypeColor: {r: 0.9245283, g: 0.06541473, b: 0.06541473, a: 1}
   _hasStats: 1
   _hasCost: 1
   _hasKeywords: 1
   _hasCardText: 1
-  _cardStats:
-  - _statName: 
-    _statValue: 0
-    _statDescription: 
+  _cardStatData:
+  - statName: Attack
+    statDescription: Amount of Damage Dealt
+    statWeight: 0
+  - statName: Health
+    statDescription: Amount of Hit Points
+    statWeight: 0

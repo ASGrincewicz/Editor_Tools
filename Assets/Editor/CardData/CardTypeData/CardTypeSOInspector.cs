@@ -14,7 +14,7 @@ namespace Editor.CardData.CardTypeData
         private const string HasCostName = "_hasCost";
         private const string HasKeywordsName = "_hasKeywords";
         private const string HasCardTextName = "_hasCardText";
-        private const string CardStatsName = "_cardStats";
+        private const string CardStatDataName = "_cardStatData";
         
         // Serialized Properties
         private SerializedProperty CardTypeNameProperty { get; set; }
@@ -25,7 +25,7 @@ namespace Editor.CardData.CardTypeData
         private SerializedProperty HasCostProperty { get; set; }
         private SerializedProperty HasKeywordsProperty { get; set; }
         private SerializedProperty HasCardTextProperty { get; set; }
-        private SerializedProperty CardStatsProperty { get; set; }
+        private SerializedProperty CardStatDataProperty { get; set; }
 
         private void OnEnable()
         {
@@ -36,7 +36,7 @@ namespace Editor.CardData.CardTypeData
             HasCostProperty = serializedObject.FindProperty(HasCostName);
             HasKeywordsProperty = serializedObject.FindProperty(HasKeywordsName);
             HasCardTextProperty = serializedObject.FindProperty(HasCardTextName);
-            CardStatsProperty = serializedObject.FindProperty(CardStatsName);
+            CardStatDataProperty = serializedObject.FindProperty(CardStatDataName);
         }
         public override void OnInspectorGUI()
         {
@@ -67,13 +67,13 @@ namespace Editor.CardData.CardTypeData
         {
             if (HasStatsProperty.boolValue)
             {
-                DrawCardStatsProperty();
+                DrawCardStatDataProperty();
             }
         }
 
-        private void DrawCardStatsProperty()
+        private void DrawCardStatDataProperty()
         {
-            EditorGUILayout.PropertyField(CardStatsProperty);
+            EditorGUILayout.PropertyField(CardStatDataProperty);
         }
     }
 }

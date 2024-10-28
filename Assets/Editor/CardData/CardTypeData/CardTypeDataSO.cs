@@ -13,7 +13,7 @@ namespace Editor.CardData.CardTypeData
         [SerializeField] private bool _hasCost = true;
         [SerializeField] private bool _hasKeywords = true;
         [SerializeField] private bool _hasCardText = true;
-        [SerializeField] private List<CardStat> _cardStats;
+        [SerializeField] private List<CardStatData> _cardStatData;
 
         public string CardTypeName
         {
@@ -57,10 +57,10 @@ namespace Editor.CardData.CardTypeData
             set => _hasCardText = value;
         }
 
-        public List<CardStat> CardStats
+        public List<CardStatData> CardStats
         {
-            get => _cardStats;
-            set => _cardStats = value;
+            get => _cardStatData;
+            set => _cardStatData = value;
         }
     }
 }

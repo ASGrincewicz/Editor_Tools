@@ -15,12 +15,11 @@ namespace Editor.CardData
     public class CardDataSO : ScriptableObject
     {
         private const string KeywordManagerPath = "Assets/Data/Scriptable Objects/Keywords/KeywordManager.asset";
-        [SerializeField] private WeightContainer _weightData;
+        //[SerializeField] private WeightContainer _weightData;
         [SerializeField] private string _cardSetName = "None";
         [SerializeField] private int _cardNumber = 0;
         [SerializeField] private CardRarity _rarity;
         [SerializeField] private int _cost;
-        //[SerializeField] private CardTypes _cardType;
         [SerializeField] private CardTypeDataSO _cardTypeData;
         [SerializeField] private string _cardName;
         [SerializeField] private Texture2D _artWork;
@@ -29,12 +28,6 @@ namespace Editor.CardData
         private string _cardText;
         // Stats
         [SerializeField] private List<CardStat> _stats;
-        /*[SerializeField] private CardStat _attack;
-        [HideInInspector] [SerializeField] private CardStat _explore;
-        [HideInInspector] [SerializeField] private CardStat _focus;
-        [HideInInspector] [SerializeField] private CardStat _hitPoints;
-        [HideInInspector] [SerializeField] private CardStat _speed;
-        [HideInInspector] [SerializeField] private CardStat _upgradeSlots;*/
 
         public string CardSetName
         {
@@ -60,16 +53,22 @@ namespace Editor.CardData
             get { return _cost; }
             set { _cost = value; }
         }
-        /// <summary>
+       
         /// Type of the card.
-        /// </summary>
-        /*public CardTypes CardType
+       
+        public CardTypeDataSO CardTypeDataSO 
         {
-            get { return _cardType; }
-            set { _cardType = value; }
-        }*/
-        
-        public CardTypeDataSO CardTypeDataSO { get; set; }
+            get
+            {
+                return _cardTypeData;
+            }
+            set
+            {
+                Debug.Log($"CardTypeDataSO: {_cardTypeData}");
+                _cardTypeData = value;
+                
+            }
+        }
         /// <summary>
         /// Name of the card.
         /// </summary>
@@ -116,52 +115,6 @@ namespace Editor.CardData
             get { return _stats; }
             set { _stats = value; }
         }
-        
-        // The following properties are the CardStat type properties representing different stats for a card
-        /*public CardStat Attack
-        {
-            get { return _attack; }
-            set { _attack = value; }
-        }
-
-        public CardStat Explore
-        {
-            get { return _explore; }
-            set { _explore = value; }
-        }
-
-        public CardStat Focus
-        {
-            get { return _focus; }
-            set { _focus = value; }
-        }
-
-        public CardStat HitPoints
-        {
-            get { return _hitPoints; }
-            set { _hitPoints = value; }
-        }
-
-        public CardStat Speed
-        {
-            get { return _speed; }
-            set { _speed = value; }
-        }
-
-        public CardStat UpgradeSlots
-        {
-            get { return _upgradeSlots; }
-            set { _upgradeSlots = value; }
-        }
-
-        public CardStat[] GetCardStats()
-        {
-            CardStat[] stats = new[]
-            {
-                _attack, _explore, _focus, _hitPoints, _speed, _upgradeSlots
-            };
-            return stats;
-        }*/
 
         private int GetKeywordsTotalValue()
         {
@@ -204,12 +157,6 @@ namespace Editor.CardData
                 Keyword keyword = manager.keywordList.Find(x => x.keywordName == _keywords[i].keywordName);
                 _keywords[i].keywordValue = keyword.keywordValue;
             }
-        }
-
-        public WeightContainer WeightData
-        {
-            get { return _weightData; }
-            set { _weightData = value; }
         }
     }
 }

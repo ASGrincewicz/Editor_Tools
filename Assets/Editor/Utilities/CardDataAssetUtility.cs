@@ -24,31 +24,26 @@ namespace Editor.Utilities
         public static CardRarity CardRarity { get; set; }
         public static string CardName { get; set; }
         [CanBeNull] public static Texture2D Artwork { get; set; }
-        public static CardStat? AttackStat { get; set; }
-        public static int attackValue;
-        public static CardStat? ExploreStat { get; set; }
-        public static int exploreValue;
-        public static CardStat? FocusStat { get; set; }
-        public static int focusValue;
-        public static CardStat? HitPointsStat { get; set; }
-        public static int hitPointsValue;
-        public static CardStat? SpeedStat { get; set; }
-        public static int speedValue;
-        public static CardStat? UpgradeSlotsStat { get; set; }
-        public static int upgradeSlotsValue;
         public static string CardText { get; set; }
         public static int CardCost { get; set; }
+        
+        // Keyword
         public static List<Keyword> KeywordsList { get; set; }
         public static List<string> KeywordNamesList { get; set; }
         public static Keyword[] SelectedKeywords { get; set; }
         public static int[] SelectedKeywordsIndex { get; set; }
+        
+        // Stats
+        /*public static List<CardStat> CardStats { get; set; }*/
+        public static List<int> CardStatValues { get; set; }
+        
         public static CardDataSO SelectedCard { get; set; }
         public static CardDataSO CardToEdit { get; set; }
 
         public static void CreateNewCard()
         {
             CardDataSO newCard = ScriptableObject.CreateInstance<CardDataSO>();
-            if (InitializeCard(newCard))
+            if (InitializeCard(newCard, CardStatValues))
             {
                 AssetDatabase.CreateAsset(newCard, $"{ASSET_PATH}{CardName}.asset");
                 AssetDatabase.SaveAssets();
@@ -112,8 +107,13 @@ namespace Editor.Utilities
             if (SelectedCard == null) return;
             LoadCommonCardData();
             UpdateSelectedKeywordsIndices();
-            CardText += CardTextStringBuilder.Append(SelectedCard.CardText);
+            CardText = SelectedCard.CardText;
             /*GetStatsFromLoadedCard();*/
+            CardStatValues = new List<int>();
+            foreach (CardStat stat in SelectedCard.Stats)
+            {
+                CardStatValues.Add(stat.StatValue);
+            }
 
             CardTextStringBuilder.Clear();
         }
@@ -131,12 +131,6 @@ namespace Editor.Utilities
             CardName = string.Empty;
             CardRarity = CardRarity.None;
             CardText = string.Empty;
-            AttackStat = null;
-            HitPointsStat = null;
-            SpeedStat = null;
-            FocusStat = null;
-            ExploreStat = null;
-            UpgradeSlotsStat = null;
             SelectedKeywords = null;
             Artwork = null;
         }
@@ -144,9 +138,9 @@ namespace Editor.Utilities
         public static void SaveExistingCard()
         {
             Undo.RecordObject(SelectedCard, "Edited Card");
-            if (InitializeCard(SelectedCard))
+            //CardStatValues = new List<int>();
+            if (InitializeCard(SelectedCard, CardStatValues))
             {
-                //WeightDataAssetUtility.SetWeightData(SelectedCard);
                 EditorUtility.SetDirty(SelectedCard);
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
@@ -213,7 +207,7 @@ namespace Editor.Utilities
         }
       
 
-        private static bool InitializeCard(CardDataSO card)
+        private static bool InitializeCard(CardDataSO card, List<int> statValues)
         {
             if (ReferenceEquals(card, null))
             {
@@ -221,8 +215,7 @@ namespace Editor.Utilities
             }
 
             InitializeCommonCardData(card);
-            AssignStatsToCard(card);
-            //WeightDataAssetUtility.SetWeightData(card);
+            AssignStatsToCard(card, statValues);
             
             return true;
         }
@@ -230,6 +223,7 @@ namespace Editor.Utilities
         private static void InitializeCommonCardData(CardDataSO card)
         {
             card.CardTypeDataSO = CardTypeData;
+            Debug.Log($"Initializing card data for {card.CardTypeDataSO.name}");
             card.Rarity = CardRarity;
             card.CardName = CardName;
             card.ArtWork = Artwork;
@@ -238,16 +232,41 @@ namespace Editor.Utilities
             card.CardCost = CardCost;
         }
 
-        private static void AssignStatsToCard(CardDataSO card)
+        private static void AssignStatsToCard(CardDataSO card, List<int> statValues)
         {
-            if (card.CardTypeDataSO != null && card.CardTypeDataSO.HasStats)
+            if (card.CardTypeDataSO == null)
             {
-                card.Stats ??= new List<CardStat>();
-                card.Stats.Add(new CardStat(AttackStat.ToString(), attackValue, ATTACK_DESCRIPTION));
-                card.Stats.Add( new CardStat(HitPointsStat.ToString(), hitPointsValue, HIT_POINTS_DESCRIPTION));
-                card.Stats.Add(new CardStat(SpeedStat.ToString(), speedValue, SPEED_DESCRIPTION));
-                card.Stats.Add(new CardStat(FocusStat.ToString(), focusValue, FOCUS_DESCRIPTION));
-                card.Stats.Add( new CardStat(UpgradeSlotsStat.ToString(), upgradeSlotsValue, UPGRADE_SLOTS_DESCRIPTION));
+                Debug.LogError("CardTypeDataSO is null.");
+                return;
+            }
+
+            if (!card.CardTypeDataSO.HasStats)
+            {
+                Debug.LogError("CardTypeDataSO does not have stats.");
+                return;
+            }
+
+            if (card.CardTypeDataSO.CardStats == null || card.CardTypeDataSO.CardStats.Count == 0)
+            {
+                Debug.LogError("CardTypeDataSO.CardStats is null or empty.");
+                return;
+            }
+
+            if (statValues == null || statValues.Count < card.CardTypeDataSO.CardStats.Count)
+            {
+                Debug.LogError("statValues is null or does not contain enough elements.");
+                return;
+            }
+
+            card.Stats = new List<CardStat>();
+
+            for (int i = 0; i < card.CardTypeDataSO.CardStats.Count; i++)
+            {
+                Debug.Log($"Adding stat: {card.CardTypeDataSO.CardStats[i].statName} with value: {statValues[i]}");
+                card.Stats.Add(new CardStat(
+                    card.CardTypeDataSO.CardStats[i].statName, 
+                    statValues[i], 
+                    card.CardTypeDataSO.CardStats[i].statDescription));
             }
         }
     }

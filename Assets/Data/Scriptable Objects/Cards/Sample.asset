@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85c2db69d287cba46a63d7dc92203786, type: 3}
+  m_Name: Sample
+  m_EditorClassIdentifier: 
+  _cardSetName: None
+  _cardNumber: 0
+  _rarity: 2
+  _cost: 0
+  _cardTypeData: {fileID: 11400000, guid: a8f5de3dc48124cd9a1f1fd971cd914b, type: 2}
+  _cardName: Sample
+  _artWork: {fileID: 2800000, guid: 5299ea8879f667e49af9f5c307cdec9c, type: 3}
+  _keywords:
+  - keywordName: Blink
+    keywordValue: 2
+    definition: "Move this card from the melee zone \nto the ranged zone or vice
+      versa."
+    abilityType: 10
+  - keywordName: Cloak
+    keywordValue: 7
+    definition: This card cannot be targeted this turn.
+    abilityType: 0
+  - keywordName: Dodge
+    keywordValue: 7
+    definition: 'oll a 5 or 6 to take no damage from a successful attack. If this
+      card is in the melee zone, any ally in the ranged position behind this card
+      takes the damage. '
+    abilityType: 5
+  _cardText: Sample
+  _stats:
+  - _statName: Attack
+    _statValue: 5
+    _statDescription: Amount of Damage Dealt
+  - _statName: Health
+    _statValue: 80
+    _statDescription: Amount of Hit Points
