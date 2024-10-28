@@ -92,13 +92,13 @@ namespace Editor.CostCalculator
         {
             GUILayout.BeginArea(CardInfoRect);
             DrawLabel($"Card Name: {LoadedCardDataData?.CardName}");
-            DrawLabel($"Card Type: {LoadedCardDataData?.CardType}");
-            DrawLabel($"Attack: {LoadedCardDataData?.Attack.StatValue}");
+            DrawLabel($"Card Type: {LoadedCardDataData?.CardTypeDataSO}");
+            /*DrawLabel($"Attack: {LoadedCardDataData?.Attack.StatValue}");
             DrawLabel($"Explore: {LoadedCardDataData?.Explore.StatValue}");
             DrawLabel($"Focus: {LoadedCardDataData?.Focus.StatValue}");
             DrawLabel($"Hit Points: {LoadedCardDataData?.HitPoints.StatValue}");
             DrawLabel($"Speed: {LoadedCardDataData?.Speed.StatValue}");
-            DrawLabel($"Upgrade Slots: {LoadedCardDataData?.UpgradeSlots.StatValue}");
+            DrawLabel($"Upgrade Slots: {LoadedCardDataData?.UpgradeSlots.StatValue}");*/
             DrawLabel($"Keywords: {KeywordSumString}");
             GUILayout.EndArea();
         }
@@ -156,8 +156,8 @@ namespace Editor.CostCalculator
            ErrorHandler.TryToGetCard(LoadedCardDataData);
             float cost = 0.0f;
             Message = $"Calculating cost for {LoadedCardDataData?.CardName}";
-            CostCalculator calculator = new(calculationSettings,LoadedCardDataData.WeightData,LoadedCardDataData.GetCardStats(), LoadedCardDataData.Keywords);
-            cost = calculator.NormalizeCost();
+           // CostCalculator calculator = new(calculationSettings,LoadedCardDataData.WeightData,LoadedCardDataData.GetCardStats(), LoadedCardDataData.Keywords);
+           // cost = calculator.NormalizeCost();
             KeywordSumString = LoadedCardDataData?.GetKeywordsSumString();
             Message = $"Cost is {cost}";
             AssignCostToCard((int)cost);

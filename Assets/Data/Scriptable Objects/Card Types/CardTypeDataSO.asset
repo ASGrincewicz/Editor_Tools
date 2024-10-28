@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: CardTypeDataSO
   m_EditorClassIdentifier: 
   _cardTypeName: 
-  _cardStat:
-    _statName: 0
+  _cardTypeIcon: {fileID: 0}
+  _cardTypeColor: {r: 0, g: 0, b: 0, a: 0}
+  _hasStats: 1
+  _hasCost: 1
+  _hasKeywords: 1
+  _hasCardText: 1
+  _cardStats:
+  - _statName: 
     _statValue: 0
     _statDescription: 

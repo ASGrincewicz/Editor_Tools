@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using Editor.AttributesWeights;
+using Editor.CardData.CardTypeData;
 using Editor.KeywordSystem;
 using UnityEditor;
 using UnityEngine;
@@ -10,27 +12,29 @@ namespace Editor.CardData
     /// It implements the ICardData interface and is used to create new card configs in Unity.
     /// </summary>
     [CreateAssetMenu(menuName="Config/CardData")] 
-    public class CardDataSO : ScriptableObject, ICardData
+    public class CardDataSO : ScriptableObject
     {
         private const string KeywordManagerPath = "Assets/Data/Scriptable Objects/Keywords/KeywordManager.asset";
-        [HideInInspector] [SerializeField] private WeightContainer _weightData;
-        [HideInInspector] [SerializeField] private string _cardSetName = "None";
-        [HideInInspector] [SerializeField] private int _cardNumber = 0;
-        [HideInInspector] [SerializeField] private CardRarity _rarity;
-        [HideInInspector] [SerializeField] private int _cost;
-        [HideInInspector] [SerializeField] private CardTypes _cardType;
-        [HideInInspector] [SerializeField] private string _cardName;
-        [HideInInspector] [SerializeField] private Texture2D _artWork;
-        [HideInInspector] [SerializeField] private Keyword[] _keywords;
-        [HideInInspector] [SerializeField][Multiline]
+        [SerializeField] private WeightContainer _weightData;
+        [SerializeField] private string _cardSetName = "None";
+        [SerializeField] private int _cardNumber = 0;
+        [SerializeField] private CardRarity _rarity;
+        [SerializeField] private int _cost;
+        //[SerializeField] private CardTypes _cardType;
+        [SerializeField] private CardTypeDataSO _cardTypeData;
+        [SerializeField] private string _cardName;
+        [SerializeField] private Texture2D _artWork;
+        [SerializeField] private Keyword[] _keywords;
+        [SerializeField][Multiline]
         private string _cardText;
         // Stats
-        [HideInInspector] [SerializeField] private CardStat _attack;
+        [SerializeField] private List<CardStat> _stats;
+        /*[SerializeField] private CardStat _attack;
         [HideInInspector] [SerializeField] private CardStat _explore;
         [HideInInspector] [SerializeField] private CardStat _focus;
         [HideInInspector] [SerializeField] private CardStat _hitPoints;
         [HideInInspector] [SerializeField] private CardStat _speed;
-        [HideInInspector] [SerializeField] private CardStat _upgradeSlots;
+        [HideInInspector] [SerializeField] private CardStat _upgradeSlots;*/
 
         public string CardSetName
         {
@@ -59,11 +63,13 @@ namespace Editor.CardData
         /// <summary>
         /// Type of the card.
         /// </summary>
-        public CardTypes CardType
+        /*public CardTypes CardType
         {
             get { return _cardType; }
             set { _cardType = value; }
-        }
+        }*/
+        
+        public CardTypeDataSO CardTypeDataSO { get; set; }
         /// <summary>
         /// Name of the card.
         /// </summary>
@@ -104,9 +110,15 @@ namespace Editor.CardData
             get { return _cardText; }
             set { _cardText = value; }
         }
+
+        public List<CardStat> Stats
+        {
+            get { return _stats; }
+            set { _stats = value; }
+        }
         
         // The following properties are the CardStat type properties representing different stats for a card
-        public CardStat Attack
+        /*public CardStat Attack
         {
             get { return _attack; }
             set { _attack = value; }
@@ -149,7 +161,7 @@ namespace Editor.CardData
                 _attack, _explore, _focus, _hitPoints, _speed, _upgradeSlots
             };
             return stats;
-        }
+        }*/
 
         private int GetKeywordsTotalValue()
         {

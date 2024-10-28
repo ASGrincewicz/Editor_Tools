@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Editor.KeywordSystem;
 using UnityEngine;
 
 namespace Editor.CardData.CardTypeData
@@ -15,5 +14,53 @@ namespace Editor.CardData.CardTypeData
         [SerializeField] private bool _hasKeywords = true;
         [SerializeField] private bool _hasCardText = true;
         [SerializeField] private List<CardStat> _cardStats;
+
+        public string CardTypeName
+        {
+            get => _cardTypeName;
+            set => _cardTypeName = value;
+        }
+
+        public Texture2D CardTypeIcon
+        {
+            get => _cardTypeIcon;
+            set => _cardTypeIcon = value;
+        }
+
+        public Color CardTypeColor
+        {
+            get => _cardTypeColor;
+            set => _cardTypeColor = value;
+        }
+
+        public bool HasStats
+        {
+            get => _hasStats;
+            set => _hasStats = value;
+        }
+
+        public bool HasCost
+        {
+            get => _hasCost;
+            set => _hasCost = value;
+        }
+
+        public bool HasKeywords
+        {
+            get => _hasKeywords;
+            set => _hasKeywords = value;
+        }
+
+        public bool HasCardText
+        {
+            get => _hasCardText;
+            set => _hasCardText = value;
+        }
+
+        public List<CardStat> CardStats
+        {
+            get => _cardStats;
+            set => _cardStats = value;
+        }
     }
 }

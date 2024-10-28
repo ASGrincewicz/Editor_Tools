@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Editor.CardData;
+using Editor.CardData.CardTypeData;
 using Editor.KeywordSystem;
 using JetBrains.Annotations;
 using UnityEditor;
@@ -19,7 +20,7 @@ namespace Editor.Utilities
         public static string[] CardAssetGUIDs { get; } = LoadAllCardDataByGUID();
         public static List<CardDataSO> AllCardData { get; } = LoadAllCardData();
         public static StringBuilder CardTextStringBuilder { get; set; }
-        public static CardTypes CardTypes { get; set; }
+        public static CardTypeDataSO CardTypeData { get; set; }
         public static CardRarity CardRarity { get; set; }
         public static string CardName { get; set; }
         [CanBeNull] public static Texture2D Artwork { get; set; }
@@ -56,8 +57,12 @@ namespace Editor.Utilities
                 CardToEdit = newCard;
                 SelectedCard = CardToEdit;
             }
+            else
+            {
+                Debug.LogError($"Failed to create card.");
+            }
 
-            Debug.Log("Initialization Failed: Card is null.");
+            Debug.Log("Card Created.");
             CardToEdit = null;
         }
 
@@ -108,7 +113,7 @@ namespace Editor.Utilities
             LoadCommonCardData();
             UpdateSelectedKeywordsIndices();
             CardText += CardTextStringBuilder.Append(SelectedCard.CardText);
-            GetStatsFromLoadedCard();
+            /*GetStatsFromLoadedCard();*/
 
             CardTextStringBuilder.Clear();
         }
@@ -122,7 +127,7 @@ namespace Editor.Utilities
         public static void UnloadCard()
         {
             if (SelectedCard == null) return;
-            CardTypes = CardTypes.TBD;
+            CardTypeData = null;
             CardName = string.Empty;
             CardRarity = CardRarity.None;
             CardText = string.Empty;
@@ -141,7 +146,7 @@ namespace Editor.Utilities
             Undo.RecordObject(SelectedCard, "Edited Card");
             if (InitializeCard(SelectedCard))
             {
-                WeightDataAssetUtility.SetWeightData(SelectedCard);
+                //WeightDataAssetUtility.SetWeightData(SelectedCard);
                 EditorUtility.SetDirty(SelectedCard);
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
@@ -169,7 +174,7 @@ namespace Editor.Utilities
 
         private static void LoadCommonCardData()
         {
-            CardTypes = SelectedCard.CardType;
+            CardTypeData = SelectedCard.CardTypeDataSO;
             CardName = SelectedCard.CardName;
             CardRarity = SelectedCard.Rarity;
             Artwork = SelectedCard.ArtWork;
@@ -206,43 +211,7 @@ namespace Editor.Utilities
                 }
             }
         }
-
-        private static void GetStatsFromLoadedCard()
-        {
-            switch (CardTypes)
-            {
-                case CardTypes.TBD:
-                case CardTypes.Starship:
-                case CardTypes.Action:
-                    break;
-                case CardTypes.Environment:
-                    ExploreStat = SelectedCard.Explore;
-                    exploreValue = SelectedCard.Explore.StatValue;
-                    break;
-                case CardTypes.Gear_Equipment:
-                case CardTypes.Gear_Upgrade:
-                case CardTypes.Character_Ally:
-                case CardTypes.Character_Hunter:
-                case CardTypes.Boss:
-                case CardTypes.Creature:
-                    AttackStat = SelectedCard.Attack;
-                    attackValue = SelectedCard.Attack.StatValue;
-                    HitPointsStat = SelectedCard.HitPoints;
-                    hitPointsValue = SelectedCard.HitPoints.StatValue;
-                    SpeedStat = SelectedCard.Speed;
-                    speedValue = SelectedCard.Speed.StatValue;
-                    FocusStat = SelectedCard.Focus;
-                    focusValue = SelectedCard.Focus.StatValue;
-                    if (CardTypes == CardTypes.Character_Hunter)
-                    {
-                        UpgradeSlotsStat = SelectedCard.UpgradeSlots;
-                        upgradeSlotsValue = SelectedCard.UpgradeSlots.StatValue;
-                    }
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
+      
 
         private static bool InitializeCard(CardDataSO card)
         {
@@ -253,14 +222,14 @@ namespace Editor.Utilities
 
             InitializeCommonCardData(card);
             AssignStatsToCard(card);
-            WeightDataAssetUtility.SetWeightData(card);
+            //WeightDataAssetUtility.SetWeightData(card);
             
             return true;
         }
 
         private static void InitializeCommonCardData(CardDataSO card)
         {
-            card.CardType = CardTypes;
+            card.CardTypeDataSO = CardTypeData;
             card.Rarity = CardRarity;
             card.CardName = CardName;
             card.ArtWork = Artwork;
@@ -271,32 +240,14 @@ namespace Editor.Utilities
 
         private static void AssignStatsToCard(CardDataSO card)
         {
-            switch (CardTypes)
+            if (card.CardTypeDataSO != null && card.CardTypeDataSO.HasStats)
             {
-                case CardTypes.TBD:
-                case CardTypes.Starship:
-                case CardTypes.Action:
-                    break;
-                case CardTypes.Environment:
-                    card.Explore = new CardStat(StatNames.Explore, exploreValue, EXPLORE_DESCRIPTION);
-                    break;
-                case CardTypes.Gear_Equipment:
-                case CardTypes.Gear_Upgrade:
-                case CardTypes.Character_Ally:
-                case CardTypes.Character_Hunter:
-                case CardTypes.Creature:
-                case CardTypes.Boss:
-                    card.Attack = new CardStat(StatNames.Attack, attackValue, ATTACK_DESCRIPTION);
-                    card.HitPoints = new CardStat(StatNames.HP, hitPointsValue, HIT_POINTS_DESCRIPTION);
-                    card.Speed = new CardStat(StatNames.Speed, speedValue, SPEED_DESCRIPTION);
-                    card.Focus = new CardStat(StatNames.Focus, focusValue, FOCUS_DESCRIPTION);
-                    if (CardTypes == CardTypes.Character_Hunter)
-                    {
-                        card.UpgradeSlots = new CardStat(StatNames.Upgrades, upgradeSlotsValue, UPGRADE_SLOTS_DESCRIPTION);
-                    }
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                card.Stats ??= new List<CardStat>();
+                card.Stats.Add(new CardStat(AttackStat.ToString(), attackValue, ATTACK_DESCRIPTION));
+                card.Stats.Add( new CardStat(HitPointsStat.ToString(), hitPointsValue, HIT_POINTS_DESCRIPTION));
+                card.Stats.Add(new CardStat(SpeedStat.ToString(), speedValue, SPEED_DESCRIPTION));
+                card.Stats.Add(new CardStat(FocusStat.ToString(), focusValue, FOCUS_DESCRIPTION));
+                card.Stats.Add( new CardStat(UpgradeSlotsStat.ToString(), upgradeSlotsValue, UPGRADE_SLOTS_DESCRIPTION));
             }
         }
     }

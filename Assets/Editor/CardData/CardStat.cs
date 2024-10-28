@@ -7,18 +7,18 @@ namespace Editor.CardData
     public struct CardStat
     {
         //Backing Fields
-        [SerializeField] private StatNames _statName;
+        [SerializeField] private string _statName;
         [SerializeField] private int _statValue;
         [SerializeField] private string _statDescription;
 
         //Properties
-        public StatNames RawStatName => _statName;
+
         public string StatName
         {
-            get { return _statName.GetDescription(); }
+            get => _statName;
+            set => _statName = value;
         }
-
-        public int StatValue
+       public int StatValue
         {
             get
             {
@@ -38,7 +38,7 @@ namespace Editor.CardData
             }
         } 
 
-        public CardStat(StatNames statName, int statValue = 0, string statDescription = "empty")
+        public CardStat(string statName, int statValue = 0, string statDescription = "empty")
         {
             _statName = statName;
             _statValue = statValue;

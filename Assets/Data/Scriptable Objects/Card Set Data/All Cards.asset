@@ -15,30 +15,15 @@ MonoBehaviour:
   setLabelColor: {r: 1, g: 0.995283, b: 0.995283, a: 1}
   _cardSetType: 0
   _cardSetName: All Cards
-  _numberOfCards: 21
+  _numberOfCards: 1
   _commonPercentage: 0
   _uncommonPercentage: 0
   _rarePercentage: 0
   _hyperRarePercentage: 0
-  _cardsInSet:
-  - {fileID: 11400000, guid: f1ae923bb2a41e14ba4dadbf2717d733, type: 2}
-  - {fileID: 11400000, guid: 7b7a674130f6f5f43bb75282ea451662, type: 2}
-  - {fileID: 11400000, guid: 69503412c386d4cda876710485088d76, type: 2}
-  - {fileID: 11400000, guid: 7c1195702f2fe439da367abcaf9f1f93, type: 2}
-  - {fileID: 11400000, guid: 25f6f520038986e45b03b32527630aa7, type: 2}
-  - {fileID: 11400000, guid: 615845a80556f5442856b8f3c4567880, type: 2}
-  - {fileID: 11400000, guid: 8df12c1b8a2b6ad4f9c3f9989b28f961, type: 2}
-  - {fileID: 11400000, guid: c9ae326a3875f104ab56486952d23850, type: 2}
-  - {fileID: 11400000, guid: d82e26230b02ba047afbf0658f3af6f8, type: 2}
-  - {fileID: 11400000, guid: c1f427bda2acb8c49ae8bb58c1d51489, type: 2}
-  - {fileID: 11400000, guid: afcc1f8ad8e10d54ab46a74670bd6596, type: 2}
-  - {fileID: 11400000, guid: e75b89c1975b28742ba3596213e3b8cd, type: 2}
-  - {fileID: 11400000, guid: 2694d72040e84c04ea48acbdb75b5107, type: 2}
-  - {fileID: 11400000, guid: 89b793e87af244e44aa046f7f02ebc74, type: 2}
-  - {fileID: 11400000, guid: 767f8ad1b5e9ef144a566989d0a1f8f9, type: 2}
-  - {fileID: 11400000, guid: 2a39c2471d48be447ae41995063baa1e, type: 2}
-  - {fileID: 11400000, guid: 16c2874fc1dad35449c8e48a287f416f, type: 2}
-  - {fileID: 11400000, guid: d66e8dae3cae9a24080c225fe8695f3e, type: 2}
-  - {fileID: 11400000, guid: a86fede06169b7941b41dcd26efd4626, type: 2}
-  - {fileID: 11400000, guid: 65813408c9a099e46a3cade52582fe51, type: 2}
-  - {fileID: 11400000, guid: db4c892d6a998de4aab1d155c33b9360, type: 2}
+  _cardsInSet: []
+  _commonCardsInSet: []
+  _uncommonCardsInSet: []
+  _rareCardsInSet: []
+  _hyperRareCardsInSet: []
+  _promoCardsInSet: []
+  _kickStarterCardsInSet: []

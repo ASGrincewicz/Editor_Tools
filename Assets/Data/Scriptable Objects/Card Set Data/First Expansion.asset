@@ -21,29 +21,11 @@ MonoBehaviour:
   _rarePercentage: 0.15
   _hyperRarePercentage: 0.1
   _cardsInSet:
-  - {fileID: 11400000, guid: f1ae923bb2a41e14ba4dadbf2717d733, type: 2}
-  - {fileID: 11400000, guid: 7b7a674130f6f5f43bb75282ea451662, type: 2}
-  - {fileID: 11400000, guid: a86fede06169b7941b41dcd26efd4626, type: 2}
-  - {fileID: 11400000, guid: 65813408c9a099e46a3cade52582fe51, type: 2}
-  - {fileID: 11400000, guid: db4c892d6a998de4aab1d155c33b9360, type: 2}
-  - {fileID: 11400000, guid: 16c2874fc1dad35449c8e48a287f416f, type: 2}
-  - {fileID: 11400000, guid: d66e8dae3cae9a24080c225fe8695f3e, type: 2}
-  - {fileID: 11400000, guid: 89b793e87af244e44aa046f7f02ebc74, type: 2}
-  - {fileID: 11400000, guid: 767f8ad1b5e9ef144a566989d0a1f8f9, type: 2}
-  - {fileID: 11400000, guid: afcc1f8ad8e10d54ab46a74670bd6596, type: 2}
+  - {fileID: 11400000, guid: a75da83cc23d54cfab124f41011105c8, type: 2}
   _commonCardsInSet:
-  - {fileID: 11400000, guid: 16c2874fc1dad35449c8e48a287f416f, type: 2}
-  _uncommonCardsInSet:
-  - {fileID: 11400000, guid: f1ae923bb2a41e14ba4dadbf2717d733, type: 2}
-  - {fileID: 11400000, guid: 7b7a674130f6f5f43bb75282ea451662, type: 2}
-  - {fileID: 11400000, guid: a86fede06169b7941b41dcd26efd4626, type: 2}
-  - {fileID: 11400000, guid: 65813408c9a099e46a3cade52582fe51, type: 2}
-  - {fileID: 11400000, guid: 767f8ad1b5e9ef144a566989d0a1f8f9, type: 2}
-  _rareCardsInSet:
-  - {fileID: 11400000, guid: d66e8dae3cae9a24080c225fe8695f3e, type: 2}
-  - {fileID: 11400000, guid: 89b793e87af244e44aa046f7f02ebc74, type: 2}
-  - {fileID: 11400000, guid: afcc1f8ad8e10d54ab46a74670bd6596, type: 2}
-  _hyperRareCardsInSet:
-  - {fileID: 11400000, guid: db4c892d6a998de4aab1d155c33b9360, type: 2}
+  - {fileID: 11400000, guid: a75da83cc23d54cfab124f41011105c8, type: 2}
+  _uncommonCardsInSet: []
+  _rareCardsInSet: []
+  _hyperRareCardsInSet: []
   _promoCardsInSet: []
   _kickStarterCardsInSet: []

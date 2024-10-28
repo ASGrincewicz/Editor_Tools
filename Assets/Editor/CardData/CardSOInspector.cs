@@ -1,4 +1,4 @@
-﻿using Editor.Channels;
+﻿/*using Editor.Channels;
 using Editor.Utilities;
 using UnityEditor;
 using UnityEngine;
@@ -222,4 +222,4 @@ namespace Editor.CardData
             EditorGUILayout.PropertyField(property, GUILayout.Height(15), GUILayout.ExpandHeight(true));
         }
     }
-}
+}*/

@@ -26,7 +26,7 @@ namespace Editor.Utilities
         
         public static void SetWeightData(CardDataSO card)
         {
-            WeightContainer weights = GetWeightContainer(card.CardType);
+            WeightContainer weights = GetWeightContainer();
             if (ReferenceEquals(card.WeightData, null))
             {
                 Debug.LogError($"{nameof(card.WeightData)} is null.");
@@ -34,9 +34,9 @@ namespace Editor.Utilities
             card.WeightData = weights;
         }
         
-        private static WeightContainer GetWeightContainer(CardTypes cardType)
+        private static WeightContainer GetWeightContainer()
         {
-            return cardType switch
+            /*return cardType switch
             {
                 CardTypes.Character_Ally => AssetDatabase.LoadAssetAtPath<WeightContainer>(ALLY_WEIGHT_ASSET_PATH),
                 CardTypes.Environment => AssetDatabase.LoadAssetAtPath<WeightContainer>(ENVIRONMENT_WEIGHT_ASSET_PATH),
@@ -46,7 +46,9 @@ namespace Editor.Utilities
                 CardTypes.Gear_Equipment=> AssetDatabase.LoadAssetAtPath<WeightContainer>(GEAR_WEIGHT_ASSET_PATH),
                 CardTypes.Gear_Upgrade => AssetDatabase.LoadAssetAtPath<WeightContainer>(GEAR_WEIGHT_ASSET_PATH),
                 _ => AssetDatabase.LoadAssetAtPath<WeightContainer>(KEYWORD_ONLY_WEIGHT_ASSET_PATH)
-            };
+            };*/
+            // TODO: Need to refactor Weight system.
+            return null;
         }
         
     }
