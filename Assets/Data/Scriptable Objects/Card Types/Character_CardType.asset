@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d3c1a53a361c4d8c9fe124796c21b743, type: 3}
-  m_Name: CardTypeDataSO
+  m_Name: Character_CardType
   m_EditorClassIdentifier: 
   _cardTypeName: Character
   _cardTypeIcon: {fileID: 0}

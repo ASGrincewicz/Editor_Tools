@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Editor.CardData;
 using Editor.CardEditor;
 using Editor.CostCalculator;
@@ -12,6 +13,7 @@ namespace Editor.Channels
     [CreateAssetMenu(fileName = "Card Editor Channel", menuName = "Channels/Card Editor Channel", order = 0)]
     public class EditorWindowChannel : ScriptableObject
     {
+        public Func<List<CardStat>> OnCardStatsUpdated;
         public Action<CardDataSO> OnCardEditorWindowRequested;
         public Action<CardDataSO> OnCostCalculatorWindowRequested;
         public Action OnKwywordEditorWindowRequested;
@@ -39,6 +41,11 @@ namespace Editor.Channels
         {
             EditorWindow.GetWindow<CardSetEditorWindow>();
             OnCardSetEditorWindowRequested?.Invoke();
+        }
+
+        public void RaiseCardStatsUpdatedEvent(List<CardStat> cardStats)
+        {
+            OnCardStatsUpdated?.Invoke();
         }
     }
 }
