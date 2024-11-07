@@ -78,10 +78,10 @@ namespace Editor.Utilities
             Debug.Log($"Loaded Stats");
         }
 
-        public static void CreateNewCard()
+        public static void CreateNewCard(List<CardStat> newStats)
         {
             CardToEdit ??= ScriptableObject.CreateInstance<CardDataSO>();
-            if (InitializeCard(CardToEdit, CardStats))
+            if (InitializeCard(CardToEdit, newStats))
             {
                 AssetDatabase.CreateAsset(CardToEdit, $"{ASSET_PATH}{CardName}.asset");
                 AssetDatabase.SaveAssets();
@@ -176,10 +176,10 @@ namespace Editor.Utilities
             Artwork = null;
         }
 
-        public static void SaveExistingCard()
+        public static void SaveExistingCard(List<CardStat> stats)
         {
             Undo.RecordObject(SelectedCard, "Edited Card");
-            if (InitializeCard(SelectedCard, CardStats))
+            if (InitializeCard(SelectedCard, stats))
             {
                 EditorUtility.SetDirty(SelectedCard);
                 AssetDatabase.SaveAssets();

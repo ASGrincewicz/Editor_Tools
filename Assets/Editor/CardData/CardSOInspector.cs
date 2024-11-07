@@ -198,9 +198,9 @@ namespace Editor.CardData
                 DrawLabel($"STATS:");
                 foreach (CardStat stat in CardStats)
                 {
-                    DrawLabel("",$"{stat.StatName}");
-                    DrawLabel("",$"{stat.StatValue}");
-                    DrawLabel("",$"{stat.StatDescription}");
+                    DrawLabel("",$"{stat.statName}");
+                    DrawLabel("",$"{stat.statValue}");
+                    DrawLabel("",$"{stat.statDescription}");
                     DrawLabel("          ");
                 }
             }

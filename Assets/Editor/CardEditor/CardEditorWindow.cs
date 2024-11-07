@@ -35,6 +35,7 @@ namespace Editor.CardEditor
         
         private bool IsDoneButtonPressed => GUILayout.Button("Done", EditorStyles.toolbarButton);
         private List<CardStat> TempStats = new List<CardStat>();
+        private int[] _tempValues = new int[10];
         
         [MenuItem("Tools/Card Editor")]
         public static void Init()
@@ -55,7 +56,7 @@ namespace Editor.CardEditor
         private void OnDisable()
         {
             _editorWindowChannel.OnCardEditorWindowRequested -= OpenCardInEditor;
-            CardDataAssetUtility.SelectedCard = null;
+            CardDataAssetUtility.UnloadCard();
         }
         
         private void OpenCardInEditor(CardDataSO card)
@@ -64,7 +65,7 @@ namespace Editor.CardEditor
             CardDataAssetUtility.CardToEdit = card;
             CardDataAssetUtility.LoadCardFromFile();
             TempStats = CardDataAssetUtility.CardStats;
-            //CardDataAssetUtility.StatsLoaded = false;
+            CardDataAssetUtility.StatsLoaded = true;
         }
        
         private void OnGUI()
@@ -93,47 +94,51 @@ namespace Editor.CardEditor
         private void DrawEditableFields()
         {
             EditorGUIUtility.labelWidth = 100;
-            CardDataAssetUtility.CardToEdit =
-                EditorGUILayout.ObjectField("Card To Edit", CardDataAssetUtility.CardToEdit, typeof(CardDataSO), false)
-                    as CardDataSO;
-            GUILayout.Label(
-                !ReferenceEquals(CardDataAssetUtility.SelectedCard, null) ? "Select Card Type" : "Create New Card",
-                EditorStyles.boldLabel);
-            CardDataAssetUtility.CardTypeData = (CardTypeDataSO)EditorGUILayout.ObjectField("Card Type",
-                CardDataAssetUtility.CardTypeData, typeof(CardTypeDataSO), false);
+            CardDataAssetUtility.CardToEdit = (CardDataSO)EditorGUILayout.ObjectField(
+                "Card To Edit", CardDataAssetUtility.CardToEdit, typeof(CardDataSO), false);
+
+            GUILayout.Label(!ReferenceEquals(CardDataAssetUtility.SelectedCard, null) ? 
+                "Select Card Type" : "Create New Card", EditorStyles.boldLabel);
+
+            CardDataAssetUtility.CardTypeData = (CardTypeDataSO)EditorGUILayout.ObjectField(
+                "Card Type", CardDataAssetUtility.CardTypeData, typeof(CardTypeDataSO), false);
+
             if (GUILayout.Button("Change Card Type"))
             {
                 CardDataAssetUtility.LoadCardTypeData();
                 TempStats = CardDataAssetUtility.CardStats;
             }
 
-            CardDataAssetUtility.CardName = EditorGUILayout.TextField("Card Name", CardDataAssetUtility.CardName,
-                GUILayout.Width(FIELD_WIDTH));
+            CardDataAssetUtility.CardName = EditorGUILayout.TextField("Card Name", 
+                CardDataAssetUtility.CardName, GUILayout.Width(FIELD_WIDTH));
+
             CardDataAssetUtility.CardRarity = (CardRarity)EditorGUILayout.EnumPopup("Card Rarity",
                 CardDataAssetUtility.CardRarity, GUILayout.Width(FIELD_WIDTH));
+
             CardDataAssetUtility.Artwork = (Texture2D)EditorGUILayout.ObjectField("Artwork",
                 CardDataAssetUtility.Artwork, typeof(Texture2D), false,
                 GUILayout.Height(200), GUILayout.Width(FIELD_WIDTH));
+
             if (CardDataAssetUtility.CardTypeData != null)
             {
                 if (CardDataAssetUtility.CardTypeData.HasStats)
                 {
                     CardDataAssetUtility.CardToEdit ??= CreateInstance<CardDataSO>();
+
                     if (!CardDataAssetUtility.StatsLoaded)
                     {
                         CardDataAssetUtility.LoadCardTypeData();
                         TempStats = CardDataAssetUtility.CardStats;
                     }
+
                     int totalStats = CardDataAssetUtility.CardStats.Count;
-                    
-                    
+
                     for (int i = 0; i < totalStats; i++)
                     {
-                        CardStat stat = TempStats[i];
-                        int statValue = stat.StatValue;
-                        DrawStatLayout(stat.StatName, ref statValue, stat.StatDescription);
+                        DrawStatLayout(TempStats[i].statName, ref TempStats[i].statValue, TempStats[i].statDescription);
                     }
                 }
+
                 if (CardDataAssetUtility.CardTypeData.HasKeywords)
                 {
                     DrawKeywordArea();
@@ -142,7 +147,6 @@ namespace Editor.CardEditor
                 if (CardDataAssetUtility.CardTypeData.HasCost)
                 {
                     GUILayout.Label($"Card Cost: {CardDataAssetUtility.CardCost}");
-                        
                 }
 
                 if (CardDataAssetUtility.CardTypeData.HasCardText)
@@ -153,7 +157,7 @@ namespace Editor.CardEditor
                 }
             }
         }
-
+        
         private void DrawStatLayout(string statName, ref int statValue, string statDescription)
         {
             GUILayout.BeginHorizontal(GUILayout.Width(FIELD_WIDTH), GUILayout.ExpandWidth(true));
@@ -245,7 +249,7 @@ namespace Editor.CardEditor
         {
             if (IsCreateCardButtonPressed)
             {
-                CardDataAssetUtility.CreateNewCard();
+                CardDataAssetUtility.CreateNewCard(TempStats);
             }
             if (IsLoadCardButtonPressed)
             {
@@ -255,7 +259,7 @@ namespace Editor.CardEditor
             }
             if (IsSaveCardButtonPressed)
             {
-                CardDataAssetUtility.SaveExistingCard();
+                CardDataAssetUtility.SaveExistingCard(TempStats);
             }
             if(IsUnloadCardButtonPressed && !ReferenceEquals(CardDataAssetUtility.SelectedCard, null))
             {

@@ -64,7 +64,7 @@ namespace Editor.CostCalculator
         {
             for (int i = 0; i <= count - 2; i++)
             {
-                totalCost += WeightContainer.cardStatWeights[i].statWeight * CardStatsArray[i].StatValue;
+                totalCost += WeightContainer.cardStatWeights[i].statWeight * CardStatsArray[i].statValue;
                
             }
             totalCost += AddKeywordValues(WeightContainer.cardStatWeights[count - 1].statWeight);
