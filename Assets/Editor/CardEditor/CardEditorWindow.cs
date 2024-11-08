@@ -124,12 +124,12 @@ namespace Editor.CardEditor
                 if (CardDataAssetUtility.CardTypeData.HasStats)
                 {
                     CardDataAssetUtility.CardToEdit ??= CreateInstance<CardDataSO>();
-
-                    if (!CardDataAssetUtility.StatsLoaded)
+                    do
                     {
                         CardDataAssetUtility.LoadCardTypeData();
                         TempStats = CardDataAssetUtility.CardStats;
-                    }
+                    } 
+                    while (!CardDataAssetUtility.StatsLoaded);
 
                     int totalStats = CardDataAssetUtility.CardStats.Count;
 

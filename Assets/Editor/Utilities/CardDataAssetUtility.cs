@@ -50,32 +50,35 @@ namespace Editor.Utilities
 
         public static void LoadCardTypeData()
         {
-            if (!StatsLoaded)
-            {
-                CardStats = new List<CardStat>();
-            }
-            CardStats ??= new List<CardStat>();
             if (CardTypeData == null)
             {
                 return;
             }
-            List<CardStat> newStats = new List<CardStat>();
-            foreach (CardStatData statData in CardTypeData.CardStats)
+            
+            if (CardToEdit != null)
             {
-                if (SelectedCard != null)
+                CardStats = CardToEdit.Stats;
+                Debug.Log($"Selected Card: {CardToEdit.CardName}");
+            }
+            else
+            {
+                CardToEdit = ScriptableObject.CreateInstance<CardDataSO>();
+            }
+            
+            if(!StatsLoaded)
+            {
+                CardStats ??= new List<CardStat>();
+
+                List<CardStat> newStats = new();
+                foreach (CardStatData statData in CardTypeData.CardStats)
                 {
-                   CardStats = SelectedCard.Stats;
-                   Debug.Log($"Selected Card: {SelectedCard.CardName}");
-                }
-                else
-                {
-                    newStats.Add(new CardStat(statData.statName,0,statData.statDescription));
+                    newStats.Add(new CardStat(statData.statName, 0, statData.statDescription));
                     Debug.Log($"Added Stat:{statData.statName}");
                 }
+                CardStats = newStats;
+                StatsLoaded = true;
+                Debug.Log($"Loaded Stats = {StatsLoaded}");
             }
-            CardStats = newStats;
-            StatsLoaded = true;
-            Debug.Log($"Loaded Stats");
         }
 
         public static void CreateNewCard(List<CardStat> newStats)
