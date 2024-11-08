@@ -35,9 +35,7 @@ namespace Editor.Utilities
         
         // Stats
         public static List<CardStat> CardStats { get; set; }
-        //public static List<int> CardStatValues { get; set; }
         
-        public static CardDataSO SelectedCard { get; set; }
         public static CardDataSO CardToEdit { get; set; }
         
         public static bool StatsLoaded { get; set; }
@@ -48,37 +46,25 @@ namespace Editor.Utilities
             CardStats = stats;
         }
 
-        public static void LoadCardTypeData()
+        public static CardTypeDataSO LoadCardTypeData(CardTypeDataSO cardTypeData)
         {
-            if (CardTypeData == null)
+            Debug.Log("Load Card Type Data");
+            if (CardToEdit == null)
             {
-                return;
-            }
-            
-            if (CardToEdit != null)
-            {
-                CardStats = CardToEdit.Stats;
-                Debug.Log($"Selected Card: {CardToEdit.CardName}");
+                CardToEdit ??= ScriptableObject.CreateInstance<CardDataSO>();
+                Debug.LogWarning("CardToEdit == null");
             }
             else
             {
-                CardToEdit = ScriptableObject.CreateInstance<CardDataSO>();
-            }
-            
-            if(!StatsLoaded)
-            {
-                CardStats ??= new List<CardStat>();
-
-                List<CardStat> newStats = new();
-                foreach (CardStatData statData in CardTypeData.CardStats)
+                CardTypeData = cardTypeData;
+                Debug.Log($"{CardTypeData.CardTypeName}");
+                CardStats= new List<CardStat>();
+                foreach (CardStatData cardStatData in CardTypeData.CardStats)
                 {
-                    newStats.Add(new CardStat(statData.statName, 0, statData.statDescription));
-                    Debug.Log($"Added Stat:{statData.statName}");
+                    CardStats.Add(new CardStat(cardStatData.statName, 0, cardStatData.statDescription));
                 }
-                CardStats = newStats;
-                StatsLoaded = true;
-                Debug.Log($"Loaded Stats = {StatsLoaded}");
             }
+            return CardTypeData;
         }
 
         public static void CreateNewCard(List<CardStat> newStats)
@@ -90,7 +76,6 @@ namespace Editor.Utilities
                 AssetDatabase.SaveAssets();
                 EditorUtility.FocusProjectWindow();
                 Selection.activeObject = CardToEdit;
-                SelectedCard = CardToEdit;
             }
             else
             {
@@ -98,8 +83,6 @@ namespace Editor.Utilities
             }
 
             Debug.Log("Card Created.");
-            CardToEdit = null;
-            StatsLoaded = false;
         }
 
         public static void LoadKeywordManagerAsset()
@@ -130,29 +113,21 @@ namespace Editor.Utilities
 
         public static void LoadCardFromFile()
         {
-            //UnloadCard();
-            if (CardToEdit != null)
-            {
-                SelectedCard = CardToEdit;
-            }
-            else
+            if (CardToEdit == null)
             {
                 string path = EditorUtility.OpenFilePanel("Select Card", ASSET_PATH, "asset");
                 if (path.StartsWith(Application.dataPath))
                 {
                     path = "Assets" + path.Substring(Application.dataPath.Length);
                     CardToEdit = AssetDatabase.LoadAssetAtPath<CardDataSO>(path);
-                    SelectedCard = CardToEdit;
-                    LoadCardTypeData();
+                    CardTypeData = LoadCardTypeData(CardToEdit.CardTypeDataSO);
                 }
             }
-
-            if (SelectedCard == null) return;
             LoadCommonCardData();
             UpdateSelectedKeywordsIndices();
-            CardText = SelectedCard.CardText;
+            CardText = CardToEdit.CardText;
             CardStats = new List<CardStat>();
-            foreach (CardStat stat in SelectedCard.Stats)
+            foreach (CardStat stat in CardToEdit.Stats)
             {
                 CardStats.Add(stat);
             }
@@ -168,8 +143,7 @@ namespace Editor.Utilities
 
         public static void UnloadCard()
         {
-            if (SelectedCard == null) return;
-            SelectedCard = null;
+            if (CardToEdit == null) return;
             CardToEdit = null;
             CardTypeData = null;
             CardName = string.Empty;
@@ -181,10 +155,10 @@ namespace Editor.Utilities
 
         public static void SaveExistingCard(List<CardStat> stats)
         {
-            Undo.RecordObject(SelectedCard, "Edited Card");
-            if (InitializeCard(SelectedCard, stats))
+            Undo.RecordObject(CardToEdit, "Edited Card");
+            if (InitializeCard(CardToEdit, stats))
             {
-                EditorUtility.SetDirty(SelectedCard);
+                EditorUtility.SetDirty(CardToEdit);
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
             }
@@ -211,23 +185,22 @@ namespace Editor.Utilities
 
         private static void LoadCommonCardData()
         {
-            CardTypeData = SelectedCard.CardTypeDataSO;
-            LoadCardTypeData();
-            CardName = SelectedCard.CardName;
-            CardRarity = SelectedCard.Rarity;
-            Artwork = SelectedCard.ArtWork;
-            CardCost = SelectedCard.CardCost;
+            CardTypeData = LoadCardTypeData(CardToEdit.CardTypeDataSO);
+            CardName = CardToEdit.CardName;
+            CardRarity = CardToEdit.Rarity;
+            Artwork = CardToEdit.ArtWork;
+            CardCost = CardToEdit.CardCost;
         }
 
         private static void UpdateSelectedKeywordsIndices()
         {
-            if (SelectedCard?.Keywords == null)
+            if (CardToEdit?.Keywords == null)
             {
                 Debug.LogError("Selected card or its keywords are null");
                 return;
             }
 
-            SelectedKeywords = SelectedCard.Keywords;
+            SelectedKeywords = CardToEdit.Keywords;
 
             // Ensure SelectedKeywordsIndex has the correct size
             if (SelectedKeywordsIndex == null || SelectedKeywordsIndex.Length != SelectedKeywords.Length)
@@ -267,7 +240,7 @@ namespace Editor.Utilities
         private static void InitializeCommonCardData(CardDataSO card)
         {
             card.CardTypeDataSO = CardTypeData;
-            Debug.Log($"Initializing card data for {card.CardTypeDataSO.name}");
+            Debug.Log($"Initializing card data for {card.CardName}");
             card.Rarity = CardRarity;
             card.CardName = CardName;
             card.ArtWork = Artwork;
@@ -286,7 +259,6 @@ namespace Editor.Utilities
 
             if (!card.CardTypeDataSO.HasStats)
             {
-                Debug.LogError("CardTypeDataSO does not have stats.");
                 return;
             }
 
@@ -303,15 +275,6 @@ namespace Editor.Utilities
             }
 
             card.Stats = CardStats;
-
-            /*for (int i = 0; i < CardStats.Count; i++)
-            {
-                Debug.Log($"Adding stat: {stats[i].StatName} with value: {stats[i].StatValue}");
-                card.Stats[i] = new CardStat(
-                    stats[i].StatName, 
-                    stats[i].StatValue, 
-                    stats[i].StatDescription);
-            }*/
         }
     }
 }
