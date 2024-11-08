@@ -38,14 +38,14 @@ MonoBehaviour:
   _cardText: This is where the fun stuff happens.
   _stats:
   - statName: Attack
-    statValue: 5
+    statValue: 10
     statDescription: Damage Dealt
   - statName: HP
-    statValue: 100
+    statValue: 50
     statDescription: Amount of Health
   - statName: Upgrades
     statValue: 2
     statDescription: Number of Upgrade Slots
   - statName: Speed
-    statValue: 5
+    statValue: 1
     statDescription: Determines Action Sequence

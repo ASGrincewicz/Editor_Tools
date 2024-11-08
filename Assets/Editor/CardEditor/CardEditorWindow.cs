@@ -38,6 +38,7 @@ namespace Editor.CardEditor
         private int[] _tempValues = new int[10];
         private CardTypeDataSO _loadedCardTypeData;
         private bool _typeLoaded = false;
+        private bool _isCardLoaded = false;
         
         [MenuItem("Tools/Card Editor")]
         public static void Init()
@@ -65,10 +66,7 @@ namespace Editor.CardEditor
         {
             Init();
             CardDataAssetUtility.CardToEdit = card;
-            CardDataAssetUtility.LoadCardFromFile();
-            _loadedCardTypeData = CardDataAssetUtility.CardTypeData;
-            TempStats = CardDataAssetUtility.CardStats;
-            CardDataAssetUtility.StatsLoaded = true;
+            LoadCardData();
         }
        
         private void OnGUI()
@@ -99,6 +97,11 @@ namespace Editor.CardEditor
             EditorGUIUtility.labelWidth = 100;
             CardDataAssetUtility.CardToEdit = (CardDataSO)EditorGUILayout.ObjectField(
                 "Card To Edit", CardDataAssetUtility.CardToEdit, typeof(CardDataSO), false);
+            if (CardDataAssetUtility.CardToEdit != null && !_isCardLoaded)
+            {
+                LoadCardData();
+                _isCardLoaded = true;
+            }
 
             GUILayout.Label(!ReferenceEquals(CardDataAssetUtility.CardToEdit, null) ? 
                 "Select Card Type" : "Create New Card", EditorStyles.boldLabel);
@@ -132,10 +135,7 @@ namespace Editor.CardEditor
                 if (_loadedCardTypeData.HasStats)
                 {
                     CardDataAssetUtility.CardToEdit ??= CreateInstance<CardDataSO>();
-                    //TempStats??= CardDataAssetUtility.CardStats;
                     TempStats = CardDataAssetUtility.CardStats;
-                    //Debug.Log($"Temp Stats:{TempStats.Count}");
-
                     int totalStats = TempStats.Count;
 
                     for (int i = 0; i < totalStats; i++)
@@ -258,10 +258,7 @@ namespace Editor.CardEditor
             }
             if (IsLoadCardButtonPressed)
             {
-                CardDataAssetUtility.LoadCardFromFile();
-                _loadedCardTypeData = CardDataAssetUtility.CardTypeData;
-                TempStats = CardDataAssetUtility.CardStats;
-                Debug.Log($"Temp stats loaded:{TempStats.Count}");
+               LoadCardData();
             }
             if (IsSaveCardButtonPressed)
             {
@@ -270,6 +267,7 @@ namespace Editor.CardEditor
             if(IsUnloadCardButtonPressed && !ReferenceEquals(CardDataAssetUtility.CardToEdit, null))
             {
                 CardDataAssetUtility.UnloadCard();
+                _isCardLoaded = false;
             }
 
             if (IsCalculateCostButtonPressed && !ReferenceEquals(CardDataAssetUtility.CardToEdit, null))
@@ -281,6 +279,14 @@ namespace Editor.CardEditor
             {
                _cardEditorWindow.Close();
             }
+        }
+
+        private void LoadCardData()
+        {
+            CardDataAssetUtility.LoadCardFromFile();
+            _loadedCardTypeData = CardDataAssetUtility.CardTypeData;
+            TempStats = CardDataAssetUtility.CardStats;
+            Debug.Log($"Temp stats loaded:{TempStats.Count}");
         }
     }
 }

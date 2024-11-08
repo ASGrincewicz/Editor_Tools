@@ -1,8 +1,4 @@
-﻿using Editor.Utilities;
-using UnityEngine;
-using UnityEngine.Serialization;
-
-namespace Editor.CardData
+﻿namespace Editor.CardData
 {
     [System.Serializable]
     public class CardStat

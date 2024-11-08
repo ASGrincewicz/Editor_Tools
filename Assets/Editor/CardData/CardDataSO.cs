@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Editor.AttributesWeights;
 using Editor.CardData.CardTypeData;
 using Editor.KeywordSystem;
 using UnityEditor;

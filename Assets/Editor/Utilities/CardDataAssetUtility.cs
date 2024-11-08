@@ -7,7 +7,6 @@ using Editor.KeywordSystem;
 using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
-using static Editor.CardData.StatDataReference;
 
 namespace Editor.Utilities
 {

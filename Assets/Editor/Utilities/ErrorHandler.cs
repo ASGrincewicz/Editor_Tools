@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Editor.AttributesWeights;
 using Editor.CardData;
 using UnityEngine;
 
@@ -23,22 +22,7 @@ namespace Editor.Utilities
                 return ScriptableObject.CreateInstance<CardDataSO>();
             }
         }
-
-        public static void TryToGetWeightData(WeightContainer weightData)
-        {
-            try
-            {
-                if (ReferenceEquals(weightData, null))
-                {
-                    throw new WeightDataIsNullException($"{nameof(weightData)} is null.");
-                }
-            }
-            catch (WeightDataIsNullException exception)
-            {
-                Debug.LogException(exception, weightData);
-            }
-        }
-
+        
         public static void TryToGetCardFromList(List<CardDataSO> listToCheck, CardDataSO cardDataToCheck)
         {
             try
