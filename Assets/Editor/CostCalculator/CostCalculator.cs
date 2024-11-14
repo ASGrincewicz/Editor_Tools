@@ -1,5 +1,6 @@
 using System;
 using Editor.CardData;
+using Editor.CardData.Stats;
 using Editor.KeywordSystem;
 using UnityEngine;
 

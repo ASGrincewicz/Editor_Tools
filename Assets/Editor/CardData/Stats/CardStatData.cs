@@ -1,6 +1,6 @@
 using System;
 
-namespace Editor.CardData.CardTypeData
+namespace Editor.CardData.Stats
 {
     [Serializable]
     public struct CardStatData

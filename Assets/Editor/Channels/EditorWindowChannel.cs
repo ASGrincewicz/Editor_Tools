@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Editor.CardData;
+using Editor.CardData.Stats;
 using Editor.CardEditor;
 using Editor.CostCalculator;
 using Editor.KeywordSystem;

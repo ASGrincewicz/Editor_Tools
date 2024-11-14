@@ -1,4 +1,4 @@
-﻿namespace Editor.CardData
+﻿namespace Editor.CardData.Stats
 {
     [System.Serializable]
     public class CardStat

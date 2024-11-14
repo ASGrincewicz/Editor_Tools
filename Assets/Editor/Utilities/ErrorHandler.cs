@@ -38,23 +38,5 @@ namespace Editor.Utilities
                 Debug.LogException(exception, cardDataToCheck);
             }
         }
-
-        public static bool VerifyCardNotInList(List<CardDataSO> listToCheck, CardDataSO cardDataToCheck)
-        {
-            try
-            {
-                if (listToCheck.Contains(cardDataToCheck))
-                {
-                    throw new CardAlreadyInListException($"{cardDataToCheck} is in {listToCheck}.");
-                }
-
-                return true;
-            }
-            catch (CardAlreadyInListException exception)
-            {
-                Debug.LogException(exception, cardDataToCheck);
-                return false;
-            }
-        }
     }
 }

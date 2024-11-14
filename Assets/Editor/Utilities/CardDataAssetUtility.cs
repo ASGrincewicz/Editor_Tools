@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Editor.CardData;
-using Editor.CardData.CardTypeData;
+using Editor.CardData.CardTypes;
+using Editor.CardData.Stats;
 using Editor.KeywordSystem;
 using JetBrains.Annotations;
 using UnityEditor;
@@ -12,8 +13,8 @@ namespace Editor.Utilities
 {
     public static class CardDataAssetUtility
     {
-        private const string ASSET_PATH = "Assets/Data/Scriptable Objects/Cards/";
-        private const string KEYWORD_MANAGER_PATH = "Assets/Data/Scriptable Objects/Keywords/KeywordManager.asset";
+        private const string ASSET_PATH = "Assets/Resources/Scriptable Objects/Cards/";
+        private const string KEYWORD_MANAGER_PATH = "Assets/Resources/Scriptable Objects/Keywords/KeywordManager.asset";
 
         public static KeywordManager keywordManager;
         public static string[] CardAssetGUIDs { get; } = LoadAllCardDataByGUID();

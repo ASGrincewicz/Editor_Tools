@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.Text;
 using Editor.CardData;
-using Editor.CardData.CardTypeData;
+using Editor.CardData.CardTypes;
+using Editor.CardData.Stats;
 using Editor.Channels;
 using Editor.KeywordSystem;
 using Editor.Utilities;
@@ -25,7 +26,10 @@ namespace Editor.CardEditor
         // Main Area Buttons Setup
         private bool IsCreateCardButtonPressed => GUILayout.Button("Create", EditorStyles.toolbarButton);
 
-        private bool IsLoadCardButtonPressed => GUILayout.Button("Load Card", EditorStyles.toolbarButton);
+        private bool IsLoadCardButtonPressed
+        {
+            get { return GUILayout.Button("Load Card", EditorStyles.toolbarButton); }
+        }
 
         private bool IsSaveCardButtonPressed => GUILayout.Button("Save Card", EditorStyles.toolbarButton);
 
@@ -34,6 +38,9 @@ namespace Editor.CardEditor
         private bool IsCalculateCostButtonPressed => GUILayout.Button("Calculate Cost", EditorStyles.toolbarButton);
         
         private bool IsDoneButtonPressed => GUILayout.Button("Done", EditorStyles.toolbarButton);
+
+        private string[] _cardTypeNames;
+        private int _selectedCardTypeIndex;
         private List<CardStat> TempStats = new List<CardStat>();
         private int[] _tempValues = new int[10];
         private CardTypeDataSO _loadedCardTypeData;
@@ -53,7 +60,23 @@ namespace Editor.CardEditor
 
         private void OnEnable()
         {
+            Debug.Log("CardEditorWindow OnEnable");
             _editorWindowChannel.OnCardEditorWindowRequested += OpenCardInEditor;
+            // Load all CardTypeDataSO instances from the Resources folder
+            CardTypeDataSO[] cardTypes = Resources.LoadAll<CardTypeDataSO>("");
+            // Extract card type names for displaying in the dropdown
+            _cardTypeNames = new string[cardTypes.Length];
+            for (int i = 0; i < cardTypes.Length; i++)
+            {
+                _cardTypeNames[i] = cardTypes[i].CardTypeName;
+                Debug.Log($"Found:{cardTypes[i].CardTypeName}");
+            }
+            // Optionally, find the currently selected card type and set the index
+            if (_loadedCardTypeData!= null)
+            {
+                _selectedCardTypeIndex = System.Array.IndexOf(_cardTypeNames, _loadedCardTypeData.CardTypeName);
+                Debug.Log($"Loaded:{_loadedCardTypeData.CardTypeName}");
+            }
         }
 
         private void OnDisable()
@@ -67,6 +90,7 @@ namespace Editor.CardEditor
             Init();
             CardDataAssetUtility.CardToEdit = card;
             LoadCardData();
+            _isCardLoaded = true;
         }
        
         private void OnGUI()
@@ -105,15 +129,25 @@ namespace Editor.CardEditor
 
             GUILayout.Label(!ReferenceEquals(CardDataAssetUtility.CardToEdit, null) ? 
                 "Select Card Type" : "Create New Card", EditorStyles.boldLabel);
+            
+            // Show the dropdown menu
+            /*_selectedCardTypeIndex = EditorGUILayout.Popup("Card Type", _selectedCardTypeIndex, _cardTypeNames);
 
-            _loadedCardTypeData = (CardTypeDataSO)EditorGUILayout.ObjectField(
-                "Card Type", _loadedCardTypeData, typeof(CardTypeDataSO), false);
+            // If a valid selection is made, assign the selected CardTypeDataSO to the script
+            if (_selectedCardTypeIndex >= 0 && _cardTypeNames.Length > 0)
+            {
+               _loadedCardTypeData = Resources.Load<CardTypeDataSO>(_cardTypeNames[_selectedCardTypeIndex]);
+               Debug.Log($"Loaded:{_loadedCardTypeData.CardTypeName}");
+            }*/
+
+             _loadedCardTypeData = (CardTypeDataSO)EditorGUILayout.ObjectField(
+               "Card Type", _loadedCardTypeData, typeof(CardTypeDataSO), false);
 
             if (GUILayout.Button("Change Card Type") || _loadedCardTypeData != null && !_typeLoaded)
             {
                 CardDataAssetUtility.LoadCardTypeData(_loadedCardTypeData);
                 TempStats = CardDataAssetUtility.CardStats;
-            }
+            };
 
             CardDataAssetUtility.CardName = EditorGUILayout.TextField("Card Name", 
                 CardDataAssetUtility.CardName, GUILayout.Width(FIELD_WIDTH));

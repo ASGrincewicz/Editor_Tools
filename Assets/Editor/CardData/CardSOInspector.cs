@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
-using Editor.CardData.CardTypeData;
+using Editor.CardData.CardTypes;
+using Editor.CardData.Stats;
 using Editor.Channels;
 using Editor.Utilities;
 using UnityEditor;

@@ -38,5 +38,5 @@ MonoBehaviour:
     statValue: 5
     statDescription: Amount of Damage Dealt
   - statName: Durabilty
-    statValue: 5
+    statValue: 2
     statDescription: Number of Uses

@@ -1,6 +1,6 @@
 using UnityEditor;
 
-namespace Editor.CardData.CardTypeData
+namespace Editor.CardData.CardTypes
 {
     [CustomEditor(typeof(CardTypeDataSO))]
     public class CardTypeSOInspector : UnityEditor.Editor
