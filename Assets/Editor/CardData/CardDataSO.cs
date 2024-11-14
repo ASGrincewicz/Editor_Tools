@@ -64,9 +64,7 @@ namespace Editor.CardData
             }
             set
             {
-                Debug.Log($"CardTypeDataSO: {_cardTypeData}");
                 _cardTypeData = value;
-                
             }
         }
         /// <summary>

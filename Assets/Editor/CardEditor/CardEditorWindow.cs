@@ -18,6 +18,7 @@ namespace Editor.CardEditor
         private static  EditorWindow _cardEditorWindow;
         // Constants
         private const float FIELD_WIDTH = 400;
+        private const string ASSET_PATH = "Assets/Resources/Scriptable Objects/Card Types/";
         
         // GUI variables
         private Vector2 ScrollPosition { get; set; }
@@ -43,7 +44,9 @@ namespace Editor.CardEditor
         private int _selectedCardTypeIndex;
         private List<CardStat> TempStats = new List<CardStat>();
         private int[] _tempValues = new int[10];
+        private CardTypeDataSO[] _allCardTypes;
         private CardTypeDataSO _loadedCardTypeData;
+        
         private bool _typeLoaded = false;
         private bool _isCardLoaded = false;
         
@@ -60,23 +63,14 @@ namespace Editor.CardEditor
 
         private void OnEnable()
         {
-            Debug.Log("CardEditorWindow OnEnable");
             _editorWindowChannel.OnCardEditorWindowRequested += OpenCardInEditor;
-            // Load all CardTypeDataSO instances from the Resources folder
-            CardTypeDataSO[] cardTypes = Resources.LoadAll<CardTypeDataSO>("");
-            // Extract card type names for displaying in the dropdown
-            _cardTypeNames = new string[cardTypes.Length];
-            for (int i = 0; i < cardTypes.Length; i++)
+            _allCardTypes = Resources.LoadAll<CardTypeDataSO>("");
+            _cardTypeNames = new string[_allCardTypes.Length];
+            for (int i = 0; i < _allCardTypes.Length; i++)
             {
-                _cardTypeNames[i] = cardTypes[i].CardTypeName;
-                Debug.Log($"Found:{cardTypes[i].CardTypeName}");
+                _cardTypeNames[i] = _allCardTypes[i].CardTypeName;
             }
-            // Optionally, find the currently selected card type and set the index
-            if (_loadedCardTypeData!= null)
-            {
-                _selectedCardTypeIndex = System.Array.IndexOf(_cardTypeNames, _loadedCardTypeData.CardTypeName);
-                Debug.Log($"Loaded:{_loadedCardTypeData.CardTypeName}");
-            }
+            FindCardTypeAndSetIndex();
         }
 
         private void OnDisable()
@@ -91,6 +85,14 @@ namespace Editor.CardEditor
             CardDataAssetUtility.CardToEdit = card;
             LoadCardData();
             _isCardLoaded = true;
+        }
+
+        private void FindCardTypeAndSetIndex()
+        {
+            if (_loadedCardTypeData!= null)
+            {
+                _selectedCardTypeIndex = System.Array.IndexOf(_cardTypeNames, _loadedCardTypeData.CardTypeName);
+            }
         }
        
         private void OnGUI()
@@ -130,24 +132,30 @@ namespace Editor.CardEditor
             GUILayout.Label(!ReferenceEquals(CardDataAssetUtility.CardToEdit, null) ? 
                 "Select Card Type" : "Create New Card", EditorStyles.boldLabel);
             
-            // Show the dropdown menu
-            /*_selectedCardTypeIndex = EditorGUILayout.Popup("Card Type", _selectedCardTypeIndex, _cardTypeNames);
-
-            // If a valid selection is made, assign the selected CardTypeDataSO to the script
-            if (_selectedCardTypeIndex >= 0 && _cardTypeNames.Length > 0)
+            if (_cardTypeNames == null || _cardTypeNames.Length == 0)
             {
-               _loadedCardTypeData = Resources.Load<CardTypeDataSO>(_cardTypeNames[_selectedCardTypeIndex]);
-               Debug.Log($"Loaded:{_loadedCardTypeData.CardTypeName}");
-            }*/
-
-             _loadedCardTypeData = (CardTypeDataSO)EditorGUILayout.ObjectField(
-               "Card Type", _loadedCardTypeData, typeof(CardTypeDataSO), false);
-
-            if (GUILayout.Button("Change Card Type") || _loadedCardTypeData != null && !_typeLoaded)
+                Debug.LogError("Card type names array is not initialized or empty.");
+                return;
+            }
+            _selectedCardTypeIndex = EditorGUILayout.Popup("Card Type", _selectedCardTypeIndex, _cardTypeNames);
+            
+            if (_selectedCardTypeIndex >= 0 && _selectedCardTypeIndex < _cardTypeNames.Length)
             {
-                CardDataAssetUtility.LoadCardTypeData(_loadedCardTypeData);
-                TempStats = CardDataAssetUtility.CardStats;
-            };
+                _loadedCardTypeData = _allCardTypes[_selectedCardTypeIndex];
+                if (CardDataAssetUtility.CardTypeData == null)
+                {
+                    CardDataAssetUtility.LoadCardTypeData(_loadedCardTypeData);
+                }
+
+                if (_loadedCardTypeData == null)
+                {
+                    Debug.LogError($"Failed to load CardTypeDataSO named {_cardTypeNames[_selectedCardTypeIndex]}");
+                }
+            }
+            else
+            {
+                Debug.LogWarning("Invalid selection index.");
+            }
 
             CardDataAssetUtility.CardName = EditorGUILayout.TextField("Card Name", 
                 CardDataAssetUtility.CardName, GUILayout.Width(FIELD_WIDTH));
@@ -278,7 +286,7 @@ namespace Editor.CardEditor
                 if (CardDataAssetUtility.KeywordNamesList.Count > 0)
                 {
                     string selectedKeywordName = CardDataAssetUtility.KeywordNamesList[CardDataAssetUtility.SelectedKeywordsIndex[i]];
-                    CardDataAssetUtility.SelectedKeywords[i] = CardDataAssetUtility.keywordManager.GetKeywordByName(selectedKeywordName);
+                    CardDataAssetUtility.SelectedKeywords[i] = CardDataAssetUtility.KeywordManager.GetKeywordByName(selectedKeywordName);
                 }
             }
             GUILayout.EndHorizontal();
@@ -317,10 +325,11 @@ namespace Editor.CardEditor
 
         private void LoadCardData()
         {
+            CardDataAssetUtility.CardToEdit.CardTypeDataSO = _loadedCardTypeData;
             CardDataAssetUtility.LoadCardFromFile();
             _loadedCardTypeData = CardDataAssetUtility.CardTypeData;
+            FindCardTypeAndSetIndex();
             TempStats = CardDataAssetUtility.CardStats;
-            Debug.Log($"Temp stats loaded:{TempStats.Count}");
         }
     }
 }

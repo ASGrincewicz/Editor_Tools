@@ -239,7 +239,7 @@ namespace Editor.SetDesigner
            _cardSetScrollPosition = GUILayout.BeginScrollView(_cardSetScrollPosition, GUILayout.Height(MainAreaRect.height * 0.8f));
             GUILayout.BeginVertical(GUILayout.Height(MainAreaRect.height), GUILayout.ExpandHeight(true));
             DrawTotalCardsLabel();
-           _cardAssetGUIDs = CardDataAssetUtility.CardAssetGUIDs;
+           _cardAssetGUIDs = CardDataAssetUtility.CardAssetGuids;
 
             foreach (string guid in _cardAssetGUIDs)
             {
