@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85c2db69d287cba46a63d7dc92203786, type: 3}
   m_Name: Flimsy Bow
   m_EditorClassIdentifier: 
-  _cardSetName: None
-  _cardNumber: 0
+  _cardSetName: First Expansion
+  _cardNumber: 2
   _rarity: 1
   _cost: 0
-  _cardTypeData: {fileID: 11400000, guid: 0cbb2fa413dd54a85b6590601ef45254, type: 2}
+  _cardTypeData: {fileID: 11400000, guid: f6ca39d28d5674a54925faf5dc258a8e, type: 2}
   _cardName: Flimsy Bow
   _artWork: {fileID: 0}
   _keywords:

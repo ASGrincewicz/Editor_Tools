@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 85c2db69d287cba46a63d7dc92203786, type: 3}
-  m_Name: Derelict Space Station
+  m_Name: Apple
   m_EditorClassIdentifier: 
   _cardSetName: None
   _cardNumber: 0
   _rarity: 1
   _cost: 0
-  _cardTypeData: {fileID: 11400000, guid: df2a7ba10b4694045b6bb6f96f7beb46, type: 2}
-  _cardName: Derelict Space Station
-  _artWork: {fileID: 2800000, guid: b02356dda495763498ae6b21cdd79f41, type: 3}
+  _cardTypeData: {fileID: 11400000, guid: f6ca39d28d5674a54925faf5dc258a8e, type: 2}
+  _cardName: Apple
+  _artWork: {fileID: 0}
   _keywords:
   - keywordName: Barrage
     keywordValue: 1
@@ -35,5 +35,11 @@ MonoBehaviour:
     definition: "Attack X Targets this turn.\nYou must roll X or higher for \neach
       attack to succeed."
     abilityType: 3
-  _cardText: Environment Text
-  _stats: []
+  _cardText: Heal target character by 5 HP.
+  _stats:
+  - statName: Health Recovery
+    statValue: 5
+    statDescription: Amount of Health Recovered.
+  - statName: Stamina Recovery
+    statValue: 0
+    statDescription: Amount of Stamina Recovered.

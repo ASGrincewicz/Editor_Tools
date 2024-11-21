@@ -1,4 +1,6 @@
+using Editor.Channels;
 using UnityEditor;
+using UnityEngine;
 
 namespace Editor.CardData.CardTypes
 {
@@ -14,7 +16,8 @@ namespace Editor.CardData.CardTypes
         private const string HasKeywordsName = "_hasKeywords";
         private const string HasCardTextName = "_hasCardText";
         private const string CardStatDataName = "_cardStatData";
-        
+
+        [SerializeField] private EditorWindowChannel _editorWindowChannel;
         // Serialized Properties
         private SerializedProperty CardTypeNameProperty { get; set; }
         private SerializedProperty CardTypeIconProperty { get; set; }
@@ -47,8 +50,19 @@ namespace Editor.CardData.CardTypes
         private void DrawCardTypeSOInspectorGUI()
         {
             CardTypeDataSO cardTypeSO = (CardTypeDataSO) target;
+            GUILayout.BeginHorizontal(EditorStyles.toolbar);
+            DrawOpenInCardTypeEditorButton(cardTypeSO);
+            GUILayout.EndHorizontal();
             DrawRequiredProperties();
             DrawOptionalProperties();
+        }
+
+        private void DrawOpenInCardTypeEditorButton(CardTypeDataSO cardTypeSO)
+        {
+            if (GUILayout.Button("Open Card Type Editor", EditorStyles.toolbarButton))
+            {
+                _editorWindowChannel.RaiseCardTypeEditorWindowRequestedEvent(cardTypeSO);
+            }
         }
 
         private void DrawRequiredProperties()

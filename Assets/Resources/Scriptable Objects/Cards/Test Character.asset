@@ -12,18 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85c2db69d287cba46a63d7dc92203786, type: 3}
   m_Name: Test Character
   m_EditorClassIdentifier: 
-  _cardSetName: None
-  _cardNumber: 0
+  _cardSetName: First Expansion
+  _cardNumber: 5
   _rarity: 2
   _cost: 0
   _cardTypeData: {fileID: 11400000, guid: a8f5de3dc48124cd9a1f1fd971cd914b, type: 2}
   _cardName: Test Character
   _artWork: {fileID: 2800000, guid: 1cfdc142c7aca32438a78fcee7fcf426, type: 3}
   _keywords:
-  - keywordName: None
-    keywordValue: 0
-    definition: 
-    abilityType: 0
+  - keywordName: Mend
+    keywordValue: 1
+    definition: Heal any ally by 5.
+    abilityType: 9
   - keywordName: None
     keywordValue: 0
     definition: 

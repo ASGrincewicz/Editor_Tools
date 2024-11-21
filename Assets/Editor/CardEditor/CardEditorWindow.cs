@@ -24,26 +24,9 @@ namespace Editor.CardEditor
         private Vector2 ScrollPosition { get; set; }
         private Rect MainAreaRect { get; set; }
         
-        // Main Area Buttons Setup
-        private bool IsCreateCardButtonPressed => GUILayout.Button("Create", EditorStyles.toolbarButton);
-
-        private bool IsLoadCardButtonPressed
-        {
-            get { return GUILayout.Button("Load Card", EditorStyles.toolbarButton); }
-        }
-
-        private bool IsSaveCardButtonPressed => GUILayout.Button("Save Card", EditorStyles.toolbarButton);
-
-        private bool IsUnloadCardButtonPressed => GUILayout.Button("Unload Card", EditorStyles.toolbarButton);
-
-        private bool IsCalculateCostButtonPressed => GUILayout.Button("Calculate Cost", EditorStyles.toolbarButton);
-        
-        private bool IsDoneButtonPressed => GUILayout.Button("Done", EditorStyles.toolbarButton);
-
         private string[] _cardTypeNames;
         private int _selectedCardTypeIndex;
-        private List<CardStat> TempStats = new List<CardStat>();
-        private int[] _tempValues = new int[10];
+        private List<CardStat> TempStats = new ();
         private CardTypeDataSO[] _allCardTypes;
         private CardTypeDataSO _loadedCardTypeData;
         
@@ -64,6 +47,17 @@ namespace Editor.CardEditor
         private void OnEnable()
         {
             _editorWindowChannel.OnCardEditorWindowRequested += OpenCardInEditor;
+            LoadCardTypes();
+        }
+
+        private void OnDisable()
+        {
+            _editorWindowChannel.OnCardEditorWindowRequested -= OpenCardInEditor;
+            CardDataAssetUtility.UnloadCard();
+        }
+
+        private void LoadCardTypes()
+        {
             _allCardTypes = Resources.LoadAll<CardTypeDataSO>("");
             _cardTypeNames = new string[_allCardTypes.Length];
             for (int i = 0; i < _allCardTypes.Length; i++)
@@ -72,11 +66,13 @@ namespace Editor.CardEditor
             }
             FindCardTypeAndSetIndex();
         }
-
-        private void OnDisable()
+        
+        private void FindCardTypeAndSetIndex()
         {
-            _editorWindowChannel.OnCardEditorWindowRequested -= OpenCardInEditor;
-            CardDataAssetUtility.UnloadCard();
+            if (_loadedCardTypeData!= null)
+            {
+                _selectedCardTypeIndex = System.Array.IndexOf(_cardTypeNames, _loadedCardTypeData.CardTypeName);
+            }
         }
         
         private void OpenCardInEditor(CardDataSO card)
@@ -86,15 +82,6 @@ namespace Editor.CardEditor
             LoadCardData();
             _isCardLoaded = true;
         }
-
-        private void FindCardTypeAndSetIndex()
-        {
-            if (_loadedCardTypeData!= null)
-            {
-                _selectedCardTypeIndex = System.Array.IndexOf(_cardTypeNames, _loadedCardTypeData.CardTypeName);
-            }
-        }
-       
         private void OnGUI()
         {
             SetupAreaRects();
@@ -128,20 +115,22 @@ namespace Editor.CardEditor
                 LoadCardData();
                 _isCardLoaded = true;
             }
-
-            GUILayout.Label(!ReferenceEquals(CardDataAssetUtility.CardToEdit, null) ? 
-                "Select Card Type" : "Create New Card", EditorStyles.boldLabel);
             
             if (_cardTypeNames == null || _cardTypeNames.Length == 0)
             {
                 Debug.LogError("Card type names array is not initialized or empty.");
                 return;
             }
+            
             _selectedCardTypeIndex = EditorGUILayout.Popup("Card Type", _selectedCardTypeIndex, _cardTypeNames);
             
             if (_selectedCardTypeIndex >= 0 && _selectedCardTypeIndex < _cardTypeNames.Length)
             {
                 _loadedCardTypeData = _allCardTypes[_selectedCardTypeIndex];
+                if (GUILayout.Button("Change Card Type", EditorStyles.toolbarButton))
+                {
+                    CardDataAssetUtility.CardTypeData = _allCardTypes[_selectedCardTypeIndex];
+                }
                 if (CardDataAssetUtility.CardTypeData == null)
                 {
                     CardDataAssetUtility.LoadCardTypeData(_loadedCardTypeData);
@@ -167,6 +156,11 @@ namespace Editor.CardEditor
                 CardDataAssetUtility.Artwork, typeof(Texture2D), false,
                 GUILayout.Height(200), GUILayout.Width(FIELD_WIDTH));
 
+            DrawFieldsBasedOnType();
+        }
+
+        private void DrawFieldsBasedOnType()
+        {
             if (_loadedCardTypeData != null)
             {
                 if (!_typeLoaded)
@@ -248,34 +242,9 @@ namespace Editor.CardEditor
 
             for (int i = 0; i < CardDataAssetUtility.SelectedKeywords.Length; i++)
             {
-                if (CardDataAssetUtility.SelectedKeywordsIndex.Length <= i)
-                {
-                    Debug.LogError($"Index {i} is out of range for _selectedKeywordsIndex");
-                    continue;
-                }
-                
-                if (CardDataAssetUtility.SelectedKeywordsIndex[i] == -1)
-                {
-                    CardDataAssetUtility.SelectedKeywordsIndex[i] = 0;
-                }
+               CheckAndResetSelectedKeywordIndex(i);
 
-                if (CardDataAssetUtility.SelectedKeywordsIndex != null && CardDataAssetUtility.KeywordNamesList != null && CardDataAssetUtility.KeywordNamesList.Count > 0)
-                {
-                    CardDataAssetUtility.SelectedKeywordsIndex[i] = EditorGUILayout.Popup(
-                        CardDataAssetUtility.SelectedKeywordsIndex[i],
-                        CardDataAssetUtility.KeywordNamesList.ToArray(),
-                        GUILayout.Width(FIELD_WIDTH / 3)
-                    );
-                }
-                else
-                {
-                    CardDataAssetUtility.SelectedKeywordsIndex[i] = 0;
-                    EditorGUILayout.Popup(
-                        0,
-                        new string[] { "No Keywords Available" },
-                        GUILayout.Width(FIELD_WIDTH / 3)
-                    );
-                }
+                DrawKeywordFields(i);
                 
                 if (CardDataAssetUtility.SelectedKeywordsIndex[i] < 0 || CardDataAssetUtility.SelectedKeywordsIndex[i] >= CardDataAssetUtility.KeywordNamesList.Count)
                 {
@@ -283,53 +252,127 @@ namespace Editor.CardEditor
                     continue;
                 }
                 
-                if (CardDataAssetUtility.KeywordNamesList.Count > 0)
-                {
-                    string selectedKeywordName = CardDataAssetUtility.KeywordNamesList[CardDataAssetUtility.SelectedKeywordsIndex[i]];
-                    CardDataAssetUtility.SelectedKeywords[i] = CardDataAssetUtility.KeywordManager.GetKeywordByName(selectedKeywordName);
-                }
+                SetKeyword(i);
             }
             GUILayout.EndHorizontal();
         }
 
+        private void CheckAndResetSelectedKeywordIndex(int index)
+        {
+            if (CardDataAssetUtility.SelectedKeywordsIndex.Length <= index)
+            {
+                Debug.LogError($"Index {index} is out of range for _selectedKeywordsIndex");
+            }
+                
+            if (CardDataAssetUtility.SelectedKeywordsIndex[index] == -1)
+            {
+                CardDataAssetUtility.SelectedKeywordsIndex[index] = 0;
+            }
+        }
+
+        private void DrawKeywordFields(int index)
+        {
+            if (CardDataAssetUtility.SelectedKeywordsIndex != null && CardDataAssetUtility.KeywordNamesList != null && CardDataAssetUtility.KeywordNamesList.Count > 0)
+            {
+                CardDataAssetUtility.SelectedKeywordsIndex[index] = EditorGUILayout.Popup(
+                    CardDataAssetUtility.SelectedKeywordsIndex[index],
+                    CardDataAssetUtility.KeywordNamesList.ToArray(),
+                    GUILayout.Width(FIELD_WIDTH / 3)
+                );
+            }
+            else
+            {
+                CardDataAssetUtility.SelectedKeywordsIndex[index] = 0;
+                EditorGUILayout.Popup(
+                    0,
+                    new string[] { "No Keywords Available" },
+                    GUILayout.Width(FIELD_WIDTH / 3)
+                );
+            }
+        }
+
+        private void SetKeyword(int index)
+        {
+            if (CardDataAssetUtility.KeywordNamesList.Count > 0)
+            {
+                string selectedKeywordName = CardDataAssetUtility.KeywordNamesList[CardDataAssetUtility.SelectedKeywordsIndex[index]];
+                CardDataAssetUtility.SelectedKeywords[index] = CardDataAssetUtility.KeywordManager.GetKeywordByName(selectedKeywordName);
+            }
+        }
+
         private void DrawControlButtons()
         {
-            if (IsCreateCardButtonPressed)
+            if (GUILayout.Button("Create", EditorStyles.toolbarButton))
             {
-                CardDataAssetUtility.CreateNewCard(TempStats);
+                HandleCreateButtonPressed();
             }
-            if (IsLoadCardButtonPressed)
+            if (GUILayout.Button("Load", EditorStyles.toolbarButton))
             {
-               LoadCardData();
+               HandleLoadButtonPressed();
             }
-            if (IsSaveCardButtonPressed)
+            if (GUILayout.Button("Save", EditorStyles.toolbarButton))
             {
-                CardDataAssetUtility.SaveExistingCard(TempStats);
+                HandleSaveButtonPressed();
             }
-            if(IsUnloadCardButtonPressed && !ReferenceEquals(CardDataAssetUtility.CardToEdit, null))
+            if(GUILayout.Button("Unload", EditorStyles.toolbarButton) && !ReferenceEquals(CardDataAssetUtility.CardToEdit, null))
             {
-                CardDataAssetUtility.UnloadCard();
-                _isCardLoaded = false;
-            }
-
-            if (IsCalculateCostButtonPressed && !ReferenceEquals(CardDataAssetUtility.CardToEdit, null))
-            {
-               _editorWindowChannel.RaiseCostCalculatorWindowRequestedEvent(CardDataAssetUtility.CardToEdit);
+               HandleUnloadButtonPressed();
             }
 
-            if (IsDoneButtonPressed)
+            if (GUILayout.Button("Calculate Cost", EditorStyles.toolbarButton) && !ReferenceEquals(CardDataAssetUtility.CardToEdit, null))
             {
-               _cardEditorWindow.Close();
+               HandleCalculateCostButtonPressed();
             }
+
+            if (GUILayout.Button("Done", EditorStyles.toolbarButton))
+            {
+               HandleDoneButtonPressed();
+            }
+        }
+
+        private void HandleCreateButtonPressed()
+        {
+            CardDataAssetUtility.CreateNewCard(TempStats);
+        }
+
+        private void HandleSaveButtonPressed()
+        {
+            CardDataAssetUtility.SaveExistingCard(TempStats);
+        }
+
+        private void HandleLoadButtonPressed()
+        {
+            LoadCardData();
+        }
+
+        private void HandleUnloadButtonPressed()
+        {
+            CardDataAssetUtility.UnloadCard();
+            _isCardLoaded = false;
+        }
+
+        private void HandleCalculateCostButtonPressed()
+        {
+            _editorWindowChannel.RaiseCostCalculatorWindowRequestedEvent(CardDataAssetUtility.CardToEdit);
+        }
+
+        private void HandleDoneButtonPressed()
+        {
+            _cardEditorWindow.Close();
         }
 
         private void LoadCardData()
         {
+            LoadCardTypeData();
+            FindCardTypeAndSetIndex();
+            TempStats = CardDataAssetUtility.CardStats;
+        }
+
+        private void LoadCardTypeData()
+        {
             CardDataAssetUtility.CardToEdit.CardTypeDataSO = _loadedCardTypeData;
             CardDataAssetUtility.LoadCardFromFile();
             _loadedCardTypeData = CardDataAssetUtility.CardTypeData;
-            FindCardTypeAndSetIndex();
-            TempStats = CardDataAssetUtility.CardStats;
         }
     }
 }

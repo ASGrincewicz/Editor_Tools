@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3c1a53a361c4d8c9fe124796c21b743, type: 3}
+  m_Name: Consumbale_CardType
+  m_EditorClassIdentifier: 
+  _cardTypeName: Consumable
+  _cardTypeIcon: {fileID: 0}
+  _cardTypeColor: {r: 0.17515129, g: 0.9056604, b: 0.79351467, a: 0.99215686}
+  _hasStats: 1
+  _hasCost: 1
+  _hasKeywords: 0
+  _hasCardText: 1
+  _cardStatData:
+  - statName: Health Recovery
+    statDescription: Amount of Health Recovered.
+    statWeight: 0
+  - statName: Stamina Recovery
+    statDescription: Amount of Stamina Recovered.
+    statWeight: 0

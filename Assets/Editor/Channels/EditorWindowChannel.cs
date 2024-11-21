@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Editor.CardData;
+using Editor.CardData.CardTypes;
 using Editor.CardData.Stats;
 using Editor.CardEditor;
 using Editor.CostCalculator;
@@ -19,6 +20,7 @@ namespace Editor.Channels
         public Action<CardDataSO> OnCostCalculatorWindowRequested;
         public Action OnKwywordEditorWindowRequested;
         public Action OnCardSetEditorWindowRequested;
+        public Action<CardTypeDataSO> OnCardTypeEditorWindowRequested;
 
         public void RaiseCardEditorWindowRequestedEvent(CardDataSO cardData)
         {
@@ -47,6 +49,12 @@ namespace Editor.Channels
         public void RaiseCardStatsUpdatedEvent(List<CardStat> cardStats)
         {
             OnCardStatsUpdated?.Invoke();
+        }
+
+        public void RaiseCardTypeEditorWindowRequestedEvent(CardTypeDataSO cardType)
+        {
+            EditorWindow.GetWindow<CardTypeEditorWindow>($"Editing {cardType.CardTypeName} Card Type");
+            OnCardTypeEditorWindowRequested?.Invoke(cardType);
         }
     }
 }

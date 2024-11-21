@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Editor.CardData.CardTypes
 {
-    [CreateAssetMenu(fileName = "CardTypeDataSO", menuName = "ard Type Data", order = 0)]
+    [CreateAssetMenu(fileName = "CardTypeDataSO", menuName = "Card Type Data", order = 0)]
     public class CardTypeDataSO : ScriptableObject
     {
         [SerializeField] private string _cardTypeName;
