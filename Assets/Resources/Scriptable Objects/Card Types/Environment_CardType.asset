@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cardTypeName: Environment
   _cardTypeIcon: {fileID: 0}
-  _cardTypeColor: {r: 0.24003202, g: 0.5471698, b: 0.5074887, a: 1}
+  _cardTypeColor: {r: 0.2988163, g: 0.8018868, b: 0.731839, a: 1}
   _hasStats: 0
   _hasCost: 1
   _hasKeywords: 0

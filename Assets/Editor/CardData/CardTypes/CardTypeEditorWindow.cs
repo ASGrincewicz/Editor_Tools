@@ -118,6 +118,20 @@ namespace Editor.CardData.CardTypes
         private void HandleSaveButtonPressed()
         {
             Debug.Log("Save card type");
+            if (!ReferenceEquals(_loadedType, null))
+            {
+                _loadedType.CardTypeName = _cardTypeName;
+                _loadedType.CardTypeIcon = _cardTypeIcon;
+                _loadedType.CardTypeColor = _cardTypeColor;
+                _loadedType.HasStats = _hasStats;
+                _loadedType.HasCost = _hasCost;
+                _loadedType.HasKeywords = _hasKeywords;
+                _loadedType.HasCardText = _hasCardText;
+                Undo.RecordObject(_loadedType, "Save card type");
+                EditorUtility.SetDirty(_loadedType);
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
+            }
         }
 
         private void HandleLoadButtonPressed()
@@ -129,6 +143,7 @@ namespace Editor.CardData.CardTypes
         private void HandleUnloadButtonPressed()
         {
             Debug.Log("Unload card type");
+            _loadedType = null;
         }
         
         private void HandleDoneButtonPressed()
