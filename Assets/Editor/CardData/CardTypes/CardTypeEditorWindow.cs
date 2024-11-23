@@ -6,6 +6,8 @@ namespace Editor.CardData.CardTypes
 {
     public class CardTypeEditorWindow: EditorWindow
     {
+        private const string ResourcesPath = "Assets/Resources/Scriptable Objects/";
+        private const string CardTypesPath = "Card Types/";
         [SerializeField] private EditorWindowChannel _editorWindowChannel;
 
         private static EditorWindow _typeEditorWindow;
@@ -35,14 +37,26 @@ namespace Editor.CardData.CardTypes
         private void OnEnable()
         {
             _editorWindowChannel.OnCardTypeEditorWindowRequested += OpenCardTypeInEditor;
+            VerifyDirectory();
         }
 
         private void OnDisable()
         {
             _editorWindowChannel.OnCardTypeEditorWindowRequested -= OpenCardTypeInEditor;
         }
+        
+        private void VerifyDirectory()
+        {
+            if (AssetDatabase.IsValidFolder(ResourcesPath+CardTypesPath))
+            {
+                return;
+            }
 
-        public void OpenCardTypeInEditor(CardTypeDataSO cardTypeData)
+            AssetDatabase.CreateFolder(ResourcesPath, CardTypesPath);
+
+        }
+
+        private void OpenCardTypeInEditor(CardTypeDataSO cardTypeData)
         {
             Init();
             _loadedType = cardTypeData;
@@ -113,6 +127,7 @@ namespace Editor.CardData.CardTypes
         private void HandleCreateButtonPressed()
         {
             Debug.Log("Create card type");
+            CreateNewCardType();
         }
 
         private void HandleSaveButtonPressed()
@@ -143,7 +158,17 @@ namespace Editor.CardData.CardTypes
         private void HandleUnloadButtonPressed()
         {
             Debug.Log("Unload card type");
-            _loadedType = null;
+            if (!ReferenceEquals(_loadedType, null))
+            {
+                _loadedType = null;
+                _cardTypeName = string.Empty;
+                _cardTypeIcon = null;
+                _cardTypeColor = Color.white;
+                _hasStats = false;
+                _hasCost = false;
+                _hasKeywords = false;
+                _hasCardText = false;
+            }
         }
         
         private void HandleDoneButtonPressed()
@@ -164,6 +189,23 @@ namespace Editor.CardData.CardTypes
             _hasCost = _loadedType.HasCost;
             _hasKeywords = _loadedType.HasKeywords;
             _hasCardText = _loadedType.HasCardText;
+        }
+
+        private void CreateNewCardType()
+        {
+            _loadedType = ScriptableObject.CreateInstance<CardTypeDataSO>();
+            _loadedType.CardTypeName = _cardTypeName;
+            _loadedType.CardTypeIcon = _cardTypeIcon;
+            _loadedType.CardTypeColor = _cardTypeColor;
+            _loadedType.HasStats = _hasStats;
+            _loadedType.HasCost = _hasCost;
+            _loadedType.HasKeywords = _hasKeywords;
+            _loadedType.HasCardText = _hasCardText;
+            AssetDatabase.CreateAsset(_loadedType, ResourcesPath + CardTypesPath + _cardTypeName + "_CardType.asset");
+            Undo.RecordObject(_loadedType, "Create card type");
+            EditorUtility.SetDirty(_loadedType);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
         }
 
     }
