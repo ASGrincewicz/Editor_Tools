@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Environment_CardType
   m_EditorClassIdentifier: 
   _cardTypeName: Environment
-  _cardTypeIcon: {fileID: 0}
+  _cardTypeIcon: {fileID: 2800000, guid: 34d493cd19ed2481facee09ac265f092, type: 3}
   _cardTypeColor: {r: 0.2988163, g: 0.8018868, b: 0.731839, a: 1}
   _hasStats: 0
   _hasCost: 1

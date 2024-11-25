@@ -6,8 +6,17 @@ namespace Editor.CardData.CardTypes
 {
     public class CardTypeEditorWindow: EditorWindow
     {
+        private const string WindowTitle = "Card Type Editor";
         private const string ResourcesPath = "Assets/Resources/Scriptable Objects/";
         private const string CardTypesPath = "Card Types/";
+        private const string ObjectFieldLabel = "Card Type Asset:";
+        private const string CardTypeNameFieldLabel = "Card Type Name:";
+        private const string CardTypeIconFieldLabel = "Card Type Icon:";
+        private const string CardTypeColorFieldLabel = "Card Type Color:";
+        private const string HasStatsFieldLabel = "Has Stats:";
+        private const string HasCostFieldLabel = "Has Cost:";
+        private const string HasKeywordsFieldLabel = "Has Keywords:";
+        private const string HasCardTextFieldLabel = "Has Card Text:";
         [SerializeField] private EditorWindowChannel _editorWindowChannel;
 
         private static EditorWindow _typeEditorWindow;
@@ -29,7 +38,7 @@ namespace Editor.CardData.CardTypes
         [MenuItem("Tools/Card Type Editor")]
         public static void Init()
         {
-            _typeEditorWindow = GetWindow<CardTypeEditorWindow>("Card Type Editor");
+            _typeEditorWindow = GetWindow<CardTypeEditorWindow>(WindowTitle);
             _typeEditorWindow.position = new Rect(250f, 150f, 300f, 300f);
             _typeEditorWindow.Show();
         }
@@ -88,14 +97,14 @@ namespace Editor.CardData.CardTypes
 
         private void DrawEditableFields()
         {
-           _loadedType = (CardTypeDataSO)EditorGUILayout.ObjectField("Card Type Asset",_loadedType, typeof(CardTypeDataSO), false);
-           _cardTypeName = EditorGUILayout.TextField("Card Type Name", _cardTypeName);
-           _cardTypeIcon = (Texture2D)EditorGUILayout.ObjectField("Card Type Icon",_cardTypeIcon, typeof(Texture2D), false);
-           _cardTypeColor = EditorGUILayout.ColorField("Card Type Color",_cardTypeColor);
-           _hasStats = EditorGUILayout.Toggle("Stats", _hasStats);
-           _hasCost = EditorGUILayout.Toggle("Cost", _hasCost);
-           _hasKeywords = EditorGUILayout.Toggle("Keywords", _hasKeywords);
-           _hasCardText = EditorGUILayout.Toggle("Card Text", _hasCardText);
+           _loadedType = (CardTypeDataSO)EditorGUILayout.ObjectField(ObjectFieldLabel,_loadedType, typeof(CardTypeDataSO), false);
+           _cardTypeName = EditorGUILayout.TextField(CardTypeNameFieldLabel, _cardTypeName);
+           _cardTypeIcon = (Texture2D)EditorGUILayout.ObjectField(CardTypeIconFieldLabel,_cardTypeIcon, typeof(Texture2D), false);
+           _cardTypeColor = EditorGUILayout.ColorField(CardTypeColorFieldLabel,_cardTypeColor);
+           _hasStats = EditorGUILayout.Toggle(HasStatsFieldLabel, _hasStats);
+           _hasCost = EditorGUILayout.Toggle(HasCostFieldLabel, _hasCost);
+           _hasKeywords = EditorGUILayout.Toggle(HasKeywordsFieldLabel, _hasKeywords);
+           _hasCardText = EditorGUILayout.Toggle(HasCardTextFieldLabel, _hasCardText);
            
         }
 
@@ -135,17 +144,9 @@ namespace Editor.CardData.CardTypes
             Debug.Log("Save card type");
             if (!ReferenceEquals(_loadedType, null))
             {
-                _loadedType.CardTypeName = _cardTypeName;
-                _loadedType.CardTypeIcon = _cardTypeIcon;
-                _loadedType.CardTypeColor = _cardTypeColor;
-                _loadedType.HasStats = _hasStats;
-                _loadedType.HasCost = _hasCost;
-                _loadedType.HasKeywords = _hasKeywords;
-                _loadedType.HasCardText = _hasCardText;
+                InitializeLoadedCardType();
                 Undo.RecordObject(_loadedType, "Save card type");
-                EditorUtility.SetDirty(_loadedType);
-                AssetDatabase.SaveAssets();
-                AssetDatabase.Refresh();
+                SaveAndRefreshAssets();
             }
         }
 
@@ -173,6 +174,8 @@ namespace Editor.CardData.CardTypes
         
         private void HandleDoneButtonPressed()
         {
+            _typeEditorWindow ??= GetWindow<CardTypeEditorWindow>();
+
             _typeEditorWindow.Close();
         }
 
@@ -194,6 +197,14 @@ namespace Editor.CardData.CardTypes
         private void CreateNewCardType()
         {
             _loadedType = ScriptableObject.CreateInstance<CardTypeDataSO>();
+            InitializeLoadedCardType();
+            AssetDatabase.CreateAsset(_loadedType, ResourcesPath + CardTypesPath + _cardTypeName + "_CardType.asset");
+            Undo.RecordObject(_loadedType, "Create card type");
+            SaveAndRefreshAssets();
+        }
+
+        private void InitializeLoadedCardType()
+        {
             _loadedType.CardTypeName = _cardTypeName;
             _loadedType.CardTypeIcon = _cardTypeIcon;
             _loadedType.CardTypeColor = _cardTypeColor;
@@ -201,8 +212,10 @@ namespace Editor.CardData.CardTypes
             _loadedType.HasCost = _hasCost;
             _loadedType.HasKeywords = _hasKeywords;
             _loadedType.HasCardText = _hasCardText;
-            AssetDatabase.CreateAsset(_loadedType, ResourcesPath + CardTypesPath + _cardTypeName + "_CardType.asset");
-            Undo.RecordObject(_loadedType, "Create card type");
+        }
+
+        private void SaveAndRefreshAssets()
+        {
             EditorUtility.SetDirty(_loadedType);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();

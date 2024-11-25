@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Consumbale_CardType
   m_EditorClassIdentifier: 
   _cardTypeName: Consumable
-  _cardTypeIcon: {fileID: 0}
+  _cardTypeIcon: {fileID: 2800000, guid: 6289a5c06287f404f9d9448604843662, type: 3}
   _cardTypeColor: {r: 0.17515129, g: 0.9056604, b: 0.79351467, a: 0.99215686}
   _hasStats: 1
   _hasCost: 1

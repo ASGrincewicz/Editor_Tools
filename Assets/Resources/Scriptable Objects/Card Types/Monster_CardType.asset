@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Monster_CardType
   m_EditorClassIdentifier: 
   _cardTypeName: Monster
-  _cardTypeIcon: {fileID: 0}
+  _cardTypeIcon: {fileID: 2800000, guid: a9726cb51b9d342299af3785ea983f02, type: 3}
   _cardTypeColor: {r: 0.735849, g: 0.735849, b: 0.735849, a: 1}
   _hasStats: 1
   _hasCost: 1
