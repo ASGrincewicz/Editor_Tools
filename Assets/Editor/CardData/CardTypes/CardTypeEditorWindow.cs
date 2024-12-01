@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Editor.CardData.Stats;
 using Editor.Channels;
 using UnityEditor;
 using UnityEngine;
@@ -39,6 +41,11 @@ namespace Editor.CardData.CardTypes
         // Card Type List View Variables
         private string[] _typeAssetGUIDs;
         private Vector2 _cardTypeScrollPosition;
+        
+        // Stat Editing Variables
+        private Vector2 _statScrollPosition;
+        private int _amountOfStats;
+        private List<CardStatData> _cardStats;
 
         [MenuItem("Tools/Card Type Editor")]
         public static void Init()
@@ -111,7 +118,10 @@ namespace Editor.CardData.CardTypes
            _hasCost = EditorGUILayout.Toggle(HasCostFieldLabel, _hasCost);
            _hasKeywords = EditorGUILayout.Toggle(HasKeywordsFieldLabel, _hasKeywords);
            _hasCardText = EditorGUILayout.Toggle(HasCardTextFieldLabel, _hasCardText);
-           
+           if (_hasStats)
+           {
+               DrawStatEditingFields();
+           }
         }
 
         private void DrawControlButtons()
@@ -198,6 +208,11 @@ namespace Editor.CardData.CardTypes
             _hasCost = _loadedType.HasCost;
             _hasKeywords = _loadedType.HasKeywords;
             _hasCardText = _loadedType.HasCardText;
+            if (_hasStats)
+            {
+                _cardStats = _loadedType.CardStats;
+                _amountOfStats = _cardStats.Count;
+            }
         }
 
         private void CreateNewCardType()
@@ -283,5 +298,41 @@ namespace Editor.CardData.CardTypes
             GUILayout.Label(labelText, EditorStyles.boldLabel);
         }
 
+        private void DrawStatEditingFields()
+        {
+            _statScrollPosition = GUILayout.BeginScrollView(_statScrollPosition, GUILayout.ExpandHeight(true));
+            GUILayout.Label("Stats", EditorStyles.boldLabel);
+            _amountOfStats = EditorGUILayout.IntField(_amountOfStats, GUILayout.Width(50));
+            if (_cardStats == null || _cardStats.Count != _amountOfStats)
+            {
+                _cardStats = new List<CardStatData>();
+               for(int i = 0; i < _amountOfStats; i++)
+                {
+                    _cardStats.Add(new CardStatData());
+                    Debug.Log("Added Card Stat");
+                }
+            }
+            GUILayout.BeginHorizontal(GUILayout.Width(100));
+            if (GUILayout.Button("Add Stat", EditorStyles.miniButton))
+            {
+                _cardStats.Add(new CardStatData());
+                _amountOfStats++;
+            }
+
+            if (GUILayout.Button("Remove Stat", EditorStyles.miniButton))
+            {
+                _cardStats.RemoveAt(_cardStats.Count - 1);
+                _amountOfStats--;
+            }
+            GUILayout.EndHorizontal();
+
+            foreach (CardStatData stat in _cardStats)
+            {
+                GUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField(stat.statName);
+                GUILayout.EndHorizontal();
+            }
+            GUILayout.EndScrollView();
+        }
     }
 }
