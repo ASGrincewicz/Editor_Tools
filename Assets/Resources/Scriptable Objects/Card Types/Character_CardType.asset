@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Character_CardType
   m_EditorClassIdentifier: 
   _cardTypeName: Character
-  _cardTypeIcon: {fileID: 0}
+  _cardTypeIcon: {fileID: 2800000, guid: 61d9f296dacce4021acf39cc024c8cb1, type: 3}
   _cardTypeColor: {r: 0.9245283, g: 0.06541473, b: 0.06541473, a: 1}
   _hasStats: 1
   _hasCost: 1

@@ -8,6 +8,7 @@ namespace Editor.CardData.CardTypes
     {
         private const string WindowTitle = "Card Type Editor";
         private const string ResourcesPath = "Assets/Resources/Scriptable Objects/";
+        private const string AssetFilter = "t:CardTypeDataSO";
         private const string CardTypesPath = "Card Types/";
         private const string ObjectFieldLabel = "Card Type Asset:";
         private const string CardTypeNameFieldLabel = "Card Type Name:";
@@ -34,12 +35,16 @@ namespace Editor.CardData.CardTypes
         private bool _hasCost;
         private bool _hasKeywords;
         private bool _hasCardText;
+        
+        // Card Type List View Variables
+        private string[] _typeAssetGUIDs;
+        private Vector2 _cardTypeScrollPosition;
 
         [MenuItem("Tools/Card Type Editor")]
         public static void Init()
         {
             _typeEditorWindow = GetWindow<CardTypeEditorWindow>(WindowTitle);
-            _typeEditorWindow.position = new Rect(250f, 150f, 300f, 300f);
+            _typeEditorWindow.position = new Rect(250f, 150f, 300f, 600f);
             _typeEditorWindow.Show();
         }
         
@@ -80,7 +85,7 @@ namespace Editor.CardData.CardTypes
 
         private void SetupAreaRects()
         {
-            MainAreaRect= new Rect(5,5,position.width - 10,position.height - 25);
+            MainAreaRect= new Rect(5,5,position.width - 10,position.height -25);
         }
 
         private void DrawMainArea()
@@ -92,6 +97,7 @@ namespace Editor.CardData.CardTypes
             ScrollPosition = GUILayout.BeginScrollView(ScrollPosition,GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
             DrawEditableFields();
             GUILayout.EndScrollView();
+            DrawCardTypeListArea();
             GUILayout.EndArea();
         }
 
@@ -219,6 +225,62 @@ namespace Editor.CardData.CardTypes
             EditorUtility.SetDirty(_loadedType);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+        }
+
+        private void DrawCardTypeListArea()
+        {
+            GetTypeAssetsFromGUID();
+            _cardTypeScrollPosition = GUILayout.BeginScrollView(_cardTypeScrollPosition, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+           
+            DrawTotalTypesLabel();
+            foreach (string guid in _typeAssetGUIDs)
+            {
+                CardTypeDataSO typeData = LoadCardTypeDataByGUID(guid);
+                GUILayout.BeginHorizontal();
+                GUILayout.Label(typeData.CardTypeName);
+                if (GUILayout.Button("View", GUILayout.Width(50)))
+                {
+                    EditorGUIUtility.PingObject(typeData);
+                    Selection.activeObject = typeData;
+                }
+                    
+                if (GUILayout.Button("Edit", GUILayout.Width(50)))
+                {
+                    _loadedType = typeData;
+                    LoadCardTypeData();
+                }
+                GUILayout.EndHorizontal();
+            }
+            GUILayout.EndScrollView();
+        }
+
+        private void GetTypeAssetsFromGUID()
+        {
+            string[] guids = AssetDatabase.FindAssets(AssetFilter);;
+            if (_typeAssetGUIDs == null || _typeAssetGUIDs.Length != guids.Length)
+            {
+                _typeAssetGUIDs = guids;
+            }
+        }
+        
+        private  CardTypeDataSO LoadCardTypeDataByGUID(string guid)
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+            return AssetDatabase.LoadAssetAtPath<CardTypeDataSO>(path);
+        }
+
+        private void DrawTotalTypesLabel()
+        {
+            string labelText = "";
+            if (_typeAssetGUIDs != null && _typeAssetGUIDs.Length > 0)
+            {
+                labelText = $"Total Card Types: {_typeAssetGUIDs.Length}";
+            }
+            else
+            {
+                labelText = $"Total Card Types: None";
+            }
+            GUILayout.Label(labelText, EditorStyles.boldLabel);
         }
 
     }

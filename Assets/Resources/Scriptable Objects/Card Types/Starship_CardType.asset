@@ -13,10 +13,13 @@ MonoBehaviour:
   m_Name: Starship_CardType
   m_EditorClassIdentifier: 
   _cardTypeName: Starship
-  _cardTypeIcon: {fileID: 0}
+  _cardTypeIcon: {fileID: 2800000, guid: 69fd57a4b3e5046e39e01ef98ff37d79, type: 3}
   _cardTypeColor: {r: 0.50691015, g: 0.735849, b: 0.35751158, a: 1}
   _hasStats: 1
   _hasCost: 1
   _hasKeywords: 1
   _hasCardText: 1
-  _cardStatData: []
+  _cardStatData:
+  - statName: Support
+    statDescription: Amount This Card Can Buff A Target.
+    statWeight: 0

@@ -49,10 +49,12 @@ namespace Editor.CardData.CardTypes
 
         private void DrawCardTypeSOInspectorGUI()
         {
+            GUI.enabled = true;
             CardTypeDataSO cardTypeSO = (CardTypeDataSO) target;
             GUILayout.BeginHorizontal(EditorStyles.toolbar);
             DrawOpenInCardTypeEditorButton(cardTypeSO);
             GUILayout.EndHorizontal();
+            GUI.enabled = false;
             DrawRequiredProperties();
             DrawOptionalProperties();
         }
@@ -68,18 +70,30 @@ namespace Editor.CardData.CardTypes
         private void DrawRequiredProperties()
         {
             EditorGUILayout.PropertyField(CardTypeNameProperty);
-            EditorGUILayout.PropertyField(CardTypeIconProperty);
+            DrawArtWorkProperty();
             EditorGUILayout.PropertyField(CardTypeColorProperty);
             EditorGUILayout.PropertyField(HasStatsProperty);
             EditorGUILayout.PropertyField(HasCostProperty);
             EditorGUILayout.PropertyField(HasKeywordsProperty);
             EditorGUILayout.PropertyField(HasCardTextProperty);
         }
+        
+        private void DrawArtWorkProperty() 
+        {
+            if (CardTypeIconProperty.objectReferenceValue is not Texture2D iconTexture) 
+            {
+                return;
+            }
+            GUILayout.Label("Icon Preview:");
+            Rect rect = GUILayoutUtility.GetRect(100, 100, GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(false));
+            EditorGUI.DrawPreviewTexture(rect, iconTexture);
+        }
 
         private void DrawOptionalProperties()
         {
             if (HasStatsProperty.boolValue)
             {
+                GUI.enabled = true;
                 DrawCardStatDataProperty();
             }
         }

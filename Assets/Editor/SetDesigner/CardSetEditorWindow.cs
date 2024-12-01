@@ -109,7 +109,6 @@ namespace Editor.SetDesigner
             {
                 IsInEditMode = false;
                 _selectedCardSet = null;
-               //Debug.Log("New Set");
             }
         }
 
@@ -117,7 +116,6 @@ namespace Editor.SetDesigner
         {
             if (GUILayout.Button("Save", EditorStyles.toolbarButton))
             {
-                //Debug.Log("Save");
                 SaveCurrentSet();
             }
         }
@@ -135,7 +133,6 @@ namespace Editor.SetDesigner
             if (GUILayout.Button("Edit", EditorStyles.toolbarButton))
             {
                 IsInEditMode = true;
-                //Debug.Log("Edit");
             }
         }
 
@@ -258,14 +255,12 @@ namespace Editor.SetDesigner
                     
                     if (GUILayout.Button("View", GUILayout.Width(50)))
                     {
-                       // Debug.Log("View card: " + cardData.name);
                         EditorGUIUtility.PingObject(cardData);
                         Selection.activeObject = cardData;
                     }
                     
                     if (GUILayout.Button("Edit", GUILayout.Width(50)))
                     {
-                       // Debug.Log("Edit card: " + cardData.name);
                        _editorWindowChannel.RaiseCardEditorWindowRequestedEvent(cardData);
                     }
                     
@@ -314,14 +309,12 @@ namespace Editor.SetDesigner
         // TODO: Turn into event
         private void AddCardToSet(CardDataSO cardData)
         {
-            //Debug.Log("Add card: " + cardData.name);
             _selectedCardSet.AddCardToSet(cardData);
         }
         
         // TODO: Turn into event
         private void RemoveCardFromSet(CardDataSO cardData)
         {
-           // Debug.Log("Remove card: " + cardData.name);
             _selectedCardSet.RemoveCardFromSet(cardData);
         }
     }
