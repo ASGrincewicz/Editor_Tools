@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Editor.CardData.Stats;
 using Editor.Channels;
 using UnityEditor;
 using UnityEngine;
@@ -28,6 +30,8 @@ namespace Editor.CardData.CardTypes
         private SerializedProperty HasKeywordsProperty { get; set; }
         private SerializedProperty HasCardTextProperty { get; set; }
         private SerializedProperty CardStatDataProperty { get; set; }
+        
+        private List<CardStatData> _cardStatData;
 
         private void OnEnable()
         {
@@ -39,6 +43,8 @@ namespace Editor.CardData.CardTypes
             HasKeywordsProperty = serializedObject.FindProperty(HasKeywordsName);
             HasCardTextProperty = serializedObject.FindProperty(HasCardTextName);
             CardStatDataProperty = serializedObject.FindProperty(CardStatDataName);
+            CardTypeDataSO cardTypeSO = (CardTypeDataSO) target;
+            _cardStatData = cardTypeSO.CardStats;
         }
         public override void OnInspectorGUI()
         {
@@ -49,12 +55,10 @@ namespace Editor.CardData.CardTypes
 
         private void DrawCardTypeSOInspectorGUI()
         {
-            GUI.enabled = true;
             CardTypeDataSO cardTypeSO = (CardTypeDataSO) target;
             GUILayout.BeginHorizontal(EditorStyles.toolbar);
             DrawOpenInCardTypeEditorButton(cardTypeSO);
             GUILayout.EndHorizontal();
-            GUI.enabled = false;
             DrawRequiredProperties();
             DrawOptionalProperties();
         }
@@ -69,13 +73,21 @@ namespace Editor.CardData.CardTypes
 
         private void DrawRequiredProperties()
         {
-            EditorGUILayout.PropertyField(CardTypeNameProperty);
+            DrawBoldLabel("Card Type Name", CardTypeNameProperty.stringValue);
+            DrawColorPreview();
             DrawArtWorkProperty();
-            EditorGUILayout.PropertyField(CardTypeColorProperty);
-            EditorGUILayout.PropertyField(HasStatsProperty);
-            EditorGUILayout.PropertyField(HasCostProperty);
-            EditorGUILayout.PropertyField(HasKeywordsProperty);
-            EditorGUILayout.PropertyField(HasCardTextProperty);
+            DrawBoldLabel("Has Stats",HasStatsProperty.boolValue.ToString() );
+            DrawBoldLabel("Has Cost",HasCostProperty.boolValue.ToString() );
+            DrawBoldLabel("Has Keywords",HasKeywordsProperty.boolValue.ToString() );
+            DrawBoldLabel("Has Card Text",HasCardTextProperty.boolValue.ToString() );
+            DrawLabel("          ");
+        }
+        
+        private void DrawColorPreview()
+        {
+            GUILayout.Label("Color Preview:");
+            Rect rect = GUILayoutUtility.GetRect(50, 25, GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(false));
+            EditorGUI.DrawRect(rect, CardTypeColorProperty.colorValue);
         }
         
         private void DrawArtWorkProperty() 
@@ -93,14 +105,38 @@ namespace Editor.CardData.CardTypes
         {
             if (HasStatsProperty.boolValue)
             {
-                GUI.enabled = true;
                 DrawCardStatDataProperty();
             }
         }
 
         private void DrawCardStatDataProperty()
         {
-            EditorGUILayout.PropertyField(CardStatDataProperty);
+            DrawBoldLabel("Stats");
+            foreach (CardStatData stat in _cardStatData)
+            {
+                DrawLabel("Stat Name",$"{stat.statName}");
+                DrawLabel("Description",$"{stat.statDescription}");
+                DrawLabel("Weight",$"{stat.statWeight}");
+                DrawLabel("          ");
+            }
+        }
+        
+        private void DrawBoldLabel(string labelText = "", string fieldText = "") 
+        {
+            GUILayout.BeginHorizontal(GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+            EditorGUILayout.LabelField(labelText,EditorStyles.boldLabel, GUILayout.Width(10), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+            EditorGUILayout.LabelField(fieldText,EditorStyles.label, GUILayout.Width(100), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+            GUILayout.EndHorizontal();
+        }
+
+        private void DrawLabel(string labelText = "", string fieldText = "")
+        {
+            GUILayout.BeginHorizontal(GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+            EditorGUILayout.LabelField(labelText, EditorStyles.label, GUILayout.Width(10), GUILayout.ExpandWidth(true),
+                GUILayout.ExpandHeight(true));
+            EditorGUILayout.LabelField(fieldText, EditorStyles.label, GUILayout.Width(100), GUILayout.ExpandWidth(true),
+                GUILayout.ExpandHeight(true));
+            GUILayout.EndHorizontal();
         }
     }
 }
