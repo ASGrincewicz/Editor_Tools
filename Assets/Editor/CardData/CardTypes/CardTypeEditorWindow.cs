@@ -51,7 +51,7 @@ namespace Editor.CardData.CardTypes
         public static void Init()
         {
             _typeEditorWindow = GetWindow<CardTypeEditorWindow>(WindowTitle);
-            _typeEditorWindow.position = new Rect(250f, 150f, 300f, 600f);
+            _typeEditorWindow.position = new Rect(250f, 150f, 400f, 800f);
             _typeEditorWindow.Show();
         }
         
@@ -326,12 +326,19 @@ namespace Editor.CardData.CardTypes
             }
             GUILayout.EndHorizontal();
 
-            foreach (CardStatData stat in _cardStats)
-            {
+            for(int i = 0; i < _amountOfStats; i++)
+            { 
                 GUILayout.BeginHorizontal();
-                EditorGUILayout.LabelField(stat.statName);
+                _cardStats[i].statName = EditorGUILayout.TextField("Stat Name", _cardStats[i].statName, GUILayout.Width(200), GUILayout.ExpandWidth(true));
                 GUILayout.EndHorizontal();
-            }
+                GUILayout.BeginHorizontal();
+                _cardStats[i].statDescription = EditorGUILayout.TextField("Description", _cardStats[i].statDescription, GUILayout.Width(200), GUILayout.ExpandWidth(true));
+                GUILayout.EndHorizontal();
+                GUILayout.BeginHorizontal();
+                _cardStats[i].statWeight = EditorGUILayout.FloatField("Weight", _cardStats[i].statWeight, GUILayout.Width(200), GUILayout.ExpandWidth(true));
+                GUILayout.EndHorizontal();
+                GUILayout.Space(10);
+            } 
             GUILayout.EndScrollView();
         }
     }

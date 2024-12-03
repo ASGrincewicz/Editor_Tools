@@ -23,6 +23,9 @@ MonoBehaviour:
   - statName: Attack
     statDescription: Amount of Damage Dealt
     statWeight: 0
-  - statName: Health
-    statDescription: Amount of Hit Points
+  - statName: Hit Points
+    statDescription: Amount of Health
+    statWeight: 0
+  - statName: Speed
+    statDescription: Description
     statWeight: 0
