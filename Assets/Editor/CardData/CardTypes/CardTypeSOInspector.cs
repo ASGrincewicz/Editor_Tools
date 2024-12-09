@@ -84,7 +84,7 @@ namespace Editor.CardData.CardTypes
             DrawBoldLabel(_cardTypeInspectorLogic.FormatPropertyLabel("Has Cost",HasCostProperty.boolValue.ToString() ));
             DrawBoldLabel(_cardTypeInspectorLogic.FormatPropertyLabel("Has Keywords",HasKeywordsProperty.boolValue.ToString()));
             DrawBoldLabel(_cardTypeInspectorLogic.FormatPropertyLabel("Has Card Text",HasCardTextProperty.boolValue.ToString()));
-            DrawLabel("          ");
+            DrawLabel(_cardTypeInspectorLogic.FormatPropertyLabel("          ",""));
         }
         
         private void DrawColorPreview()
@@ -115,28 +115,29 @@ namespace Editor.CardData.CardTypes
 
         private void DrawCardStatDataProperty()
         {
-            DrawBoldLabel("Stats");
+            DrawBoldLabel(_cardTypeInspectorLogic.FormatPropertyLabel("Stats:",""));
             foreach (CardStatData stat in _cardStatData)
             {
                 DrawLabel(_cardTypeInspectorLogic.FormatPropertyLabel("Stat Name",$"{stat.statName}"));
                 DrawLabel(_cardTypeInspectorLogic.FormatPropertyLabel("Description",$"{stat.statDescription}"));
                 DrawLabel(_cardTypeInspectorLogic.FormatPropertyLabel("Weight",$"{stat.statWeight}"));
-                DrawLabel("          ");
+                DrawLabel(_cardTypeInspectorLogic.FormatPropertyLabel("          ",""));
             }
         }
         
-        private void DrawBoldLabel(string labelText = "") 
+        private void DrawBoldLabel((string, string) labelText) 
         {
             GUILayout.BeginHorizontal(GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
-            EditorGUILayout.LabelField(labelText,EditorStyles.boldLabel, GUILayout.Width(10), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+            EditorGUILayout.LabelField(labelText.Item1,EditorStyles.boldLabel, GUILayout.Width(10), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+            EditorGUILayout.LabelField(labelText.Item2,EditorStyles.label, GUILayout.Width(100), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
             GUILayout.EndHorizontal();
         }
 
-        private void DrawLabel(string labelText = "")
+        private void DrawLabel((string, string) labelText) 
         {
             GUILayout.BeginHorizontal(GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
-            EditorGUILayout.LabelField(labelText, EditorStyles.label, GUILayout.Width(10), GUILayout.ExpandWidth(true),
-                GUILayout.ExpandHeight(true));
+            EditorGUILayout.LabelField(labelText.Item1,EditorStyles.label, GUILayout.Width(10), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+            EditorGUILayout.LabelField(labelText.Item2,EditorStyles.label, GUILayout.Width(100), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
             GUILayout.EndHorizontal();
         }
     }
