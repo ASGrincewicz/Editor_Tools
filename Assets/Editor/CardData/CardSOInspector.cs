@@ -12,7 +12,10 @@ namespace Editor.CardData
     [CustomEditor(typeof(CardDataSO))]
     public class CardSoInspector: UnityEditor.Editor
     {
-        [FormerlySerializedAs("_cardEditorChannel")] [SerializeField] private EditorWindowChannel _editorWindowChannel;
+        // Logic helper
+        private CardInspectorLogic _cardInspectorLogic;
+        // Property Names
+        [SerializeField] private EditorWindowChannel _editorWindowChannel;
         private const string CardSetNamePropertyName = "_cardSetName";
         private const string CardNumberPropertyName = "_cardNumber";
         private const string RarityPropertyName = "_rarity";
@@ -52,6 +55,7 @@ namespace Editor.CardData
 
         private void OnEnable()
         {
+            _cardInspectorLogic = new CardInspectorLogic();
             CardSetNameProperty = serializedObject.FindProperty(CardSetNamePropertyName);
             CardNumberProperty = serializedObject.FindProperty(CardNumberPropertyName);
             RarityProperty = serializedObject.FindProperty(RarityPropertyName);
@@ -119,31 +123,31 @@ namespace Editor.CardData
         private void DrawProperties() 
         {
             GUI.enabled = true;
-            DrawLabel($"#{CardNumberProperty.intValue} in {CardSetNameProperty.stringValue}");
+            DrawLabel(_cardInspectorLogic.FormatPropertyLabel($"#{CardNumberProperty.intValue} in ",$"{CardSetNameProperty.stringValue}"));
             CardRarity cardRarity = (CardRarity) RarityProperty.enumValueIndex;
-            DrawLabel($"Rarity: ",$"{cardRarity.GetDescription()}");
+            DrawLabel(_cardInspectorLogic.FormatPropertyLabel($"Rarity: ",$"{cardRarity.GetDescription()}"));
             if (HasCostProperty)
             {
-                DrawLabel($"Card Cost: ",$"{CostProperty.intValue}");
+                DrawLabel(_cardInspectorLogic.FormatPropertyLabel($"Card Cost: ",$"{CostProperty.intValue}"));
             }
            
-            DrawLabel($"Card Type: ",$"{CardTypeNameProperty}");
+            DrawLabel(_cardInspectorLogic.FormatPropertyLabel($"Card Type: ",$"{CardTypeNameProperty}"));
 
-            DrawLabel($"Card Name: ", $"{CardNameProperty.stringValue}");
+            DrawLabel(_cardInspectorLogic.FormatPropertyLabel($"Card Name: ", $"{CardNameProperty.stringValue}"));
 
             DrawArtWorkProperty();
 
-            if (HasKeywordsProperty)
+            if (_cardInspectorLogic.ShouldDrawKeywordData(HasKeywordsProperty))
             {
                 DrawKeywordArrayProperty();
             }
             
-            if (HasCardTextProperty)
+            if (_cardInspectorLogic.ShouldDrawCardTextData(HasCardTextProperty))
             {
                 DrawCardTextLabel();
             }
             
-            if (HasStatsProperty)
+            if (_cardInspectorLogic.ShouldDrawCardStatData(HasStatsProperty))
             {
                DrawStatsProperties();
             }
@@ -172,17 +176,17 @@ namespace Editor.CardData
                 string keywordName = keywordNameProperty.stringValue;
                 if (!string.IsNullOrEmpty(keywordName))
                 {
-                    DrawLabel("",keywordNameProperty.stringValue);
+                    DrawLabel(_cardInspectorLogic.FormatPropertyLabel("",keywordNameProperty.stringValue));
                 }
             }
             GUILayout.EndHorizontal();
         }
         
-        private void DrawLabel(string labelText = "", string fieldText = "") 
+        private void DrawLabel((string, string) labelText) 
         {
             GUILayout.BeginHorizontal(GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
-            EditorGUILayout.LabelField(labelText,EditorStyles.boldLabel, GUILayout.Width(10), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
-            EditorGUILayout.LabelField(fieldText,EditorStyles.label, GUILayout.Width(100), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+            EditorGUILayout.LabelField(labelText.Item1,EditorStyles.boldLabel, GUILayout.Width(10), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+            EditorGUILayout.LabelField(labelText.Item2,EditorStyles.label, GUILayout.Width(100), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
             GUILayout.EndHorizontal();
         }
 
@@ -196,20 +200,15 @@ namespace Editor.CardData
         {
             if (CardTypeDataProperty != null && CardTypeDataProperty.objectReferenceValue != null)
             {
-                DrawLabel($"STATS:");
+                DrawLabel(_cardInspectorLogic.FormatPropertyLabel($"STATS:",""));
                 foreach (CardStat stat in CardStats)
                 {
-                    DrawLabel("",$"{stat.statName}");
-                    DrawLabel("",$"{stat.statValue}");
-                    DrawLabel("",$"{stat.statDescription}");
-                    DrawLabel("          ");
+                    DrawLabel(_cardInspectorLogic.FormatPropertyLabel("",$"{stat.statName}"));
+                    DrawLabel(_cardInspectorLogic.FormatPropertyLabel("",$"{stat.statValue}"));
+                    DrawLabel(_cardInspectorLogic.FormatPropertyLabel("",$"{stat.statDescription}"));;
+                    DrawLabel(_cardInspectorLogic.FormatPropertyLabel("          ",""));
                 }
             }
-        }
-
-        private void DrawProperty(SerializedProperty property) 
-        {
-            EditorGUILayout.PropertyField(property, GUILayout.ExpandHeight(true));
         }
     }
 }
