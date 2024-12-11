@@ -8,7 +8,7 @@
         public string statDescription;
       
 
-        public CardStat(string statName, int statValue = 0, string statDescription = "empty")
+        public CardStat(string statName = "Stat Name", int statValue = 0, string statDescription = "empty")
         {
             this.statName = statName;
             this.statValue = statValue;

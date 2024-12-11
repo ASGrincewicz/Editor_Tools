@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,7 +16,7 @@ namespace Editor.Utilities
     private const string AssetPath = "Assets/Resources/Scriptable Objects/Cards/";
     private const string KeywordManagerPath = "Assets/Resources/Scriptable Objects/Keywords/KeywordManager.asset";
 
-    public static KeywordManager KeywordManager { get; private set; }
+    public static KeywordManager KeywordManager { get; set; }
     public static string[] CardAssetGuids { get; } = LoadAllCardDataByGuid();
     public static List<CardDataSO> AllCardData { get; } = LoadAllCardData();
     public static StringBuilder CardTextStringBuilder { get; set; }

@@ -28,7 +28,7 @@ namespace Editor.CardData
         private string _cardText;
         // Stats
         [SerializeField] private List<CardStat> _stats;
-
+        
         public string CardSetName
         {
             get

@@ -4,7 +4,7 @@ namespace Editor.CardData
     {
         public (string,string) FormatPropertyLabel(string propertyName, object value)
         {
-            return ($"{propertyName} ", $"{value}");
+            return ($"{propertyName}", $"{value}");
         }
         public bool ShouldDrawCardStatData(bool hasStats)
         {

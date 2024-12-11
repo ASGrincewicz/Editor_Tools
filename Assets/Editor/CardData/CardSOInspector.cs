@@ -5,7 +5,6 @@ using Editor.Channels;
 using Editor.Utilities;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Editor.CardData
 {
