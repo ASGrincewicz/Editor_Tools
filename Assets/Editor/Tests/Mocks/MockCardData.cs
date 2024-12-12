@@ -10,16 +10,16 @@ namespace Editor.Tests.Mocks
     /// </summary>
     public class MockCardData // Changed to regular C# class
     {
-        public string _cardSetName = "None";
-        public int _cardNumber = 0;
-        public CardRarity _rarity;
-        public int _cost;
-        public MockCardTypeData _mockCardTypeData;
-        public string _cardName;
-        public Texture2D _artWork;
-        public Keyword[] _keywords;
-        public string _cardText;
-        public List<CardStat> _stats;
+        private string _cardSetName = "None";
+        private int _cardNumber = 0;
+        private CardRarity _rarity = CardRarity.None;
+        private int _cost;
+        private MockCardTypeData _mockCardTypeData;
+        private string _cardName;
+        private Texture2D _artWork;
+        private Keyword[] _keywords;
+        private string _cardText;
+        private List<CardStat> _stats;
         
         public string CardSetName
         {
@@ -65,11 +65,7 @@ namespace Editor.Tests.Mocks
 
         public Keyword[] Keywords
         {
-            get
-            {
-                if (_keywords == null) _keywords = new Keyword[3];
-                return _keywords;
-            }
+            get { return _keywords ??= new Keyword[3]; }
             set { _keywords = value; }
         }
 

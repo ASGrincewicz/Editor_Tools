@@ -135,6 +135,7 @@ namespace Editor.Tests
             MockKeywordManager keywordManager = new();
             keywordManager.AddKeyword(new Keyword { KeywordName = "Keyword1", KeywordValue = 1});
             keywordManager.AddKeyword(new Keyword { KeywordName = "Keyword2", KeywordValue = 2});
+            keywordManager.AddKeyword(new Keyword { KeywordName = "Keyword3", KeywordValue = 3});
 
             cardData.Keywords = keywordManager.GetKeywords();
 
@@ -142,7 +143,7 @@ namespace Editor.Tests
             string result = cardData.GetKeywordsSumString();
 
             // Assert: Verify that the correct summary is generated
-            Assert.AreEqual("Keyword(1), Keyword(2)", result); // Adjust based on the method implementation
+            Assert.AreEqual("Keyword1(1) + Keyword2(2) + Keyword3(3) = 6", result); // Adjust based on the method implementation
         }
 
         [Test]
