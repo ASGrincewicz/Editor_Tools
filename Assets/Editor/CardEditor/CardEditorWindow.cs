@@ -234,27 +234,35 @@ namespace Editor.CardEditor
         {
             GUILayout.BeginHorizontal(GUILayout.Width(FIELD_WIDTH));
             EditorGUIUtility.labelWidth = 100;
-            GUILayout.Label("Keywords");
-            if (CardDataAssetUtility.SelectedKeywords is not { Length: 3 })
+            if (!ReferenceEquals(CardDataAssetUtility.CardToEdit, null))
             {
-                CardDataAssetUtility.SelectedKeywords = new Keyword[3];
-                CardDataAssetUtility.SelectedKeywordsIndex = new int[3]; // Initialize the index array only once.
-            }
-
-            for (int i = 0; i < CardDataAssetUtility.SelectedKeywords.Length; i++)
-            {
-               CheckAndResetSelectedKeywordIndex(i);
-
-                DrawKeywordFields(i);
-                
-                if (CardDataAssetUtility.SelectedKeywordsIndex[i] < 0 || CardDataAssetUtility.SelectedKeywordsIndex[i] >= CardDataAssetUtility.KeywordNamesList.Count)
+                GUILayout.Label("Keywords");
+                if (CardDataAssetUtility.SelectedKeywords is not { Length: 3 })
                 {
-                    Debug.LogError($"Index {CardDataAssetUtility.SelectedKeywordsIndex[i]} is out of range for _keywordNamesList with count {CardDataAssetUtility.KeywordNamesList.Count}");
-                    continue;
+                    CardDataAssetUtility.SelectedKeywords = new Keyword[3];
+                    CardDataAssetUtility.SelectedKeywordsIndex = new int[3]; // Initialize the index array only once.
                 }
+
+                for (int i = 0; i < CardDataAssetUtility.SelectedKeywords.Length; i++)
+                {
+                    CheckAndResetSelectedKeywordIndex(i);
+
+                    DrawKeywordFields(i);
                 
-                SetKeyword(i);
+                    if (CardDataAssetUtility.SelectedKeywordsIndex[i] < 0 || CardDataAssetUtility.SelectedKeywordsIndex[i] >= CardDataAssetUtility.KeywordNamesList.Count)
+                    {
+                        Debug.LogError($"Index {CardDataAssetUtility.SelectedKeywordsIndex[i]} is out of range for _keywordNamesList with count {CardDataAssetUtility.KeywordNamesList.Count}");
+                        continue;
+                    }
+                
+                    SetKeyword(i);
+                }
             }
+            else
+            {
+                GUILayout.Label("Keywords");
+            }
+            
             GUILayout.EndHorizontal();
         }
 

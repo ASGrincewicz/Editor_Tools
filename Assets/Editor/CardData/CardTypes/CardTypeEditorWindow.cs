@@ -20,6 +20,8 @@ namespace Editor.CardData.CardTypes
         private const string HasCostFieldLabel = "Has Cost:";
         private const string HasKeywordsFieldLabel = "Has Keywords:";
         private const string HasCardTextFieldLabel = "Has Card Text:";
+        private const float StatFieldWidth = 50;
+        private const float EditableFieldWidth = 50;
         [SerializeField] private EditorWindowChannel _editorWindowChannel;
 
         private static EditorWindow _typeEditorWindow;
@@ -113,7 +115,7 @@ namespace Editor.CardData.CardTypes
            _loadedType = (CardTypeDataSO)EditorGUILayout.ObjectField(ObjectFieldLabel,_loadedType, typeof(CardTypeDataSO), false);
            _cardTypeName = EditorGUILayout.TextField(CardTypeNameFieldLabel, _cardTypeName);
            _cardTypeIcon = (Texture2D)EditorGUILayout.ObjectField(CardTypeIconFieldLabel,_cardTypeIcon, typeof(Texture2D), false);
-           _cardTypeColor = EditorGUILayout.ColorField(CardTypeColorFieldLabel,_cardTypeColor);
+           _cardTypeColor = EditorGUILayout.ColorField(CardTypeColorFieldLabel,_cardTypeColor, GUILayout.Width(EditableFieldWidth), GUILayout.ExpandWidth(true));
            _hasStats = EditorGUILayout.Toggle(HasStatsFieldLabel, _hasStats);
            _hasCost = EditorGUILayout.Toggle(HasCostFieldLabel, _hasCost);
            _hasKeywords = EditorGUILayout.Toggle(HasKeywordsFieldLabel, _hasKeywords);
@@ -329,13 +331,13 @@ namespace Editor.CardData.CardTypes
             for(int i = 0; i < _amountOfStats; i++)
             { 
                 GUILayout.BeginHorizontal();
-                _cardStats[i].statName = EditorGUILayout.TextField("Stat Name", _cardStats[i].statName, GUILayout.Width(200), GUILayout.ExpandWidth(true));
+                _cardStats[i].statName = EditorGUILayout.TextField("Stat Name", _cardStats[i].statName, GUILayout.Width(StatFieldWidth), GUILayout.ExpandWidth(true));
                 GUILayout.EndHorizontal();
                 GUILayout.BeginHorizontal();
-                _cardStats[i].statDescription = EditorGUILayout.TextField("Description", _cardStats[i].statDescription, GUILayout.Width(200), GUILayout.ExpandWidth(true));
+                _cardStats[i].statDescription = EditorGUILayout.TextField("Description", _cardStats[i].statDescription, GUILayout.Width(StatFieldWidth), GUILayout.ExpandWidth(true));
                 GUILayout.EndHorizontal();
                 GUILayout.BeginHorizontal();
-                _cardStats[i].statWeight = EditorGUILayout.FloatField("Weight", _cardStats[i].statWeight, GUILayout.Width(200), GUILayout.ExpandWidth(true));
+                _cardStats[i].statWeight = EditorGUILayout.FloatField("Weight", _cardStats[i].statWeight, GUILayout.Width(StatFieldWidth), GUILayout.ExpandWidth(true));
                 GUILayout.EndHorizontal();
                 GUILayout.Space(10);
             } 
